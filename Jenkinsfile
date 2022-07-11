@@ -15,6 +15,13 @@ pipeline {
           try {
             sh "docker rmi -f zteb-server:latest"
           } catch (err) {
+            echo "The image of zteb-server is not defined"
+          }
+        }
+        script {
+          try {
+            sh "docker rm -f zteb-server"
+          } catch (err) {
             echo "zteb-server is not defined"
           }
         }
