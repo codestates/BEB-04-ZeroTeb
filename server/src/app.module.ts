@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EventModule } from './event/event.module';
 import { TokenModule } from './token/token.module';
 import { AuthModule } from './auth/auth.module';
+import 'dotenv/config';
 
 @Module({
   imports: [
