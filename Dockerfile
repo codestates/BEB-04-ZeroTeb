@@ -6,6 +6,8 @@ COPY ./server/package*.json ./
 
 RUN npm install
 
-CMD ["npm", "run", "start:dev"]
+RUN npm run build
+
+CMD ["npm", "run", "start:prod"]
 
 EXPOSE 8080
