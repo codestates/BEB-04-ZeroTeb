@@ -42,10 +42,28 @@ export default function Navbar() {
           tabBarShowLabel: false,
         })}
       >
-        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Tab.Screen name="Category" component={Category} />
-        <Tab.Screen name="Search" component={Search} />
-        <Tab.Screen name="MyPage" component={MyPage} />
+        <Tab.Screen
+          name="Search"
+          component={Search}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Tab.Screen
+          name="MyPage"
+          component={MyPage}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   )
