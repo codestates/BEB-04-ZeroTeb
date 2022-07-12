@@ -12,11 +12,11 @@ export class TokenController {
     return this.tokenService.findTokenList(address);
   }
   @Get('qrcode')
-  createTokenQR(@Query('address') address: string, @Query('token_id') token_id: string) {
+  createTokenQR(@Query('address') address: string, @Query('token_id') token_id: string): any {
     return this.tokenService.createTokenQR(address, token_id);
   }
 
-  @Get('qrcode/validation')
+  @Post('qrcode/validation')
   checkValidation(@Body() nonce: string) {
     return this.tokenService.checkValidation(nonce);
   }
