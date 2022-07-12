@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTokenDto } from './dto/create-token.dto';
 import { UpdateTokenDto } from './dto/update-token.dto';
+import axios from 'axios';
 
 @Injectable()
 export class TokenService {
@@ -14,10 +15,24 @@ export class TokenService {
     };
     return tokenList;
   }
-  createTokenQR(address: string, token_id: string) {
+  async createTokenQR(address: string, token_id: string) {
+    //참고 사이트 https://www.qr-code-generator.com/qr-code-api/?target=api-ad
+    const api = 'dxwHbK-0SruyZkyTJ-fWpxtAI78NENxPrKbqPOY9a7kTtcy0Izji4v1-1LeUl1-J';
+    const param = {
+      frame_name: 'no-frame',
+      qr_code_text: address,
+      image_format: 'SVG',
+      image_width: 100,
+      qr_code_logo: 'scan-me-square',
+    };
     //address와 token_id로 qrcode 생성
+    const qr = await axios
+      .post(`https://api.qr-code-generator.com/v1/create?access-token=${api}`, param)
+      .then((res) => {
+        return res.data;
+      });
 
-    return 'qrcode';
+    return qr;
   }
   checkValidation(nonce: string) {
     //nonce가 유효한지 확인
