@@ -1,7 +1,11 @@
 import * as mongoose from 'mongoose';
 
+const now = new Date();
+const start_date = now.toLocaleString();
+now.setDate(now.getDate() + 5);
+const end_date = now.toLocaleString();
+
 export const EventSchema = new mongoose.Schema({
-  event_id: { type: String, required: true },
   title: { type: String, required: true },
   address: { type: String, required: true },
   location: { type: String, required: true },
@@ -11,17 +15,16 @@ export const EventSchema = new mongoose.Schema({
   token_image_url: { type: String, required: true },
   price: { type: [], required: true },
   contents: { type: String, required: true },
-  option: { type: String },
-  recruit_start_date: { type: String, required: true },
-  recruit_end_date: { type: String, required: true },
-  event_start_date: { type: String, required: true },
-  event_end_date: { type: String, required: true },
-  created_date: { type: String, required: true },
-  modified_date: { type: String },
+  option: { type: [] },
+  recruit_start_date: { type: String, default: start_date },
+  recruit_end_date: { type: String, default: end_date },
+  event_start_date: { type: String, default: start_date },
+  event_end_date: { type: String, default: end_date },
+  created_date: { type: String, default: start_date },
+  modified_date: { type: String, default: start_date },
 });
 
 export interface Event {
-  event_id: string;
   title: string;
   address: string;
   location: string;
