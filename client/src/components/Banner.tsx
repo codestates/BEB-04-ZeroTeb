@@ -14,17 +14,15 @@ const image = {
 }
 
 interface BannerContent {
-  src: string
-  title: string
+  props: {
+    token_image_url: string
+    title: string
+  }
 }
 
-export default function Banner() {
-  const [bannerContents, setBannerContents] = React.useState<BannerContent[]>([
-    {
-      src: 'https://images.unsplash.com/photo-1608048608029-99c772d199ed?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80',
-      title: 'title',
-    },
-  ])
+const Banner: React.FC<BannerContent> = ({ props }) => {
+  const [bannerContents, setBannerContents] =
+    React.useState<BannerContent[]>(props)
 
   return (
     <View style={style.bannerOuterContainer}>
@@ -38,7 +36,7 @@ export default function Banner() {
           return (
             <View key={index}>
               <ImageBackground
-                source={{ uri: content.src }}
+                source={{ uri: content.token_image_url }}
                 resizeMode="cover"
                 style={style.bannerInnerContainer}
               >
@@ -47,33 +45,6 @@ export default function Banner() {
             </View>
           )
         })}
-        <View>
-          <ImageBackground
-            source={image}
-            resizeMode="cover"
-            style={style.bannerInnerContainer}
-          >
-            <Text style={style.bannerText}>banner1</Text>
-          </ImageBackground>
-        </View>
-        <View>
-          <ImageBackground
-            source={image}
-            resizeMode="cover"
-            style={style.bannerInnerContainer}
-          >
-            <Text style={style.bannerText}>banner2</Text>
-          </ImageBackground>
-        </View>
-        <View>
-          <ImageBackground
-            source={image}
-            resizeMode="cover"
-            style={style.bannerInnerContainer}
-          >
-            <Text style={style.bannerText}>banner3</Text>
-          </ImageBackground>
-        </View>
       </ScrollView>
     </View>
   )
@@ -91,9 +62,11 @@ const style = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
   bannerText: {
-    fontSize: 50,
+    fontSize: 18,
     alignItems: 'center',
     color: 'white',
-    paddingTop: 15,
+    paddingTop: 30,
   },
 })
+
+export default Banner

@@ -47,6 +47,7 @@ const style = StyleSheet.create({
     borderColor: 'gray',
     paddingHorizontal: 10,
     width: SCREEN_WIDTH * 0.9,
+    minHeight: 40,
     maxHeight: 40,
     margin: 20,
   },

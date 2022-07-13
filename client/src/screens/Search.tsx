@@ -1,12 +1,17 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View, StyleSheet, StatusBar, Platform } from 'react-native'
 
-function Search() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Search!</Text>
-    </View>
-  )
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+
+export default function Search() {
+  return <View style={style.searchContainer}></View>
 }
 
-export default Search
+const style = StyleSheet.create({
+  searchContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
+    marginTop: STATUSBAR_HEIGHT,
+  },
+})

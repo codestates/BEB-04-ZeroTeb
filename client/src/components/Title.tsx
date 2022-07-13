@@ -6,7 +6,7 @@ interface titleProps {
   size: number
 }
 
-export default function Title<titleProps>({ title, size }) {
+const Title: React.FC<titleProps> = ({ title, size }) => {
   return (
     <View style={style.titleContainer}>
       <Text style={{ fontSize: size }}>{title}</Text>
@@ -20,3 +20,5 @@ const style = StyleSheet.create({
     marginHorizontal: 20,
   },
 })
+
+export default Title
