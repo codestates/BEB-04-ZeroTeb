@@ -4,9 +4,10 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import { JwtService } from '@nestjs/jwt';
 import { InjectConnection } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
-import { Username, UsernameDocument, UsernameSchema } from './schemas/username.schema';
-import { User, UserDocument, UserSchema } from './schemas/user.schema';
+import { Username, UsernameDocument } from './schemas/username.schema';
+import { User, UserDocument } from './schemas/user.schema';
 import { newWallet } from 'lib/mnemonic';
+import { UserInfoDto } from './dto/userInfo.dto';
 
 @Injectable()
 export class AuthService {
@@ -66,7 +67,8 @@ export class AuthService {
           await this.userModel.create(newUser);
         }
 
-        signInResDto.setAddress(resultData.result.klaytn_address);
+        signInResDto.setAddress(userInfo.get('address'));
+        signInResDto.setUsername(userInfo.get('username'));
         signInResDto.setMessage('로그인에 성공했습니다.');
       } else if (resultData.status === 'prepared') {
         signInResDto.setMessage('로그인을 진행 중입니다.');
@@ -82,6 +84,7 @@ export class AuthService {
   signInJWT(signInResDto: SignInResDto) {
     const payload = {
       address: signInResDto.address,
+      username: signInResDto.username,
     };
     return {
       access_token: this.jwtService.sign(payload),
@@ -92,5 +95,20 @@ export class AuthService {
     const accessToken = this.jwtService.verify(jwt);
     console.log(accessToken);
     return 'good';
+  }
+
+  async userInfo(address: string): Promise<UserInfoDto | { message: string }> {
+    const userInfoDto: UserInfoDto = new UserInfoDto();
+
+    try {
+      const userData = await this.userModel.findOne({ address: address }).exec();
+      if (userData === null) throw new Error();
+      userInfoDto.username = userData.get('username');
+      return userInfoDto;
+    } catch (err) {
+      return {
+        message: '일치하는 사용자가 없습니다.',
+      };
+    }
   }
 }

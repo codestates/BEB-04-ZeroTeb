@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Req, Res, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Res, BadRequestException, Query } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignInReqDto } from './dto/signin-auth.dto';
@@ -21,6 +21,13 @@ export class AuthController {
         .json(service);
     }
   }
+
+  @Get('/userInfo')
+  async userInfo(@Query('address') address: string, @Res() res: Response): Promise<void> {
+    const service = await this.authService.userInfo(address);
+    res.status(200).json(service);
+  }
+
   @Get('/verify')
   verify(@Req() req: Request) {
     console.log(req);
