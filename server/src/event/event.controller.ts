@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -7,28 +7,48 @@ import { UpdateEventDto } from './dto/update-event.dto';
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
-  @Post()
-  create(@Body() createEventDto: CreateEventDto) {
+  @Post('create')
+  createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventService.create(createEventDto);
   }
 
-  @Get()
-  findAll() {
-    return this.eventService.findAll();
+  @Get('list')
+  findEventList(@Query('page') page: number, @Query('count') count: number) {
+    return this.eventService.findList(page, count);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.eventService.findOne(+id);
+  @Get('item')
+  findOne(@Query('event_id') event_id: number) {
+    return this.eventService.findOne(event_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventService.update(+id, updateEventDto);
+  @Get('entry')
+  confirmWin(@Query('event_id') event_id: number, @Query('address') address: string) {
+    return this.eventService.findWin(event_id, address);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventService.remove(+id);
+  @Get('history')
+  typeList(
+    @Query('address') address: string,
+    @Query('type') type: string,
+    @Query('page') page: number,
+    @Query('count') count: number,
+  ) {
+    return this.eventService.findTypeList(address, type, page, count);
   }
+
+  @Get('search')
+  search(@Query('keyword') keyword: string) {
+    return this.eventService.findByKeyword(keyword);
+  }
+
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+  //   return this.eventService.update(+id, updateEventDto);
+  // }
+
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.eventService.remove(+id);
+  // }
 }

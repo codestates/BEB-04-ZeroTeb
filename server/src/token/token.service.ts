@@ -94,9 +94,7 @@ export class TokenService {
       const validation = await this.NonceModel.findById(id);
 
       //해당 nonce의 유효기한이 남았는지 확인
-      console.log('val:', validation);
       const valResult = this.checkEx(validation.date);
-      console.log('valresult:', valResult);
 
       let message: string;
       valResult ? (message = '유효한 QR') : (message = '유효하지 않은 QR');
