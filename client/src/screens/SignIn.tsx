@@ -4,16 +4,13 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { View, TouchableOpacity, StyleSheet, Text, Image } from 'react-native'
 import KilpImage from '../../assets/kilp_image.png'
 import KilpIcon from '../../assets/kilp_icon.png'
-import * as KlipAPI from '../layout/kilps/modal/WalletInfo.tsx'
+import * as KlipAPI from '../layout/kilps/modal/WalletInfo'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../store/signinSlice'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
 
-interface SignInProps {
-  setQrvalue: any
-  callback: any
-}
+interface SignInProps {}
 
 const SignIn: React.FC<SignInProps> = () => {
   const [isChecked, setisChecked] = useState(false)
