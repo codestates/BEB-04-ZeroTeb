@@ -49,7 +49,13 @@ export default function Navbar() {
             headerShown: false,
           }}
         />
-        <Tab.Screen name="Category" component={Category} />
+        <Tab.Screen
+          name="Category"
+          component={Category}
+          options={{
+            headerShown: false,
+          }}
+        />
         <Tab.Screen
           name="Search"
           component={Search}
@@ -57,13 +63,7 @@ export default function Navbar() {
             headerShown: false,
           }}
         />
-        <Tab.Screen
-          name="MyPage"
-          component={MyPage}
-          options={{
-            headerShown: false,
-          }}
-        />
+        <Tab.Screen name="MyPage" component={MyPage} />
       </Tab.Navigator>
     </NavigationContainer>
   )
