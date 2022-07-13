@@ -12,6 +12,8 @@
   "dependencies": {
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.11",
+    "@rneui/base": "^4.0.0-rc.5",
+    "@rneui/themed": "^4.0.0-rc.5",
     "@typescript-eslint/eslint-plugin": "5.30.5",
     "@typescript-eslint/parser": "5.30.5",
     "eslint": "8.19.0",
