@@ -6,6 +6,7 @@ now.setDate(now.getDate() + 5);
 const end_date = now.toLocaleString();
 
 export const EventSchema = new mongoose.Schema({
+  event_id: { type: Number, default: 0, unique: true },
   title: { type: String, required: true },
   address: { type: String, required: true },
   location: { type: String, required: true },
@@ -25,6 +26,7 @@ export const EventSchema = new mongoose.Schema({
 });
 
 export interface Event {
+  event_id: number;
   title: string;
   address: string;
   location: string;
