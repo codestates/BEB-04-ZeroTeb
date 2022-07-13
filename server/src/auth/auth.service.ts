@@ -110,6 +110,7 @@ export class AuthService {
       const userData = await this.userModel.findOne({ address: address }).exec();
       if (userData === null) throw new Error();
       userInfoDto.username = userData.get('username');
+      userInfoDto.profile_url = `#${address.slice(2, 8)}`;
       userInfoDto.history.created = await this.EventModel.count({ address: address });
       userInfoDto.history.entry = await this.EventModel.count({ type: 'entry', address: address });
       userInfoDto.history.liked = await this.EventModel.count({ type: 'sale', address: address });
