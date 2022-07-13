@@ -1,12 +1,17 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { View, StyleSheet, StatusBar, Platform } from 'react-native'
 
-function MyPage() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>MyPage!</Text>
-    </View>
-  )
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+
+export default function MyPage() {
+  return <View style={style.myPageContainer}></View>
 }
 
-export default MyPage
+const style = StyleSheet.create({
+  myPageContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
+    marginTop: STATUSBAR_HEIGHT,
+  },
+})
