@@ -8,11 +8,15 @@ import { Username, UsernameDocument } from './schemas/username.schema';
 import { User, UserDocument } from './schemas/user.schema';
 import { newWallet } from 'lib/mnemonic';
 import { UserInfoDto } from './dto/userInfo.dto';
+import { LikedEvent } from 'src/event/schemas/likedEvent.schema';
+import { Event } from 'src/event/schemas/event.schema';
 
 @Injectable()
 export class AuthService {
   userModel: Model<UserDocument>;
   usernameModel: Model<UsernameDocument>;
+  EventModel: Model<Event>;
+  LikedEventModel: Model<LikedEvent>;
   constructor(
     private jwtService: JwtService,
     // @InjectConnection(User.name) private userModel: Model<User>,
@@ -21,6 +25,8 @@ export class AuthService {
   ) {
     this.userModel = mongooseConnection.model(User.name);
     this.usernameModel = mongooseConnection.model(Username.name);
+    this.EventModel = mongooseConnection.model('Event');
+    this.LikedEventModel = mongooseConnection.model('LikedEvent');
   }
 
   async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
@@ -104,6 +110,13 @@ export class AuthService {
       const userData = await this.userModel.findOne({ address: address }).exec();
       if (userData === null) throw new Error();
       userInfoDto.username = userData.get('username');
+      userInfoDto.profile_url = `#${address.slice(2, 8)}`;
+      userInfoDto.history.created = await this.EventModel.count({ address: address });
+      userInfoDto.history.entry = await this.EventModel.count({ type: 'entry', address: address });
+      userInfoDto.history.liked = await this.EventModel.count({ type: 'sale', address: address });
+      const likedList = await this.LikedEventModel.find({ address: address });
+      const likedId = likedList.map((ele) => ele.event_id);
+      userInfoDto.history.sale = await this.EventModel.count({ event_id: likedId });
       return userInfoDto;
     } catch (err) {
       return {
