@@ -5,6 +5,8 @@ import { View, TouchableOpacity, StyleSheet, Text, Image } from 'react-native'
 import KilpImage from '../../assets/kilp_image.png'
 import KilpIcon from '../../assets/kilp_icon.png'
 import * as KlipAPI from '../layout/kilps/modal/WalletInfo.tsx'
+import { useDispatch } from 'react-redux'
+import { signinActions } from '../store/signinSlice'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
 
@@ -17,10 +19,13 @@ const SignIn: React.FC<SignInProps> = () => {
   const [isChecked, setisChecked] = useState(false)
   const [myAddress, setMyAddress] = useState(DEFAULT_ADDRESS)
 
+  const dispatch = useDispatch()
+
   //지갑 연동하는 함수 실행
   const getUserData = () => {
-    KlipAPI.getAddress(async (address: any) => {
+    KlipAPI.getAddress(async (address: string) => {
       setMyAddress(address)
+      dispatch(signinActions.setKilpAddress(address))
     })
   }
 
