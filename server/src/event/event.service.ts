@@ -3,6 +3,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './schemas/event.schema';
 import { EventResult } from './schemas/eventResult.schema';
+import { LikedEvent } from './schemas/likedEvent.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -11,6 +12,7 @@ export class EventService {
   constructor(
     @InjectModel('Event') private readonly EventModel: Model<Event>,
     @InjectModel('EventResult') private readonly EventResultModel: Model<EventResult>,
+    @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
   ) {}
 
   // 이벤트 등록 함수
@@ -129,24 +131,43 @@ export class EventService {
   }
 
   //type : created, entry, sale, liked
-  findTypeList(address: string, type: string, page: number, count: number) {
+  // type에 따라 다른 목록을 보여주는 함수
+  async findTypeList(address: string, type: string, page: number, count: number) {
     console.log(address, type, page, count);
+    console.log(type, typeof type);
+
+    let resultList: object;
+
     try {
       switch (type) {
+        // 내 주소로 만든 이벤트
         case 'created':
-          console.log('create');
+          console.log('created', type);
+          resultList = await this.EventModel.find({ address: address });
           break;
+        // 응모성 이벤트
         case 'entry':
+          console.log('entry');
+          resultList = await this.EventModel.find({ type: 'entry' });
           break;
+        // 판매성 이벤트
         case 'sale':
+          console.log('sale');
+          resultList = await this.EventModel.find({ type: 'sale' });
           break;
+        // 내가 좋아요 누른 이벤트
         case 'liked':
+          console.log('liked');
+          const likedList = await this.LikedEventModel.find({ address: address });
+          const likedId = likedList.map((ele) => ele.event_id);
+          resultList = await this.EventModel.find({ event_id: likedId });
           break;
-
         default:
+          console.log('default');
           break;
       }
-      return 'typeList';
+      console.log('res', resultList);
+      return resultList;
     } catch (e) {
       console.log(e);
       return { message: 'Failed to find List' };
