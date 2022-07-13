@@ -133,11 +133,10 @@ export class EventService {
   //type : created, entry, sale, liked
   // type에 따라 다른 목록을 보여주는 함수
   async findTypeList(address: string, type: string, page: number, count: number) {
-    console.log(address, type, page, count);
-    console.log(type, typeof type);
-
+    console.log('findTypeList');
+    const content_count = page * count;
     let resultList: object;
-
+    //page랑 count 현재 적용 안함 - 논의 후 적용예정
     try {
       switch (type) {
         // 내 주소로 만든 이벤트
@@ -166,11 +165,25 @@ export class EventService {
           console.log('default');
           break;
       }
-      console.log('res', resultList);
       return resultList;
     } catch (e) {
       console.log(e);
       return { message: 'Failed to find List' };
+    }
+  }
+
+  // 검색 키워드로 키워드를 포함한 이벤트 검색
+  async findByKeyword(keyword: string) {
+    console.log('findByKeyword');
+    try {
+      const searchList = await this.EventModel.find({ title: { $regex: '.*' + keyword + '.*' } });
+      if (searchList.length <= 0) {
+        return { message: `No result found as ${keyword}` };
+      }
+      return searchList;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Failed to search' };
     }
   }
 }

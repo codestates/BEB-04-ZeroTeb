@@ -37,6 +37,11 @@ export class EventController {
     return this.eventService.findTypeList(address, type, page, count);
   }
 
+  @Get('search')
+  search(@Query('keyword') keyword: string) {
+    return this.eventService.findByKeyword(keyword);
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
   //   return this.eventService.update(+id, updateEventDto);
