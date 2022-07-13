@@ -4,9 +4,14 @@ import { Avatar } from '@rneui/themed'
 interface avatarProps {
   imgUri: string
   size: number
+  color: string
 }
 
-const AvatarIcon: React.FC<avatarProps> = ({ imgUri, size = 64 }) => {
+const AvatarIcon: React.FC<avatarProps> = ({
+  imgUri,
+  size = 64,
+  color = 'skyblue',
+}) => {
   return (
     <Avatar
       size={size}
@@ -14,7 +19,7 @@ const AvatarIcon: React.FC<avatarProps> = ({ imgUri, size = 64 }) => {
       source={imgUri ? { uri: imgUri } : {}}
       icon={{ name: 'user', type: 'font-awesome' }}
       // title="Rd"
-      containerStyle={{ backgroundColor: 'skyblue' }}
+      containerStyle={{ backgroundColor: color }}
     />
   )
 }

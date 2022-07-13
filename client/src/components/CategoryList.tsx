@@ -1,88 +1,56 @@
-import React from 'react'
+import * as React from 'react'
 import {
-  SafeAreaView,
   View,
-  FlatList,
-  StyleSheet,
   Text,
-  StatusBar,
+  StyleSheet,
   ImageBackground,
+  Dimensions,
 } from 'react-native'
+import { CategoryData } from '../data/CategoryData'
 
-const DATA = [
-  {
-    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-    title: 'First Item',
-    image: '',
-  },
-  {
-    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-    title: 'Second Item',
-    image: '',
-  },
-  {
-    id: '5er694a0f-3da1-471f-bd96-145571e29d72',
-    title: 'Third Item',
-    image: '',
-  },
-  {
-    id: 'de694a0f-3da1-471f-bd96-145571e29d86',
-    title: 'Third Item',
-    image: '',
-  },
-  {
-    id: '58694a0f-3da1-471f-bd96-145571e29d75',
-    title: 'Third Item',
-    image: '',
-  },
-]
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const DATA = CategoryData
 
-interface CategoryProps {
-  title: string
-  image: string
-}
-
-const Category: React.FC<CategoryProps> = ({ title, image }) => (
-  <View style={styles.item}>
-    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      <Text style={styles.title}>{title}</Text>
-    </ImageBackground>
-  </View>
-)
-
-const CategoryList = () => {
-  const renderItem = ({ item }) => (
-    <Category title={item.title} image={item.image} />
-  )
-
+export default function CategoryList() {
   return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={DATA}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
-    </SafeAreaView>
+    <View style={style.categoryListOuterContainer}>
+      {DATA.map(category => {
+        return (
+          <View key={category.id} style={style.categoryListInnerContainer}>
+            <ImageBackground
+              source={{ uri: category.image }}
+              resizeMode="cover"
+              style={style.categoryImg}
+            >
+              <Text style={style.categoryText}>{category.title}</Text>
+            </ImageBackground>
+          </View>
+        )
+      })}
+    </View>
   )
 }
 
-const styles = StyleSheet.create({
-  image: {
+const style = StyleSheet.create({
+  categoryListOuterContainer: {
     flex: 1,
-    justifyContent: 'center',
+    alignItems: 'flex-start',
+    margin: 20,
   },
-  container: {
+  categoryListInnerContainer: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    paddingBottom: 20,
+    borderRadius: 10,
   },
-  item: {
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+  categoryImg: {
+    width: SCREEN_WIDTH * 0.9,
+    height: 80,
+    paddingVertical: 15,
+    alignItems: 'center',
+    borderRadius: 10,
   },
-  title: {
-    fontSize: 32,
+  categoryText: {
+    color: 'white',
+    fontSize: 30,
   },
 })
-
-export default CategoryList

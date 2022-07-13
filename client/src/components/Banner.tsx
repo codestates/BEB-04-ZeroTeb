@@ -7,23 +7,15 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native'
+import { EventType } from '../models/Event'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const image = {
-  uri: 'https://images.unsplash.com/photo-1657529978238-fad7914674f5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1287&q=80',
-}
 
 interface BannerContent {
-  props: {
-    token_image_url: string
-    title: string
-  }
+  eventList: EventType
 }
 
-const Banner: React.FC<BannerContent> = ({ props }) => {
-  const [bannerContents, setBannerContents] =
-    React.useState<BannerContent[]>(props)
-
+const Banner: React.FC<BannerContent> = ({ eventList }) => {
   return (
     <View style={style.bannerOuterContainer}>
       <ScrollView
@@ -32,15 +24,15 @@ const Banner: React.FC<BannerContent> = ({ props }) => {
         pagingEnabled
         indicatorStyle={'black'}
       >
-        {bannerContents.map((content, index) => {
+        {eventList.slice(0, 4).map((event, index) => {
           return (
             <View key={index}>
               <ImageBackground
-                source={{ uri: content.token_image_url }}
+                source={{ uri: event.thumnail }}
                 resizeMode="cover"
                 style={style.bannerInnerContainer}
               >
-                <Text style={style.bannerText}>{content.title}</Text>
+                <Text style={style.bannerText}>{event.title}</Text>
               </ImageBackground>
             </View>
           )
@@ -62,7 +54,7 @@ const style = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
   bannerText: {
-    fontSize: 18,
+    fontSize: 20,
     alignItems: 'center',
     color: 'white',
     paddingTop: 30,
