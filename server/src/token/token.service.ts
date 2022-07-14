@@ -4,10 +4,14 @@ import { Model } from 'mongoose';
 import { Nonce } from './schemas/token.schema';
 import axios from 'axios';
 import 'dotenv/config';
+import { Holding } from './schemas/holding.schema';
 
 @Injectable()
 export class TokenService {
-  constructor(@InjectModel('Nonce') private readonly NonceModel: Model<Nonce>) {}
+  constructor(
+    @InjectModel('Nonce') private readonly NonceModel: Model<Nonce>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<Holding>,
+  ) {}
 
   // 주소에 따른 token 목록 반환 함수
   async findTokenList(_address: string) {
@@ -15,7 +19,7 @@ export class TokenService {
     //주소가 보유하고 있는 token List를 DB에서 호출
     try {
       const address = Object.values(_address)[0];
-      const tokenList = await this.NonceModel.find({ address: address });
+      const tokenList = await this.HoldingModel.find({ address: address });
       if (tokenList.length <= 0) {
         return { message: 'no data' };
       }
@@ -32,37 +36,55 @@ export class TokenService {
     //유효한 계정(로그인)일 경우, 받은 주소에 해당 토큰 확인 (이 부분은 나중에 다른 데이터 확인해야함 Nonce X)
     // 계정(로그인) 확인 코드 필요
     try {
-      const noncedata = await this.NonceModel.findOne({
+      let saveResult;
+      const holdingdata = await this.HoldingModel.findOne({
         address: `${address}`,
         token_id: `${token_id}`,
       }).exec();
       //해당 주소가 없거나 주소에 토큰이 없으면 종료
-      if (noncedata === null) {
+      if (holdingdata === null) {
         return { message: 'address or token_id is not invalid' };
       }
+      // 토큰을 가지고 있다면 nonce 발행 기록이 있는지 확인
+      const noncedata = await this.NonceModel.findOne({
+        address: `${address}`,
+        token_id: `${token_id}`,
+      }).exec();
+
       const now = new Date(); // 현재 날짜
+      const ex = now.setMinutes(5); //유효기한 5분
+      //만약 한 번도 nonce 발행 기록이 없다면 새로 발행
+      if (noncedata === null) {
+        console.log('nonce 새로 발행');
+        //nonce값 생성, DB에 논스값 저장
+        const newNonce = new this.NonceModel({
+          address,
+          token_id,
+          date: ex,
+        });
+        saveResult = await newNonce.save();
+      }
       //유효기한이 남았으면 유효기한 연장? 같은거 아직 뭐할지 안정함
-      if (this.checkEx(noncedata.date)) {
+      else if (this.checkEx(noncedata.date)) {
         console.log('유효기한 남음');
         return { message: 'QR is expired' };
       }
-      console.log('유효기한 지남');
-      console.log('재발행');
-      //유효기한이 지났으면 새로 발행====================
-      const ex = now.setMinutes(5); //유효기한 5분
-      //nonce값 생성, DB에 논스값 저장
-      const newNonce = new this.NonceModel({
-        address,
-        token_id,
-        date: ex,
-      });
-      const saveResult = await newNonce.save();
+      // 유효기한 갱싱
+      else {
+        console.log('유효기한 지남');
+        console.log('유효기한 갱신');
+        await this.NonceModel.updateOne(
+          { token_id: noncedata.token_id, address: noncedata.address },
+          { $set: { date: ex } },
+        );
+        saveResult = noncedata;
+      }
+      console.log('QR 발행');
 
-      const nonce = saveResult._id; //nonce값은 무작이로 정해지는 _id값을 사용
-      const text = `${address} ${token_id} ${nonce} format:(address, token_id, nonce)`;
       //QR 생성 요청 API
       //참고 사이트 https://www.qr-code-generator.com/qr-code-api/?target=api-ad
-
+      const nonce = saveResult._id; //nonce값은 무작이로 정해지는 _id값을 사용
+      const text = `${address} ${token_id} ${nonce} format:(address, token_id, nonce)`;
       const api = process.env.QR_API_KEY;
       const param = {
         frame_name: 'no-frame',
@@ -114,8 +136,15 @@ export class TokenService {
     try {
       const now = new Date(); // 현재 날짜
       const now_min = now.setMinutes(0);
-      console.log(date, now_min);
-      if (date > now_min.toString()) {
+      console.log(
+        'date:',
+        date,
+        'now:',
+        now_min,
+        '유효기한(양수: 유효기한 남음):',
+        Number(date) - now_min,
+      );
+      if (Number(date) > now_min) {
         return true; // 유효기한 남음
       } else {
         return false; // 유효기한 지남

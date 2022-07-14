@@ -42,6 +42,11 @@ export class EventController {
     return this.eventService.findByKeyword(keyword);
   }
 
+  @Get('location')
+  findLocation(@Query('lat') lat: number, @Query('lon') lon: number) {
+    return this.eventService.findAroundEvent(lat, lon);
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
   //   return this.eventService.update(+id, updateEventDto);

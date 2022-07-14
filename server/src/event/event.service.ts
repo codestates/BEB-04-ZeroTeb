@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './schemas/event.schema';
 import { EventResult } from './schemas/eventResult.schema';
 import { LikedEvent } from './schemas/likedEvent.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import axios from 'axios';
+import 'dotenv/config';
 
 @Injectable()
 export class EventService {
@@ -47,6 +48,19 @@ export class EventService {
         created_date,
         modified_date,
       } = createEventDto;
+      // location의 데이터를 분리해서 도, 시 까지만 사용
+      const sliceLocation = location.split(' ');
+      const sL = `${sliceLocation[0]} ${sliceLocation[1]}`;
+      // 한글로 입력된 이벤트 장소를 좌표로 바꿈
+      const header = { Authorization: process.env.KAKAO_API };
+      const point = await axios
+        .get(`https://dapi.kakao.com/v2/local/search/address.json?query=${encodeURI(sL)}`, {
+          headers: header,
+        })
+        .then((res) => {
+          return res.data;
+        });
+
       const eventData = {
         event_id: next_event_id,
         title,
@@ -65,6 +79,9 @@ export class EventService {
         event_end_date,
         created_date,
         modified_date,
+        x: point.documents[0].x, //location 기반 좌표 lat
+        y: point.documents[0].y, //location 기반 좌표 lon
+        status: '진행 중',
       };
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
@@ -185,5 +202,60 @@ export class EventService {
       console.log(e);
       return { message: 'Failed to search' };
     }
+  }
+
+  async findAroundEvent(lat: number, lon: number) {
+    console.log('findAroundEvent');
+    try {
+      const threshold = 20; // 내 주변 탐색 범위 (단위 km)
+      // API 사용을 위한 key를 헤더에 셋팅
+      const header = { Authorization: process.env.KAKAO_API };
+      // 사용자의 좌표 받아서 사용자가 있는 장소(행정구역) 구하기
+      const apiResult = await axios
+        .get(`https://dapi.kakao.com//v2/local/geo/coord2address.json?x=${lon}&y=${lat}`, {
+          headers: header,
+        })
+        .then((res) => {
+          return res.data;
+        });
+      const region = apiResult.documents[0].address.region_1depth_name; // 행정구역
+      console.log('현재 지역:', region);
+      // const tetsregion = '경상남도'; //test data
+      // 사용자가 있는 장소(행정구역)에 진행중인 이벤트 모두 호출
+      const regionEventList = await this.EventModel.find({
+        location: { $regex: '.*' + region + '.*' },
+      });
+      console.log(`${region}지역 이벤트:`, regionEventList);
+      // 호출된 이벤트와 사용자의 좌표의 거리가 threshold 이하인 데이터만 추출
+      const aroundEvent = regionEventList.filter(
+        (ele) => this.getDistance(lat, lon, ele.x, ele.y) < threshold,
+      );
+      return aroundEvent;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Failed to find around event' };
+    }
+  }
+
+  // 좌표 2개의 위치를 비교해 거리 구하는 함수
+  getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+    if (lat1 == lat2 && lon1 == lon2) return 0;
+
+    const radLat1 = (Math.PI * lat1) / 180;
+    const radLat2 = (Math.PI * lat2) / 180;
+    const theta = lon1 - lon2;
+    const radTheta = (Math.PI * theta) / 180;
+    let dist =
+      Math.sin(radLat1) * Math.sin(radLat2) +
+      Math.cos(radLat1) * Math.cos(radLat2) * Math.cos(radTheta);
+    if (dist > 1) dist = 1;
+
+    dist = Math.acos(dist);
+    dist = (dist * 180) / Math.PI;
+    dist = dist * 60 * 1.1515 * 1.609344 * 1000;
+    if (dist < 100) dist = Math.round(dist / 10) * 10;
+    else dist = Math.round(dist / 100) * 100;
+
+    return dist / 1000;
   }
 }
