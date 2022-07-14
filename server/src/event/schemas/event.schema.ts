@@ -25,6 +25,7 @@ export const EventSchema = new mongoose.Schema({
   modified_date: { type: String, default: start_date },
   x: { type: Number, required: true },
   y: { type: Number, required: true },
+  status: { type: String, required: true },
 });
 
 export interface Event {
@@ -47,4 +48,5 @@ export interface Event {
   modified_date: string;
   x: number;
   y: number;
+  status: string;
 }

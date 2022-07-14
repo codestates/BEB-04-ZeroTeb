@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
 import { Event } from './schemas/event.schema';
 import { EventResult } from './schemas/eventResult.schema';
 import { LikedEvent } from './schemas/likedEvent.schema';
@@ -82,6 +81,7 @@ export class EventService {
         modified_date,
         x: point.documents[0].x, //location 기반 좌표 lat
         y: point.documents[0].y, //location 기반 좌표 lon
+        status: '진행 중',
       };
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
