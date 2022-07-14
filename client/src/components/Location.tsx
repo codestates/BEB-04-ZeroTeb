@@ -28,6 +28,7 @@ const style = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     maxHeight: 30,
+    minHeight: 30,
     margin: 20,
   },
   allLocationContainner: {

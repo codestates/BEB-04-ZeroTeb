@@ -46,6 +46,7 @@ const style = StyleSheet.create({
   bannerOuterContainer: {
     paddingTop: 10,
     maxHeight: 200,
+    minHeight: 200,
   },
   bannerInnerContainer: {
     flex: 1,
