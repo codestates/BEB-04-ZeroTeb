@@ -1,19 +1,34 @@
 import * as React from 'react'
 import { useState, useEffect } from 'react'
-import { View, StyleSheet, StatusBar, Platform, ScrollView } from 'react-native'
-import AvatarIcon from '../components/AvatarIcon'
+import {
+  View,
+  Text,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import Banner from '../components/Banner'
 import Location from '../components/Location'
-import Searchbar from '../components/Searchbar'
 import Title from '../components/Title'
 import DummyDate from '../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../models/Event'
 import EventList from '../layout/event/EventList'
 
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+// interface Navigaion {
+//   props: {
+//     navigation: any
+//   }
+// }
 
-export default function Home() {
+const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+
+export default function Home({ navigation }) {
   const [list, setList] = useState<EventType>([...DummyDate.event])
 
   const getEventList = async () => {
@@ -44,7 +59,20 @@ export default function Home() {
             <Title title={'찾았다 내 취향 💕'} size={25} />
             <Title title={'ZeroTeb에서 발견!'} size={25} />
             <Banner eventList={list} />
-            <Searchbar />
+
+            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+              <View style={style.searchbarContainner}>
+                <Ionicons
+                  name="search"
+                  size={15}
+                  color="black"
+                  style={style.searchbarbarIcon}
+                />
+                <Text style={style.searchbarbarText}>
+                  ZeroTeb을 검색하세요!
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
           <View>
             <Title title={'다가오는 공연'} size={17} />
@@ -62,5 +90,27 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
+  },
+  searchbarContainner: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'gray',
+    paddingHorizontal: 10,
+    width: SCREEN_WIDTH * 0.9,
+    minHeight: 40,
+    maxHeight: 40,
+    margin: 20,
+  },
+  searchbarbarIcon: {
+    color: 'black',
+  },
+  searchbarbarText: {
+    fontSize: 12,
+    paddingLeft: 5,
+    color: 'gray',
   },
 })
