@@ -4,10 +4,14 @@ import { Model } from 'mongoose';
 import { Nonce } from './schemas/token.schema';
 import axios from 'axios';
 import 'dotenv/config';
+import { Holding } from './schemas/holding.schema';
 
 @Injectable()
 export class TokenService {
-  constructor(@InjectModel('Nonce') private readonly NonceModel: Model<Nonce>) {}
+  constructor(
+    @InjectModel('Nonce') private readonly NonceModel: Model<Nonce>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<Holding>,
+  ) {}
 
   // 주소에 따른 token 목록 반환 함수
   async findTokenList(_address: string) {
@@ -15,7 +19,7 @@ export class TokenService {
     //주소가 보유하고 있는 token List를 DB에서 호출
     try {
       const address = Object.values(_address)[0];
-      const tokenList = await this.NonceModel.find({ address: address });
+      const tokenList = await this.HoldingModel.find({ address: address });
       if (tokenList.length <= 0) {
         return { message: 'no data' };
       }
@@ -32,14 +36,19 @@ export class TokenService {
     //유효한 계정(로그인)일 경우, 받은 주소에 해당 토큰 확인 (이 부분은 나중에 다른 데이터 확인해야함 Nonce X)
     // 계정(로그인) 확인 코드 필요
     try {
-      const noncedata = await this.NonceModel.findOne({
+      const holdingdata = await this.HoldingModel.findOne({
         address: `${address}`,
         token_id: `${token_id}`,
       }).exec();
       //해당 주소가 없거나 주소에 토큰이 없으면 종료
-      if (noncedata === null) {
+      if (holdingdata === null) {
         return { message: 'address or token_id is not invalid' };
       }
+      // 토큰을 가지고 있다면 nonce 발행 기록이 있는지 확인
+      const noncedata = await this.NonceModel.findOne({
+        address: `${address}`,
+        token_id: `${token_id}`,
+      }).exec();
       const now = new Date(); // 현재 날짜
       //유효기한이 남았으면 유효기한 연장? 같은거 아직 뭐할지 안정함
       if (this.checkEx(noncedata.date)) {

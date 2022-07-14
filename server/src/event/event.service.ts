@@ -220,14 +220,12 @@ export class EventService {
         });
       const region = apiResult.documents[0].address.region_1depth_name; // 행정구역
       console.log('현재 지역:', region);
-      const tetsregion = '경상남도';
+      // const tetsregion = '경상남도'; //test data
       // 사용자가 있는 장소(행정구역)에 진행중인 이벤트 모두 호출
       const regionEventList = await this.EventModel.find({
-        location: { $regex: '.*' + tetsregion + '.*' },
+        location: { $regex: '.*' + region + '.*' },
       });
       console.log(`${region}지역 이벤트:`, regionEventList);
-
-      // const regionEventList = [];
       // 호출된 이벤트와 사용자의 좌표의 거리가 threshold 이하인 데이터만 추출
       const aroundEvent = regionEventList.filter(
         (ele) => this.getDistance(lat, lon, ele.x, ele.y) < threshold,
