@@ -14,7 +14,7 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
     <View style={style.eventOuterContainer}>
       {eventList.map(event => {
         return (
-          <View style={style.eventInnerContainer}>
+          <View style={style.eventInnerContainer} key={event.event_id}>
             <View style={style.eventImgContainer}>
               <Image
                 style={style.eventImg}
@@ -45,8 +45,8 @@ const style = StyleSheet.create({
   eventOuterContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    margin: 10,
+    justifyContent: 'space-evenly',
+    margin: 5,
   },
   eventInnerContainer: {
     margin: 5,
