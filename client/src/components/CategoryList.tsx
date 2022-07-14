@@ -14,7 +14,7 @@ const DATA = CategoryData
 export default function CategoryList() {
   return (
     <View style={style.categoryListOuterContainer}>
-      {DATA.map(category => {
+      {DATA.map((category: { id: string; image: string; title: string }) => {
         return (
           <View key={category.id} style={style.categoryListInnerContainer}>
             <ImageBackground
