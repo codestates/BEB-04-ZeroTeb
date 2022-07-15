@@ -29,7 +29,7 @@ export default function Navbar() {
               case 'Search':
                 iconName = 'search'
                 break
-              case 'Enroll':
+              case 'Mypage':
                 iconName = 'person-circle-outline'
                 size = 28
                 break
@@ -64,13 +64,7 @@ export default function Navbar() {
             headerShown: false,
           }}
         />
-        <Tab.Screen
-          name="Enroll"
-          component={Enroll}
-          options={{
-            headerShown: false,
-          }}
-        />
+        <Tab.Screen name="Mypage" component={MyPage} />
       </Tab.Navigator>
     </NavigationContainer>
   )
