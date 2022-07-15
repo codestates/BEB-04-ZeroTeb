@@ -1,24 +1,16 @@
 import * as React from 'react'
-import { TextInput, View, StyleSheet, Dimensions } from 'react-native'
+import {
+  TextInput,
+  TextInputProps,
+  View,
+  StyleSheet,
+  Dimensions,
+} from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useState } from 'react'
-import Hashtag from './Hashtag'
-import SearchList from '../layout/search/SearchList'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-export default function Searchbar() {
-  const [enteredSearch, setEnteredSearch] = useState<string>('')
-  const [sendText, setSendText] = useState<string>('')
-
-  function searchInputHandler(enteredText: string) {
-    setEnteredSearch(enteredText)
-  }
-
-  function searchEnterHandler(e: any) {
-    setSendText(enteredSearch)
-  }
-
+const Searchbar = ({ ...props }: TextInputProps) => {
   return (
     <View>
       <View style={style.searchbarContainner}>
@@ -33,16 +25,10 @@ export default function Searchbar() {
           placeholder={'ZeroTeb을 검색하세요!'}
           autoCapitalize="none"
           autoCorrect={false}
-          value={enteredSearch}
-          onChangeText={searchInputHandler}
-          onSubmitEditing={searchEnterHandler}
+          blurOnSubmit
+          {...props}
         ></TextInput>
-
-        {/* 나중에 인기 검색어 추가 부분 */}
-        {/* <Hashtag props={DummyDate.event} /> */}
       </View>
-
-      <SearchList style={style.searchbarContainner} props={sendText} />
     </View>
   )
 }
@@ -66,8 +52,11 @@ const style = StyleSheet.create({
     color: 'black',
   },
   searchbarbarText: {
+    width: SCREEN_WIDTH * 0.8,
     fontSize: 12,
     paddingLeft: 5,
     color: 'gray',
   },
 })
+
+export default Searchbar
