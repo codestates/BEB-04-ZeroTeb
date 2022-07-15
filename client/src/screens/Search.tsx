@@ -16,12 +16,16 @@ export default function Search() {
   const [sendList, setSendList] = useState<string>('')
 
   function searchEnterHandler(e: any) {
-    setSendList('')
+    setSendList(enteredSearch)
   }
 
   return (
     <View style={style.searchContainer}>
-      <Searchbar value={enteredSearch} onChangeText={searchInputHandler} />
+      <Searchbar
+        value={enteredSearch}
+        onChangeText={searchInputHandler}
+        onSubmitEditing={searchEnterHandler}
+      />
       {/* 나중에 인기 검색어 추가 부분 */}
       {/* <Hashtag props={DummyDate.event} /> */}
 

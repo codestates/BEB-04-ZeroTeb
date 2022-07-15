@@ -5,16 +5,22 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
-  ViewProps,
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
 import DummyDate from '../../data/DummyData.json'
+import { getDate } from '../../utils/unixTime'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-const SearchList = ({ props }: ViewProps) => {
-  const [list, setList] = useState<EventType>([...props])
+type SearchListContent = {
+  props: {
+    enteredSearch: any
+  }
+}
+
+const SearchList: React.FC<SearchListContent> = ({ props }) => {
+  const [list, setList] = useState<EventType>([...DummyDate.event])
 
   return (
     <View style={style.SearchListOuterContainer}>
@@ -25,21 +31,25 @@ const SearchList = ({ props }: ViewProps) => {
         if (event.category.indexOf(props) !== -1) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
-              <View style={style.ImageWrapper}>
-                <ImageBackground
-                  source={{ uri: event.thumnail }}
-                  style={style.consertImage}
-                  imageStyle={{ borderRadius: 50 }}
-                ></ImageBackground>
-              </View>
-              <View style={style.textWrapper}>
-                <Text style={style.SearchListTitle}>{event.title}</Text>
-                <Text style={style.SearchListSeat}>
-                  남은 좌석 : 0 / {event.price[0].count + event.price[1].count}{' '}
-                </Text>
-                <Text style={style.SearchListDate}>
-                  공연 기간 : {event.event_start_date} ~ {event.event_end_date}
-                </Text>
+              <View style={style.Wrapper}>
+                <View style={style.ImageWrapper}>
+                  <ImageBackground
+                    source={{ uri: event.thumnail }}
+                    style={style.consertImage}
+                    imageStyle={{ borderRadius: 50 }}
+                  ></ImageBackground>
+                </View>
+                <View style={style.textWrapper}>
+                  <Text style={style.SearchListTitle}>{event.title}</Text>
+                  <Text style={style.SearchListSeat}>
+                    남은 좌석 : 0 /{' '}
+                    {event.price[0].count + event.price[1].count}{' '}
+                  </Text>
+                  <Text style={style.SearchListDate}>
+                    공연 기간 : {getDate(event.event_start_date)} ~{' '}
+                    {getDate(event.event_end_date)}
+                  </Text>
+                </View>
               </View>
             </View>
           )
@@ -52,7 +62,7 @@ const SearchList = ({ props }: ViewProps) => {
 const style = StyleSheet.create({
   SearchListOuterContainer: {
     left: 20,
-    maxWidth: SCREEN_WIDTH * 0.9,
+    width: SCREEN_WIDTH * 0.9,
     maxHeight: 300,
   },
   SearchListInnerContainer: {
@@ -61,24 +71,31 @@ const style = StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 
-  ImageWrapper: {
+  Wrapper: {
     // flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+
+  ImageWrapper: {
+    flex: 1,
+    // maxHeight: 100,
+    maxWidth: 80,
   },
 
   consertImage: {
     alignItems: 'center',
-    maxHeight: 100,
-    maxWidth: 80,
     paddingTop: 80,
   },
 
   textWrapper: {
-    // maxHeight: 60,
+    flex: 1,
+    paddingTop: 25,
+    alignItems: 'flex-end',
   },
 
   SearchListTitle: {
     fontSize: 13,
-    alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
   },
