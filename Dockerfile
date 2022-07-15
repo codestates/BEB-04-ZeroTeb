@@ -10,6 +10,8 @@ COPY ./server ./
 
 RUN npm run build
 
+RUN ls
+
 CMD ["npm", "run", "start:prod"]
 
 EXPOSE 8080
