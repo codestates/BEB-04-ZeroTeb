@@ -6,7 +6,7 @@ import {
   StatusBar,
   Platform,
   ScrollView,
-  Dimensions,
+  TouchableOpacity,
 } from 'react-native'
 import Banner from '../components/Banner'
 import Location from '../components/Location'
@@ -17,14 +17,16 @@ import DummyDate from '../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../models/Event'
 import { TabActions, useNavigation } from '@react-navigation/native'
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
+import { RootTabParamList } from '../navigations/NavBar'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-// const navigation = useNavigation<ProfileScreenNavigationProp>()
+type Props = BottomTabScreenProps<RootTabParamList, 'Search'>
 
-export default function Home({ navigation }) {
+export default function Home() {
   //입력창 누르면 Search tab으로 이동
+  const navigation = useNavigation()
   const jumpToSearch = TabActions.jumpTo('Search')
 
   const [list, setList] = useState<EventType>([...DummyDate.event])
@@ -54,10 +56,14 @@ export default function Home({ navigation }) {
         <Location />
         <ScrollView decelerationRate="fast">
           <View>
-            <Title title={'찾았다 내 취향 💕'} size={25} />
-            <Title title={'ZeroTeb에서 발견!'} size={25} />
+            <Title title={'찾았다 내 취향 💕'} size={22} />
+            <Title title={'ZeroTeb에서 발견!'} size={22} />
             <Banner eventList={list} />
-            <SearchBar onPressIn={() => navigation.dispatch(jumpToSearch)} />
+            <TouchableOpacity onPress={() => navigation.dispatch(jumpToSearch)}>
+              <SearchBar
+                editable={false} //터치했을때 키보드 안나오게
+              />
+            </TouchableOpacity>
           </View>
           <View>
             <Title title={'다가오는 공연'} size={17} />
@@ -75,27 +81,5 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
-  },
-  searchbarContainner: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    paddingHorizontal: 10,
-    width: SCREEN_WIDTH * 0.9,
-    minHeight: 40,
-    maxHeight: 40,
-    margin: 20,
-  },
-  searchbarbarIcon: {
-    color: 'black',
-  },
-  searchbarbarText: {
-    fontSize: 12,
-    paddingLeft: 5,
-    color: 'gray',
   },
 })

@@ -1,11 +1,6 @@
 import * as React from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-} from 'react-native'
+import { View, Text, ImageBackground, Dimensions } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -70,11 +65,11 @@ export default function CategoryList() {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   categoryListOuterContainer: {
     flex: 1,
     alignItems: 'flex-start',
-    margin: 20,
+    margin: '20@msr',
   },
   categoryListInnerContainer: {
     flex: 1,
@@ -86,10 +81,10 @@ const style = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    paddingTop: 5,
+    paddingTop: '5@msr',
   },
   categoryText: {
     color: 'white',
-    fontSize: SCREEN_HEIGHT > 1000 ? 40 : 30,
+    fontSize: '30@msr',
   },
 })

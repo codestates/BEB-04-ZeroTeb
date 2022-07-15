@@ -1,18 +1,23 @@
 import * as React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 export default function Location() {
   return (
     <View style={style.locationContainer}>
       <View style={style.allLocationContainner}>
         <Text style={style.allLocationText}>전국</Text>
-        <FontAwesome5 name="arrow-circle-down" size={17} color="black" />
+        <FontAwesome5
+          name="arrow-circle-down"
+          size={moderateScale(17)}
+          color="black"
+        />
       </View>
       <View style={style.myLocationContainner}>
         <FontAwesome5
           name="location-arrow"
-          size={12}
+          size={moderateScale(12)}
           color="black"
           style={style.myLocationIcon}
         />
@@ -22,14 +27,15 @@ export default function Location() {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   locationContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    maxHeight: 30,
-    minHeight: 30,
-    margin: 20,
+    maxHeight: '25@vs',
+    minHeight: '25@vs',
+    marginHorizontal: '15@msr',
+    marginVertical: '10@msr',
   },
   allLocationContainner: {
     flex: 1,
@@ -37,8 +43,8 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   allLocationText: {
-    fontSize: 15,
-    paddingRight: 5,
+    fontSize: '15@msr',
+    paddingRight: '5@msr',
   },
   myLocationContainner: {
     flexDirection: 'row',
@@ -48,14 +54,14 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'gray',
-    paddingHorizontal: 10,
+    paddingHorizontal: '10@msr',
   },
   myLocationIcon: {
     color: 'gray',
   },
   myLocationText: {
-    fontSize: 10,
-    paddingLeft: 5,
+    fontSize: '10@msr',
+    paddingLeft: '5@msr',
     color: 'gray',
   },
 })

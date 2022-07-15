@@ -9,20 +9,19 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
-import DummyDate from '../../data/DummyData.json'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-const SearchList = ({ props }: ViewProps) => {
-  const [list, setList] = useState<EventType>([...props])
+const SearchList = ({ sendList }: EventType[]) => {
+  const [list, setList] = useState<EventType>([...sendList])
 
   return (
     <View style={style.SearchListOuterContainer}>
       <View>
-        <Text>검색목록 (장르로 검색)</Text>
+        <Text>검색목록</Text>
       </View>
-      {list.slice(0, 4).map((event: any, index: any) => {
-        if (event.category.indexOf(props) !== -1) {
+      {list.slice(0, 4).map((event: EventType, index: number) => {
+        if (event.category) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
               <View style={style.ImageWrapper}>
@@ -53,7 +52,6 @@ const style = StyleSheet.create({
   SearchListOuterContainer: {
     left: 20,
     maxWidth: SCREEN_WIDTH * 0.9,
-    maxHeight: 300,
   },
   SearchListInnerContainer: {
     padding: 4,

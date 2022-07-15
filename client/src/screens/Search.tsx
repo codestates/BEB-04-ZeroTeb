@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { View, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import Searchbar from '../components/Searchbar'
 import SearchList from '../layout/search/SearchList'
+import DummyDate from '../data/DummyData.json'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 export default function Search() {
   const [enteredSearch, setEnteredSearch] = useState<string>('')
@@ -13,7 +14,7 @@ export default function Search() {
   function searchInputHandler(enteredText: string) {
     setEnteredSearch(enteredText)
   }
-  const [sendList, setSendList] = useState<string>('')
+  const [sendList, setSendList] = useState<Event>('')
 
   function searchEnterHandler(e: any) {
     setSendList('')
@@ -25,30 +26,16 @@ export default function Search() {
       {/* 나중에 인기 검색어 추가 부분 */}
       {/* <Hashtag props={DummyDate.event} /> */}
 
-      <SearchList style={style.searchListContainner} props={sendList} />
+      <SearchList sendList={DummyDate.event} />
     </View>
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   searchContainer: {
     flex: 1,
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
-  },
-  searchListContainner: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    paddingHorizontal: 10,
-    width: SCREEN_WIDTH * 0.9,
-    minHeight: 40,
-    maxHeight: 40,
-    margin: 20,
   },
 })

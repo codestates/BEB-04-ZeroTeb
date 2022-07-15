@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
 import { Avatar } from '@rneui/themed'
+import { moderateScale } from 'react-native-size-matters'
 interface avatarProps {
   imgUri: string
   size: number
@@ -14,7 +14,7 @@ const AvatarIcon: React.FC<avatarProps> = ({
 }) => {
   return (
     <Avatar
-      size={size}
+      size={moderateScale(size)}
       rounded
       source={imgUri ? { uri: imgUri } : {}}
       icon={{ name: 'user', type: 'font-awesome' }}
@@ -23,7 +23,5 @@ const AvatarIcon: React.FC<avatarProps> = ({
     />
   )
 }
-
-const style = StyleSheet.create({})
 
 export default AvatarIcon

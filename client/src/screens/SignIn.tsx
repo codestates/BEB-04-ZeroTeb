@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { View, TouchableOpacity, StyleSheet, Text, Image } from 'react-native'
+import { View, TouchableOpacity, Text, Image } from 'react-native'
 import KilpImage from '../../assets/kilp_image.png'
 import KilpIcon from '../../assets/kilp_icon.png'
 import * as KlipAPI from '../layout/kilps/modal/WalletInfo'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../store/signinSlice'
+import { ScaledSheet } from 'react-native-size-matters'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
 
@@ -59,31 +60,32 @@ const SignIn: React.FC<SignInProps> = () => {
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   image: {
-    width: 391,
-    height: 296,
+    width: '391@s',
+    height: '296@vs',
+    resizeMode: 'center',
   },
   checkIcon: {
-    right: 95,
+    right: '95@msr',
   },
   checkTextBox: {
-    left: 10,
-    bottom: 24,
+    left: '10@msr',
+    bottom: '24@msr',
   },
   checkText: {
     // fontFamily: 'Itim',
-    fontSize: 16,
+    fontSize: '16@msr',
   },
   checkbox: {
-    margin: 20,
+    margin: '20@msr',
     textDecorationLine: 'none',
   },
   loginbutton: {
     flex: 1,
     flexDirection: 'row',
-    width: 292,
-    maxHeight: 43,
+    width: '292@s',
+    maxHeight: '43@vs',
     top: 0,
     borderRadius: 4,
     backgroundColor: '#216FEA',
@@ -93,8 +95,8 @@ const styles = StyleSheet.create({
   loginbuttonNot: {
     flex: 1,
     flexDirection: 'row',
-    width: 292,
-    maxHeight: 43,
+    width: '292@s',
+    maxHeight: '43@vs',
     top: 0,
     borderRadius: 4,
     backgroundColor: 'gray',
@@ -103,11 +105,11 @@ const styles = StyleSheet.create({
   },
   text: {
     // fontFamily: 'JetBrains Mono',
-    fontSize: 18,
+    fontSize: '18@msr',
     color: 'white',
   },
   icon: {
-    margin: 7,
+    margin: '7@msr',
   },
 })
 

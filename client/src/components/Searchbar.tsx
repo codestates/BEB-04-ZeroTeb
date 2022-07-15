@@ -1,12 +1,7 @@
 import * as React from 'react'
-import {
-  TextInput,
-  TextInputProps,
-  View,
-  StyleSheet,
-  Dimensions,
-} from 'react-native'
+import { TextInput, TextInputProps, View, Dimensions } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -16,7 +11,7 @@ const Searchbar = ({ ...props }: TextInputProps) => {
       <View style={style.searchbarContainner}>
         <Ionicons
           name="search"
-          size={15}
+          size={moderateScale(15)}
           color="black"
           style={style.searchbarbarIcon}
         />
@@ -33,7 +28,7 @@ const Searchbar = ({ ...props }: TextInputProps) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   searchbarContainner: {
     flex: 1,
     flexDirection: 'row',
@@ -42,19 +37,19 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'gray',
-    paddingHorizontal: 10,
+    paddingHorizontal: '10@msr',
     width: SCREEN_WIDTH * 0.9,
-    minHeight: 40,
-    maxHeight: 40,
-    margin: 20,
+    minHeight: '30@vs',
+    maxHeight: '30@vs',
+    margin: '20@msr',
   },
   searchbarbarIcon: {
     color: 'black',
   },
   searchbarbarText: {
     width: SCREEN_WIDTH * 0.8,
-    fontSize: 12,
-    paddingLeft: 5,
+    fontSize: '12@msr',
+    paddingLeft: '5@msr',
     color: 'gray',
   },
 })
