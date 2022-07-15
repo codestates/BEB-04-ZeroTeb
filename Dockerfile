@@ -8,10 +8,8 @@ RUN npm install
 
 COPY ./server ./
 
-RUN npm run build
+# RUN npm run build
 
-RUN cd /app/server
-
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start:dev"]
 
 EXPOSE 8080
