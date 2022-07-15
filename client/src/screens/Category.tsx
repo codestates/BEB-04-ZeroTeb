@@ -17,7 +17,8 @@ function Category() {
 const styles = StyleSheet.create({
   categoryContainer: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
   },
