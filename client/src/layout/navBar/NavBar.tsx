@@ -6,6 +6,7 @@ import Home from '../../screens/Home'
 import Category from '../../screens/Category'
 import Search from '../../screens/Search'
 import MyPage from '../../screens/MyPage'
+import Enroll from '../../screens/Enroll'
 
 export default function Navbar() {
   const Tab = createBottomTabNavigator()
@@ -28,7 +29,7 @@ export default function Navbar() {
               case 'Search':
                 iconName = 'search'
                 break
-              case 'MyPage':
+              case 'Enroll':
                 iconName = 'person-circle-outline'
                 size = 28
                 break
@@ -63,7 +64,13 @@ export default function Navbar() {
             headerShown: false,
           }}
         />
-        <Tab.Screen name="MyPage" component={MyPage} />
+        <Tab.Screen
+          name="Enroll"
+          component={Enroll}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   )

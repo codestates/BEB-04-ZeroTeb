@@ -30,12 +30,22 @@ const SearchList: React.FC<SearchListContent> = ({ props }) => {
         if (event.category.indexOf(props) !== -1) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
-              <ImageBackground
-                source={{ uri: event.thumnail }}
-                resizeMode="cover"
-                style={style.consertImage}
-              ></ImageBackground>
-              <Text style={style.SearchListText}>{event.category}</Text>
+              <View style={style.ImageWrapper}>
+                <ImageBackground
+                  source={{ uri: event.thumnail }}
+                  style={style.consertImage}
+                  imageStyle={{ borderRadius: 50 }}
+                ></ImageBackground>
+              </View>
+              <View style={style.textWrapper}>
+                <Text style={style.SearchListTitle}>{event.title}</Text>
+                <Text style={style.SearchListSeat}>
+                  남은 좌석 : 0 / {event.price[0].count + event.price[1].count}{' '}
+                </Text>
+                <Text style={style.SearchListDate}>
+                  공연 기간 : {event.event_start_date} ~ {event.event_end_date}
+                </Text>
+              </View>
             </View>
           )
         }
@@ -55,14 +65,36 @@ const style = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
+
+  ImageWrapper: {
+    // flex: 1,
+  },
+
   consertImage: {
     alignItems: 'center',
     maxHeight: 100,
-    maxWidth: 100,
-    paddingTop: 60,
+    maxWidth: 80,
+    paddingTop: 80,
   },
-  SearchListText: {
-    fontSize: 20,
+
+  textWrapper: {
+    // maxHeight: 60,
+  },
+
+  SearchListTitle: {
+    fontSize: 13,
+    alignItems: 'flex-end',
+    textAlign: 'right',
+    color: 'black',
+  },
+  SearchListSeat: {
+    fontSize: 14,
+    alignItems: 'flex-end',
+    textAlign: 'right',
+    color: 'black',
+  },
+  SearchListDate: {
+    fontSize: 12,
     alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
