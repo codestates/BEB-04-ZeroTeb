@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useState, useEffect } from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   StatusBar,
   Platform,
@@ -10,20 +9,14 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import Banner from '../components/Banner'
 import Location from '../components/Location'
 import Title from '../components/Title'
+import SearchBar from '../components/Searchbar'
+import EventList from '../layout/event/EventList'
 import DummyDate from '../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../models/Event'
-import EventList from '../layout/event/EventList'
-
-// interface Navigaion {
-//   props: {
-//     navigation: any
-//   }
-// }
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
@@ -59,19 +52,8 @@ export default function Home({ navigation }) {
             <Title title={'찾았다 내 취향 💕'} size={25} />
             <Title title={'ZeroTeb에서 발견!'} size={25} />
             <Banner eventList={list} />
-
             <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-              <View style={style.searchbarContainner}>
-                <Ionicons
-                  name="search"
-                  size={15}
-                  color="black"
-                  style={style.searchbarbarIcon}
-                />
-                <Text style={style.searchbarbarText}>
-                  ZeroTeb을 검색하세요!
-                </Text>
-              </View>
+              <SearchBar />
             </TouchableOpacity>
           </View>
           <View>
