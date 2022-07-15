@@ -7,7 +7,6 @@ import {
   Platform,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native'
 import Banner from '../components/Banner'
 import Location from '../components/Location'
@@ -17,11 +16,17 @@ import EventList from '../layout/event/EventList'
 import DummyDate from '../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../models/Event'
+import { TabActions, useNavigation } from '@react-navigation/native'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
+// const navigation = useNavigation<ProfileScreenNavigationProp>()
+
 export default function Home({ navigation }) {
+  //입력창 누르면 Search tab으로 이동
+  const jumpToSearch = TabActions.jumpTo('Search')
+
   const [list, setList] = useState<EventType>([...DummyDate.event])
 
   const getEventList = async () => {
@@ -52,9 +57,7 @@ export default function Home({ navigation }) {
             <Title title={'찾았다 내 취향 💕'} size={25} />
             <Title title={'ZeroTeb에서 발견!'} size={25} />
             <Banner eventList={list} />
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-              <SearchBar />
-            </TouchableOpacity>
+            <SearchBar onPressIn={() => navigation.dispatch(jumpToSearch)} />
           </View>
           <View>
             <Title title={'다가오는 공연'} size={17} />

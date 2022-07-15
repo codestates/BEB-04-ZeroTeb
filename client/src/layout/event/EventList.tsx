@@ -4,7 +4,7 @@ import Title from '../../components/Title'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface eventListProps {
   eventList: EventType[]
 }
@@ -60,9 +60,10 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   eventImg: {
-    width: 150,
+    width: SCREEN_WIDTH * 0.35,
     height: 150,
     resizeMode: 'cover',
+    borderRadius: 4,
   },
   eventTextContainer: {
     alignItems: 'flex-start',

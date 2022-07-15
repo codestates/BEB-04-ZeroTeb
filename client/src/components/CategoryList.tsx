@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { CategoryData } from '../data/CategoryData'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const DATA = CategoryData
 
 export default function CategoryList() {
@@ -39,18 +39,18 @@ const style = StyleSheet.create({
   },
   categoryListInnerContainer: {
     flex: 1,
-    paddingBottom: 20,
     borderRadius: 10,
   },
   categoryImg: {
     width: SCREEN_WIDTH * 0.9,
-    height: 80,
-    paddingVertical: 15,
+    height: (SCREEN_HEIGHT * 0.65) / 6,
+    justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
+    paddingTop: 5,
   },
   categoryText: {
     color: 'white',
-    fontSize: 30,
+    fontSize: SCREEN_HEIGHT > 1000 ? 40 : 30,
   },
 })
