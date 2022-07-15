@@ -10,7 +10,7 @@ COPY ./server ./
 
 RUN npm run build
 
-RUN ls
+RUN cd /app/server
 
 CMD ["npm", "run", "start:prod"]
 
