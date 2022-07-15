@@ -25,3 +25,18 @@ export interface EventType {
   modified_date: number
   __v: number
 }
+
+export interface EventEnroll {
+  title: string
+  start_date: string
+  end_date: string
+  start_time: string
+  end_time: string
+  place: string
+  price: string
+  content: string
+  token_url: string
+  concert_type: string
+  gender: string
+  age: string
+}
