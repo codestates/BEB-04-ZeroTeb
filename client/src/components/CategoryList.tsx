@@ -6,27 +6,66 @@ import {
   ImageBackground,
   Dimensions,
 } from 'react-native'
-import { CategoryData } from '../data/CategoryData'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-const DATA = CategoryData
 
 export default function CategoryList() {
   return (
     <View style={style.categoryListOuterContainer}>
-      {DATA.map((category: { id: string; image: string; title: string }) => {
-        return (
-          <View key={category.id} style={style.categoryListInnerContainer}>
-            <ImageBackground
-              source={{ uri: category.image }}
-              resizeMode="cover"
-              style={style.categoryImg}
-            >
-              <Text style={style.categoryText}>{category.title}</Text>
-            </ImageBackground>
-          </View>
-        )
-      })}
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/consert.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Consert</Text>
+        </ImageBackground>
+      </View>
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/theater.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Theater</Text>
+        </ImageBackground>
+      </View>
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/kids.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Kids</Text>
+        </ImageBackground>
+      </View>
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/musical.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Musical</Text>
+        </ImageBackground>
+      </View>
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/exhibition.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Exhibition</Text>
+        </ImageBackground>
+      </View>
+      <View style={style.categoryListInnerContainer}>
+        <ImageBackground
+          source={require('../../assets/categoryImg/sport.png')}
+          resizeMode="cover"
+          style={style.categoryImg}
+        >
+          <Text style={style.categoryText}>Leisure Sport</Text>
+        </ImageBackground>
+      </View>
     </View>
   )
 }
