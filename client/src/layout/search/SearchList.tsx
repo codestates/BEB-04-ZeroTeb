@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
+  ViewProps,
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
@@ -12,14 +13,8 @@ import DummyDate from '../../data/DummyData.json'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-type SearchListContent = {
-  props: {
-    enteredSearch: any
-  }
-}
-
-const SearchList: React.FC<SearchListContent> = ({ props }) => {
-  const [list, setList] = useState<EventType>([...DummyDate.event])
+const SearchList = ({ props }: ViewProps) => {
+  const [list, setList] = useState<EventType>([...props])
 
   return (
     <View style={style.SearchListOuterContainer}>
