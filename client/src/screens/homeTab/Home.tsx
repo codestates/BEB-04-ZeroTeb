@@ -9,7 +9,7 @@ import {
   Pressable,
 } from 'react-native'
 import Banner from '../../components/home/Banner'
-import LocationButton from '../../components/common/LocationButton'
+import LocationButton from '../../components/location/LocationButton'
 import Title from '../../components/common/Title'
 import SearchBar from '../../components/search/Searchbar'
 import EventList from '../../components/event/EventList'
