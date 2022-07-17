@@ -2,6 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { View, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
+import Hashtag from '../../components/search/Hashtag'
 import Searchbar from '../../components/search/Searchbar'
 import SearchList from '../../components/search/SearchList'
 import DummyDate from '../../data/DummyData.json'
@@ -19,13 +20,18 @@ export default function Search() {
 
   function searchEnterHandler(e: any) {}
 
+  function pressHandler() {}
+
   return (
     <View style={style.searchContainer}>
       <Searchbar value={enteredSearch} onChangeText={searchInputHandler} />
       {/* 나중에 인기 검색어 추가 부분 */}
-      {/* <Hashtag props={DummyDate.event} /> */}
+      <Hashtag
+        props={['김영현', '이지민', '최정환', '채희수']}
+        onPress={pressHandler}
+      />
 
-      <SearchList sendList={sendList} />
+      {/* <SearchList sendList={sendList} /> */}
     </View>
   )
 }
