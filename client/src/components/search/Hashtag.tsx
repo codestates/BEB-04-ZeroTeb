@@ -5,12 +5,12 @@ import { ScaledSheet } from 'react-native-size-matters'
 import Title from '../common/Title'
 
 type HashtagContent = {
-  props: string[]
+  hashtags: string[]
   onPress: Function
 }
 
-const Hashtag: React.FC<HashtagContent> = ({ props, onPress }) => {
-  const [hashtag, setHashtag] = useState<string[]>(props)
+const Hashtag: React.FC<HashtagContent> = ({ hashtags, onPress }) => {
+  const [hashtag, setHashtag] = useState<string[]>(hashtags)
 
   return (
     <View style={style.hashtagOuterContainer}>

@@ -27,7 +27,7 @@ export default function Search() {
       <Searchbar value={enteredSearch} onChangeText={searchInputHandler} />
       {/* 나중에 인기 검색어 추가 부분 */}
       <Hashtag
-        props={['김영현', '이지민', '최정환', '채희수']}
+        hashtags={['김영현', '이지민', '최정환', '채희수']}
         onPress={pressHandler}
       />
 

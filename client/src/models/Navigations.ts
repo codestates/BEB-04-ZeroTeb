@@ -1,8 +1,8 @@
 export type RootTabParamList = {
-  HomeStackScreen: HomeStackParamList
-  CategoryStackScreen: CategoryStackParamList
-  SearchStackScreen: SearchStackParamList
-  MyPageStackScreen: MyPageStackParamList
+  HomeStackScreen: undefined
+  CategoryStackScreen: undefined
+  SearchStackScreen: undefined
+  MyPageStackScreen: undefined
 }
 
 export type HomeStackParamList = { Home: undefined; SignIn: undefined }
