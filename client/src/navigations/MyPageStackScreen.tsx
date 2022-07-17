@@ -16,7 +16,11 @@ export default function MyPageStackScreen() {
   return (
     <MyPageStack.Navigator>
       {KilpAddress ? (
-        <MyPageStack.Screen name="MyPage" component={MyPage} />
+        <MyPageStack.Screen
+          name="MyPage"
+          component={MyPage}
+          initialParams={{ kilpAddress: KilpAddress }}
+        />
       ) : (
         <MyPageStack.Screen
           name="SignIn"
