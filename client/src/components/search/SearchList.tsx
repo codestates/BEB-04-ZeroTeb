@@ -9,11 +9,12 @@ import {
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
+import { getDate } from '../../utils/unixTime'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const SearchList = ({ sendList }: EventType[]) => {
-  const [list, setList] = useState<EventType>([...sendList])
+  const [list, setList] = useState<EventType[]>([...sendList])
 
   return (
     <View style={style.SearchListOuterContainer}>

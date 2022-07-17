@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Image, View, Text, Dimensions } from 'react-native'
-import Title from '../../components/Title'
+import Title from '../common/Title'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet } from 'react-native-size-matters'

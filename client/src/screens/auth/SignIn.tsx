@@ -2,11 +2,11 @@ import * as React from 'react'
 import { useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { View, TouchableOpacity, Text, Image } from 'react-native'
-import KilpImage from '../../assets/kilp_image.png'
-import KilpIcon from '../../assets/kilp_icon.png'
-import * as KlipAPI from '../layout/kilps/modal/WalletInfo'
+import KilpImage from '../../../assets/kilp_image.png'
+import KilpIcon from '../../../assets/kilp_icon.png'
+import * as KlipAPI from '../../layout/kilps/modal/WalletInfo'
 import { useDispatch } from 'react-redux'
-import { signinActions } from '../store/signinSlice'
+import { signinActions } from '../../store/signinSlice'
 import { ScaledSheet } from 'react-native-size-matters'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
@@ -28,7 +28,14 @@ const SignIn: React.FC<SignInProps> = () => {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+      }}
+    >
       <Image source={KilpImage} style={styles.image} />
 
       <TouchableOpacity style={styles.checkIcon}>
@@ -64,7 +71,7 @@ const styles = ScaledSheet.create({
   image: {
     width: '391@s',
     height: '296@vs',
-    resizeMode: 'center',
+    resizeMode: 'contain',
   },
   checkIcon: {
     right: '95@msr',

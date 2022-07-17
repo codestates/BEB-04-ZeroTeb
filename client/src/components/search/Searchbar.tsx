@@ -1,11 +1,27 @@
 import * as React from 'react'
+import { useRef } from 'react'
 import { TextInput, TextInputProps, View, Dimensions } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const Searchbar = ({ ...props }: TextInputProps) => {
+  const searchbarInput = useRef<null | TextInput>(null)
+  const navigation = useNavigation()
+  const route = useRoute()
+
+  //search screen으로 이동 시 input으로 포커스
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      // if (route.path === 'Home') {
+      searchbarInput.current?.focus()
+      // }
+    })
+    return unsubscribe
+  }, [navigation])
+
   return (
     <View>
       <View style={style.searchbarContainner}>
@@ -21,6 +37,7 @@ const Searchbar = ({ ...props }: TextInputProps) => {
           autoCapitalize="none"
           autoCorrect={false}
           blurOnSubmit
+          ref={searchbarInput}
           {...props}
         ></TextInput>
       </View>

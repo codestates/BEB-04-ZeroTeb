@@ -6,13 +6,13 @@ import {
   ScrollView,
   ImageBackground,
 } from 'react-native'
-import { EventType } from '../models/Event'
+import { EventType } from '../../models/Event'
 import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 interface BannerContent {
-  eventList: EventType
+  eventList: EventType[]
 }
 
 const Banner: React.FC<BannerContent> = ({ eventList }) => {
@@ -51,6 +51,11 @@ const style = ScaledSheet.create({
     paddingTop: '10@msr',
     maxHeight: '190@vs',
     minHeight: '190@vs',
+    elevation: 4, //갤럭시 boxshodow
+    shadowColor: 'black', // ios boxshodow
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    shadowOpacity: 0.25,
   },
   bannerInnerContainer: {
     flex: 1,
@@ -63,6 +68,10 @@ const style = ScaledSheet.create({
     alignItems: 'center',
     color: 'white',
     paddingTop: '30@msr',
+    fontWeight: '600',
+    textShadowColor: 'rgba(0, 0, 0, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
   },
 })
 

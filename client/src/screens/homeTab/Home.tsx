@@ -6,30 +6,24 @@ import {
   StatusBar,
   Platform,
   ScrollView,
-  TouchableOpacity,
+  Pressable,
 } from 'react-native'
-import Banner from '../components/Banner'
-import Location from '../components/Location'
-import Title from '../components/Title'
-import SearchBar from '../components/Searchbar'
-import EventList from '../layout/event/EventList'
-import DummyDate from '../data/DummyData.json'
+import Banner from '../../components/home/Banner'
+import LocationButton from '../../components/common/LocationButton'
+import Title from '../../components/common/Title'
+import SearchBar from '../../components/search/Searchbar'
+import EventList from '../../components/event/EventList'
+import DummyDate from '../../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
-import { EventType } from '../models/Event'
-import { TabActions, useNavigation } from '@react-navigation/native'
-import { BottomTabScreenProps } from '@react-navigation/bottom-tabs'
-import { RootTabParamList } from '../navigations/NavBar'
+import { EventType } from '../../models/Event'
+import { useNavigation } from '@react-navigation/native'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
-type Props = BottomTabScreenProps<RootTabParamList, 'Search'>
-
 export default function Home() {
-  //입력창 누르면 Search tab으로 이동
   const navigation = useNavigation()
-  const jumpToSearch = TabActions.jumpTo('Search')
 
-  const [list, setList] = useState<EventType>([...DummyDate.event])
+  const [list, setList] = useState<EventType[]>([...DummyDate.event])
 
   const getEventList = async () => {
     try {
@@ -53,17 +47,19 @@ export default function Home() {
   return (
     <>
       <View style={style.homeContainer}>
-        <Location />
+        <LocationButton />
         <ScrollView decelerationRate="fast">
           <View>
             <Title title={'찾았다 내 취향 💕'} size={22} />
             <Title title={'ZeroTeb에서 발견!'} size={22} />
             <Banner eventList={list} />
-            <TouchableOpacity onPress={() => navigation.dispatch(jumpToSearch)}>
+            <Pressable //입력창 누르면 Search tab으로 이동
+              onPressIn={() => navigation.navigate('SearchStackScreen')}
+            >
               <SearchBar
                 editable={false} //터치했을때 키보드 안나오게
               />
-            </TouchableOpacity>
+            </Pressable>
           </View>
           <View>
             <Title title={'다가오는 공연'} size={17} />

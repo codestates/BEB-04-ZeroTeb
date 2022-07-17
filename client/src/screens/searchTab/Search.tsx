@@ -2,9 +2,10 @@ import * as React from 'react'
 import { useState } from 'react'
 import { View, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
-import Searchbar from '../components/Searchbar'
-import SearchList from '../layout/search/SearchList'
-import DummyDate from '../data/DummyData.json'
+import Searchbar from '../../components/search/Searchbar'
+import SearchList from '../../components/search/SearchList'
+import DummyDate from '../../data/DummyData.json'
+import { EventType } from '../../models/Event'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
@@ -14,11 +15,9 @@ export default function Search() {
   function searchInputHandler(enteredText: string) {
     setEnteredSearch(enteredText)
   }
-  const [sendList, setSendList] = useState<Event>('')
+  const [sendList, setSendList] = useState<EventType[]>([...DummyDate.event])
 
-  function searchEnterHandler(e: any) {
-    setSendList('')
-  }
+  function searchEnterHandler(e: any) {}
 
   return (
     <View style={style.searchContainer}>
@@ -26,7 +25,7 @@ export default function Search() {
       {/* 나중에 인기 검색어 추가 부분 */}
       {/* <Hashtag props={DummyDate.event} /> */}
 
-      <SearchList sendList={DummyDate.event} />
+      <SearchList sendList={sendList} />
     </View>
   )
 }
