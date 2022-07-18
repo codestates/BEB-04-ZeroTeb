@@ -17,6 +17,7 @@ import DummyDate from '../../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../../models/Event'
 import { useNavigation } from '@react-navigation/native'
+import { moderateScale } from 'react-native-size-matters'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
