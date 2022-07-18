@@ -7,6 +7,7 @@ import {
   Platform,
   Pressable,
   FlatList,
+  Image,
 } from 'react-native'
 import Banner from '../../components/home/Banner'
 import LocationButton from '../../components/location/LocationButton'
@@ -23,7 +24,8 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 export default function Home() {
   const navigation = useNavigation()
 
-  const [list, setList] = useState<EventType[]>([...DummyDate.event])
+  const [list, setList] = useState<EventType[]>([...DummyDate.event]);
+  const [load, setLoad] = useState<boolean>(false);
 
   const getEventList = async () => {
     try {
@@ -44,11 +46,19 @@ export default function Home() {
     getEventList()
   }, [])
 
+  const endReached = async () =>{
+    setLoad(true);    
+    setList([...list, ...list])
+    setLoad(false);
+  }
+
   return (
     <View style={style.homeContainer}>
       <LocationButton />
       <FlatList
         data={['0']}
+        onEndReached={endReached}
+        onEndReachedThreshold={0.5}
         renderItem={() => 
           <>
             <View>
@@ -64,9 +74,10 @@ export default function Home() {
               </Pressable>
             </View>
             <View>
-              <Title title={'다가오는 공연1'} size={17} />
-              <EventList eventList={list} />
+              <Title title={'다가오는 공연'} size={17} />
+              <EventList eventList={list} />              
             </View>
+            {load ? <Image source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif'}} style={{width: 100, height: 100, alignSelf:'center'}} />:null} 
           </>
         }
       />      
