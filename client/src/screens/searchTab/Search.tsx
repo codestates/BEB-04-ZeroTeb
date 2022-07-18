@@ -24,7 +24,11 @@ export default function Search() {
 
   return (
     <View style={style.searchContainer}>
-      <Searchbar value={enteredSearch} onChangeText={searchInputHandler} />
+      <Searchbar
+        value={enteredSearch}
+        onChangeText={searchInputHandler}
+        onSubmitEditing={searchEnterHandler}
+      />
       {/* 나중에 인기 검색어 추가 부분 */}
       <Hashtag
         hashtags={['김영현', '이지민', '최정환', '채희수']}
