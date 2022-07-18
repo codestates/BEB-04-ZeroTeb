@@ -10,12 +10,12 @@ import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
-export default function CategoryList({ onPress }) {
+export default function CategoryButton({ onPress }) {
   return (
-    <View style={style.categoryListOuterContainer}>
+    <View style={style.categoryButtonOuterContainer}>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
         onPress={onPress}
@@ -31,7 +31,7 @@ export default function CategoryList({ onPress }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
       >
@@ -46,7 +46,7 @@ export default function CategoryList({ onPress }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
       >
@@ -61,7 +61,7 @@ export default function CategoryList({ onPress }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
       >
@@ -76,7 +76,7 @@ export default function CategoryList({ onPress }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
       >
@@ -91,7 +91,7 @@ export default function CategoryList({ onPress }) {
       </Pressable>
       <Pressable
         style={({ pressed }) => [
-          style.categoryListInnerContainer,
+          style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
       >
@@ -109,7 +109,7 @@ export default function CategoryList({ onPress }) {
 }
 
 const style = ScaledSheet.create({
-  categoryListOuterContainer: {
+  categoryButtonOuterContainer: {
     flex: 1,
     alignItems: 'flex-start',
     margin: '20@msr',
@@ -119,7 +119,7 @@ const style = ScaledSheet.create({
     shadowRadius: 6,
     shadowOpacity: 0.25,
   },
-  categoryListInnerContainer: {
+  categoryButtonInnerContainer: {
     flex: 1,
   },
   Pressed: { opacity: 0.5 },

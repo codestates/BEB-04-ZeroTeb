@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { View, StyleSheet, StatusBar, Platform } from 'react-native'
-import CategoryList from '../../components/category/CategoryList'
+import CategoryList from '../../components/category/CategoryButton'
 import LocationButton from '../../components/location/LocationButton'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight

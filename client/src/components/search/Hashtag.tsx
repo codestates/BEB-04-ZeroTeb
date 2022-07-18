@@ -16,9 +16,9 @@ const Hashtag: React.FC<HashtagContent> = ({ hashtags, onPress }) => {
     <View style={style.hashtagOuterContainer}>
       <Title title={'인기검색어'} size={17} />
       <Pressable style={style.hashtagInnerContainer} onPress={onPress}>
-        {hashtag.map(keyword => {
+        {hashtag.map((keyword, index) => {
           return (
-            <View style={style.hashtagButton}>
+            <View style={style.hashtagButton} key={index}>
               <Text style={style.hashtagText}>{keyword}</Text>
             </View>
           )

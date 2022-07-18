@@ -4,9 +4,15 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState, useEffect } from 'react'
 import * as Location from 'expo-location'
+import RegionSelectModal from './regionSelectModal'
 
 export default function LocationButton() {
   const [myLosition, setMyLosition] = useState<[number, number]>([0, 0])
+  const [modalVisible, setModalVisible] = useState(false)
+
+  const onStart = () => {
+    setModalVisible(true)
+  }
 
   //내주변 터치 시 위도,경도 로드
   const loadMyLosition = async () => {
@@ -33,14 +39,19 @@ export default function LocationButton() {
 
   return (
     <View style={style.locationButtonContainer}>
-      <View style={style.allLocationButtonContainner}>
+      <Pressable style={style.allLocationButtonContainner} onPress={onStart}>
         <Text style={style.allLocationButtonText}>전국</Text>
         <FontAwesome5
           name="arrow-circle-down"
           size={moderateScale(17)}
           color="black"
         />
-      </View>
+      </Pressable>
+      <RegionSelectModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        body={undefined}
+      />
       <Pressable
         style={style.myLocationButtonContainner}
         onPressIn={() => {
