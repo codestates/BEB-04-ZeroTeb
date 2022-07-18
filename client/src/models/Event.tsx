@@ -8,15 +8,9 @@ export interface EventType {
   type: string
   thumnail: string
   token_image_url: string
-  price: [
-    {
-      class: string
-      price: number
-      count: number
-    },
-  ]
+  price: object
   contents: string
-  option: [{}]
+  option: object
   recruit_start_date: number
   recruit_end_date: number
   event_start_date: number
