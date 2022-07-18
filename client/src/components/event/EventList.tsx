@@ -24,12 +24,10 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
             </View>
 
             <View style={style.eventTitleContainer}>
-              <Text></Text>
               <Title title={event.title} size={15} />
             </View>
 
             <View style={style.eventContentContainer}>
-              <Text></Text>
               <Title title={'기획자 : '} size={10} />
               <Title title={'남은 좌석 : '} size={10} />
               <Title
@@ -39,6 +37,7 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                 size={10}
               />
             </View>
+            {console.log('tt')}
           </View>
         )
       })}
@@ -53,29 +52,40 @@ const style = ScaledSheet.create({
     justifyContent: 'space-evenly',
     margin: '5@msr',
     padding: '5@msr',
+    height: 'auto',    
   },
   eventInnerContainer: {
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     margin: 5,
-    padding: 10,
+    // padding: 10,
+    paddingVertical: 10,
     borderColor: 'lightgray',
     borderWidth: 1,
-    width: SCREEN_WIDTH * 0.45,
+    width: SCREEN_WIDTH * 0.43,
     borderRadius: 10,
+    
   },
   eventImgContainer: {
     alignItems: 'center',
+    flex: 2
   },
   eventImg: {
-    width: SCREEN_WIDTH * 0.4,
+    width: SCREEN_WIDTH * 0.38,
     height: '100@vs',
     resizeMode: 'cover',
     borderRadius: 4,
   },
   eventTitleContainer: {
-    alignItems: 'flex-start',
+    marginTop: 10,
+    flex: 1
+    // alignItems: 'flex-start',
   },
-  eventContentContainer: { alignItems: 'flex-start' },
+  eventContentContainer: {
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    flex: 2,
+    marginTop: 5,    
+  },
 })
 
 export default EventList
