@@ -1,11 +1,14 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { View, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native'
-import Searchbar from '../components/Searchbar'
-import SearchList from '../layout/search/SearchList'
+import { ScaledSheet } from 'react-native-size-matters'
+import Hashtag from '../../components/search/Hashtag'
+import Searchbar from '../../components/search/Searchbar'
+import SearchList from '../../components/search/SearchList'
+import DummyDate from '../../data/DummyData.json'
+import { EventType } from '../../models/Event'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 export default function Search() {
   const [enteredSearch, setEnteredSearch] = useState<string>('')
@@ -13,11 +16,11 @@ export default function Search() {
   function searchInputHandler(enteredText: string) {
     setEnteredSearch(enteredText)
   }
-  const [sendList, setSendList] = useState<string>('')
+  const [sendList, setSendList] = useState<EventType[]>([...DummyDate.event])
 
-  function searchEnterHandler(e: any) {
-    setSendList(enteredSearch)
-  }
+  function searchEnterHandler(e: any) {}
+
+  function pressHandler() {}
 
   return (
     <View style={style.searchContainer}>
@@ -27,32 +30,21 @@ export default function Search() {
         onSubmitEditing={searchEnterHandler}
       />
       {/* 나중에 인기 검색어 추가 부분 */}
-      {/* <Hashtag props={DummyDate.event} /> */}
+      <Hashtag
+        hashtags={['김영현', '이지민', '최정환', '채희수']}
+        onPress={pressHandler}
+      />
 
-      <SearchList style={style.searchListContainner} props={sendList} />
+      {/* <SearchList sendList={sendList} /> */}
     </View>
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   searchContainer: {
     flex: 1,
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
-  },
-  searchListContainner: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 10,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'gray',
-    paddingHorizontal: 10,
-    width: SCREEN_WIDTH * 0.9,
-    minHeight: 40,
-    maxHeight: 40,
-    margin: 20,
   },
 })

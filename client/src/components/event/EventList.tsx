@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { Image, View, Text, StyleSheet, Dimensions } from 'react-native'
-import Title from '../../components/Title'
+import { Image, View, Text, Dimensions } from 'react-native'
+import Title from '../common/Title'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
+import { ScaledSheet } from 'react-native-size-matters'
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
 interface eventListProps {
   eventList: EventType[]
 }
@@ -21,10 +22,14 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                 source={{ uri: event.thumnail }}
               ></Image>
             </View>
-            <View style={style.eventTextContainer}>
+
+            <View style={style.eventTitleContainer}>
               <Text></Text>
-              <Title title={event.title} size={17} />
-              <Title title={''} size={17} />
+              <Title title={event.title} size={15} />
+            </View>
+
+            <View style={style.eventContentContainer}>
+              <Text></Text>
               <Title title={'기획자 : '} size={10} />
               <Title title={'남은 좌석 : '} size={10} />
               <Title
@@ -41,14 +46,16 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   eventOuterContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-evenly',
-    margin: 5,
+    margin: '5@msr',
+    padding: '5@msr',
   },
   eventInnerContainer: {
+    justifyContent: 'space-between',
     margin: 5,
     padding: 10,
     borderColor: 'lightgray',
@@ -60,14 +67,15 @@ const style = StyleSheet.create({
     alignItems: 'center',
   },
   eventImg: {
-    width: SCREEN_WIDTH * 0.35,
-    height: 150,
+    width: SCREEN_WIDTH * 0.4,
+    height: '100@vs',
     resizeMode: 'cover',
     borderRadius: 4,
   },
-  eventTextContainer: {
+  eventTitleContainer: {
     alignItems: 'flex-start',
   },
+  eventContentContainer: { alignItems: 'flex-start' },
 })
 
 export default EventList

@@ -1,15 +1,21 @@
+import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { View, StyleSheet, StatusBar, Platform } from 'react-native'
-import CategoryList from '../components/CategoryList'
-import Location from '../components/Location'
+import CategoryList from '../../components/category/CategoryButton'
+import LocationButton from '../../components/location/LocationButton'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
 function Category() {
+  const navigation = useNavigation()
+  const pressHandler = () => {
+    navigation.navigate('CategoryDetail', { catagoryName: '' })
+  }
+
   return (
     <View style={styles.categoryContainer}>
-      <Location />
-      <CategoryList />
+      <LocationButton />
+      <CategoryList onPress={pressHandler} />
     </View>
   )
 }

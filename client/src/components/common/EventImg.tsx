@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Image, View, StyleSheet } from 'react-native'
+import { moderateScale } from 'react-native-size-matters'
 
 interface eventImgProps {
   imgUri: string
@@ -11,7 +12,11 @@ const EventImg: React.FC<eventImgProps> = ({ imgUri, width, height }) => {
   return (
     <View style={style.eventImgContainer}>
       <Image
-        style={{ width: width, height: height, resizeMode: 'cover' }}
+        style={{
+          width: moderateScale(width),
+          height: moderateScale(height),
+          resizeMode: 'cover',
+        }}
         source={{ uri: `${imgUri}` }}
       ></Image>
     </View>
@@ -21,7 +26,7 @@ const EventImg: React.FC<eventImgProps> = ({ imgUri, width, height }) => {
 const style = StyleSheet.create({
   eventImgContainer: {
     flex: 1,
-    padding: 10,
+    padding: moderateScale(10),
     backgroundColor: 'white',
   },
 })

@@ -13,22 +13,16 @@ import { getDate } from '../../utils/unixTime'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-type SearchListContent = {
-  props: {
-    enteredSearch: any
-  }
-}
-
-const SearchList: React.FC<SearchListContent> = ({ props }) => {
-  const [list, setList] = useState<EventType>([...DummyDate.event])
+const SearchList = ({ sendList }: EventType[]) => {
+  const [list, setList] = useState<EventType[]>([...sendList])
 
   return (
     <View style={style.SearchListOuterContainer}>
       <View>
-        <Text>검색목록 (장르로 검색)</Text>
+        <Text>검색목록</Text>
       </View>
-      {list.slice(0, 4).map((event: any, index: any) => {
-        if (event.category.indexOf(props) !== -1) {
+      {list.slice(0, 4).map((event: EventType, index: number) => {
+        if (event.category) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
               <View style={style.Wrapper}>
@@ -62,8 +56,7 @@ const SearchList: React.FC<SearchListContent> = ({ props }) => {
 const style = StyleSheet.create({
   SearchListOuterContainer: {
     left: 20,
-    width: SCREEN_WIDTH * 0.9,
-    maxHeight: 300,
+    maxWidth: SCREEN_WIDTH * 0.9,
   },
   SearchListInnerContainer: {
     padding: 4,
