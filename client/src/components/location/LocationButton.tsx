@@ -4,7 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState, useEffect } from 'react'
 import * as Location from 'expo-location'
-import RegionSelectModal from './regionSelectModal'
+import RegionSelectModal from './RegionSelectModal'
 
 export default function LocationButton() {
   const [myLosition, setMyLosition] = useState<[number, number]>([0, 0])
