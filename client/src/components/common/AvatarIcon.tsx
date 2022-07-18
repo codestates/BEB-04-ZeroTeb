@@ -1,26 +1,28 @@
 import * as React from 'react'
-import { Avatar } from '@rneui/themed'
-import { moderateScale } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { View, Text } from 'react-native'
 interface avatarProps {
-  imgUri: string
   size: number
   color: string
+  title: string
 }
 
-const AvatarIcon: React.FC<avatarProps> = ({
-  imgUri,
-  size = 64,
-  color = 'skyblue',
-}) => {
+const AvatarIcon: React.FC<avatarProps> = ({ size, color, title }) => {
   return (
-    <Avatar
-      size={moderateScale(size)}
-      rounded
-      source={imgUri ? { uri: imgUri } : {}}
-      icon={{ name: 'user', type: 'font-awesome' }}
-      // title="Rd"
-      containerStyle={{ backgroundColor: color }}
-    />
+    <>
+      <View
+        style={{
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: moderateScale(size),
+          height: moderateScale(size),
+          borderRadius: moderateScale(35),
+          backgroundColor: color || 'skyblue',
+        }}
+      >
+        <Text style={{ fontSize: moderateScale(size / 2 || 64) }}>{title}</Text>
+      </View>
+    </>
   )
 }
 
