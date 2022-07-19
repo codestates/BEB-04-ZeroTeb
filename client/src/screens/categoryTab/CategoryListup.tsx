@@ -12,11 +12,11 @@ import { useNavigation } from '@react-navigation/native'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
-function CategoryDetail() {
+function CategoryListup() {
   const navigation = useNavigation()
 
   return (
-    <View style={styles.categoryDetailContainer}>
+    <View style={styles.categoryListupContainer}>
       <TouchableOpacity
         onPress={() => {
           if (navigation.canGoBack()) {
@@ -32,11 +32,11 @@ function CategoryDetail() {
 }
 
 const styles = StyleSheet.create({
-  categoryDetailContainer: {
+  categoryListupContainer: {
     flex: 1,
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
   },
 })
 
-export default CategoryDetail
+export default CategoryListup
