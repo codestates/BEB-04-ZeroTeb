@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Image, View, Text, Dimensions } from 'react-native'
-import Title from '../common/Title'
+import InnerText from '../common/InnerText'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet } from 'react-native-size-matters'
@@ -25,15 +25,15 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
 
             <View style={style.eventTitleContainer}>
               <Text></Text>
-              <Title title={event.title} size={15} />
+              <InnerText innerText={event.title} size={15} />
             </View>
 
             <View style={style.eventContentContainer}>
               <Text></Text>
-              <Title title={'기획자 : '} size={10} />
-              <Title title={'남은 좌석 : '} size={10} />
-              <Title
-                title={`공연 기간 : ${getDate(
+              <InnerText innerText={'기획자 : '} size={10} />
+              <InnerText innerText={'남은 좌석 : '} size={10} />
+              <InnerText
+                innerText={`공연 기간 : ${getDate(
                   event.event_start_date,
                 )} - ${getDate(event.event_end_date)}`}
                 size={10}

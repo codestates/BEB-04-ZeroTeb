@@ -12,11 +12,11 @@ import SearchList from '../../components/search/SearchList'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
-function SearchDetail() {
+function SearchListup() {
   const navigation = useNavigation()
 
   return (
-    <View style={styles.searchDetailContainer}>
+    <View style={styles.searchListupContainer}>
       <TouchableOpacity
         onPress={() => {
           if (navigation.canGoBack()) {
@@ -32,11 +32,11 @@ function SearchDetail() {
 }
 
 const styles = StyleSheet.create({
-  searchDetailContainer: {
+  searchListupContainer: {
     flex: 1,
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
   },
 })
 
-export default SearchDetail
+export default SearchListup

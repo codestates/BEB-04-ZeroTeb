@@ -1,7 +1,7 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Category from '../screens/categoryTab/Category'
-import CategoryDetail from '../screens/categoryTab/CategoryDetail'
+import CategoryDetail from '../screens/categoryTab/CategoryListup'
 import { CategoryStackParamList } from '../models/Navigations'
 
 export default function CategoryStackScreen() {

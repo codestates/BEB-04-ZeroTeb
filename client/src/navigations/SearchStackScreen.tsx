@@ -1,7 +1,7 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import Search from '../screens/searchTab/Search'
-import SearchDetail from '../screens/searchTab/SearchDetail'
+import SearchDetail from '../screens/searchTab/SearchListup'
 import { SearchStackParamList } from '../models/Navigations'
 
 export default function SearchStackScreen() {
