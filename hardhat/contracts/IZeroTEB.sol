@@ -8,51 +8,53 @@ interface IZeroTEB {
     function createEvent(
         address _creator,
         string memory _eventName,
-        uint256 _eventPrice,
-        string memory _tokenImageUri
-    ) external payable returns (uint256 _eventId);
+        string memory _tokenImageUri,
+        string[] memory _names,
+        uint256[] memory _prices,
+        uint256[] memory _counts,
+        uint256 _openTime,
+        uint256 _closeTime,
+        uint256 _endTime
+    ) external returns (uint256 _eventId);
 
     /*
      * 이벤트 토큰 발행
      */
-    function mintEvent(
+    function mintToken(
         uint256 _eventId,
         uint8 _tokenType,
+        uint8 _classId,
         string memory _tokenUri
-    ) external;
+    ) external returns (uint256);
 
     /*
      * 이벤트 티켓 구매
      */
     function buyToken(
         uint256 _eventId,
-        uint256 _tokenId,
-        uint openTime,
-        uint endTime
+        uint8 _classId,
+        uint8 _number
     ) external payable;
 
     /*
      * 이벤트 구매자 정보 목록 확인
      */
-    function getEventBuyers(uint256 _eventId)
+    function getEventBuyers(uint256 _eventId, uint8 _classId)
         external
+        view
         returns (address[] memory);
 
     /*
      * 이벤트 티켓 응모
      */
-    function applyToken(
-        uint256 _eventId,
-        uint256 _tokenId,
-        uint openTime,
-        uint endTime
-    ) external payable;
+    function applyToken(uint256 _eventId, uint8 _classId) external payable;
 
     /*
      * 이벤트 참여자 정보 목록 확인
      */
     function getEventParticipants(uint256 _eventId)
         external
+        view
         returns (address[] memory);
 
     /*
