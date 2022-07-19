@@ -13,9 +13,9 @@ interface eventListProps {
 const EventList: React.FC<eventListProps> = ({ eventList }) => {
   return (
     <View style={style.eventOuterContainer}>
-      {eventList.map(event => {
+      {eventList.map((event, index) => {
         return (
-          <View style={style.eventInnerContainer} key={event.event_id}>
+          <View style={style.eventInnerContainer} key={index}>
             <View style={style.eventImgContainer}>
               <Image
                 style={style.eventImg}
@@ -24,7 +24,6 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
             </View>
 
             <View style={style.eventTitleContainer}>
-
               <Text></Text>
               <InnerText innerText={event.title} size={15} />
             </View>
@@ -55,7 +54,7 @@ const style = ScaledSheet.create({
     justifyContent: 'space-evenly',
     margin: '5@msr',
     padding: '5@msr',
-    height: 'auto',    
+    height: 'auto',
   },
   eventInnerContainer: {
     // justifyContent: 'space-between',
@@ -66,11 +65,10 @@ const style = ScaledSheet.create({
     borderWidth: 1,
     width: SCREEN_WIDTH * 0.43,
     borderRadius: 10,
-    
   },
   eventImgContainer: {
     alignItems: 'center',
-    flex: 2
+    flex: 2,
   },
   eventImg: {
     width: SCREEN_WIDTH * 0.38,
@@ -80,14 +78,14 @@ const style = ScaledSheet.create({
   },
   eventTitleContainer: {
     marginTop: 10,
-    flex: 1
+    flex: 1,
     // alignItems: 'flex-start',
   },
   eventContentContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     flex: 2,
-    marginTop: 5,    
+    marginTop: 5,
   },
 })
 

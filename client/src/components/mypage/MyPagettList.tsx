@@ -60,7 +60,6 @@ const MyPagettList: React.FC<ttListProps> = props => {
         numColumns={3}
         contentContainerStyle={{
           paddingTop: headerHeight,
-          minHeight: window.height + headerHeight - tabBarHeight,
         }}
         scrollEventThrottle={16}
         onScroll={
