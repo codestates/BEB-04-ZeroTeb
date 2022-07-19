@@ -5,10 +5,12 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState, useEffect } from 'react'
 import * as Location from 'expo-location'
 import RegionSelectModal from './RegionSelectModal'
+import axios from 'axios'
 
 export default function LocationButton() {
   const [myLosition, setMyLosition] = useState<[number, number]>([0, 0])
   const [modalVisible, setModalVisible] = useState(false)
+  const [arount, setAround] = useState([])
 
   const onStart = () => {
     setModalVisible(true)
@@ -27,6 +29,18 @@ export default function LocationButton() {
       const location = await Location.getCurrentPositionAsync()
       const { latitude, longitude } = location.coords
       setMyLosition([latitude, longitude])
+
+      console.log('주변정보 호출');
+      const result = await axios.get(`http://server.beeimp.com:18080/event/location?lat=${latitude}&lon=${longitude}`)
+      .then((res)=>{
+        return res.data;
+      })
+      if(result.message){
+        alert(result.message);
+      }else{
+        console.log('around Event:',result);
+        setAround(result);
+      }
     } catch (err) {
       alert(err)
     }
@@ -34,7 +48,8 @@ export default function LocationButton() {
 
   useEffect(() => {
     setMyLosition(myLosition)
-    console.log('----' + myLosition)
+    console.log(myLosition[0])
+    
   }, [loadMyLosition])
 
   return (
