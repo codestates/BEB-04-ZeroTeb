@@ -5,8 +5,9 @@ import {
   StyleSheet,
   StatusBar,
   Platform,
-  ScrollView,
   Pressable,
+  FlatList,
+  Image,
 } from 'react-native'
 import Banner from '../../components/home/Banner'
 import LocationButton from '../../components/location/LocationButton'
@@ -24,7 +25,8 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 export default function Home() {
   const navigation = useNavigation()
 
-  const [list, setList] = useState<EventType[]>([...DummyDate.event])
+  const [list, setList] = useState<EventType[]>([...DummyDate.event]);
+  const [load, setLoad] = useState<boolean>(false);
 
   const getEventList = async () => {
     try {
@@ -45,30 +47,42 @@ export default function Home() {
     getEventList()
   }, [])
 
+  const endReached = async () =>{
+    setLoad(true);    
+    setList([...list, ...list])
+    setLoad(false);
+  }
+
   return (
-    <>
-      <View style={style.homeContainer}>
-        <LocationButton />
-        <ScrollView decelerationRate="fast">
-          <View>
-            <Title title={'찾았다 내 취향 💕'} size={22} />
-            <Title title={'ZeroTeb에서 발견!'} size={22} />
-            <Banner eventList={list} />
-            <Pressable //입력창 누르면 Search tab으로 이동
-              onPressIn={() => navigation.navigate('SearchStackScreen')}
-            >
+    <View style={style.homeContainer}>
+      <LocationButton />
+      <FlatList
+        data={['0']}
+        onEndReached={endReached}
+        onEndReachedThreshold={0.5}
+        renderItem={() => 
+          <>
+            <View>
+              <Title title={'찾았다 내 취향 💕'} size={22} />
+              <Title title={'ZeroTeb에서 발견!'} size={22} />
+              <Banner eventList={list} />
+              <Pressable //입력창 누르면 Search tab으로 이동
+                onPressIn={() => navigation.navigate('SearchStackScreen')}
+              >
               <SearchBar
                 editable={false} //터치했을때 키보드 안나오게
               />
-            </Pressable>
-          </View>
-          <View>
-            <Title title={'다가오는 공연'} size={17} />
-            <EventList eventList={list} />
-          </View>
-        </ScrollView>
-      </View>
-    </>
+              </Pressable>
+            </View>
+            <View>
+              <Title title={'다가오는 공연'} size={17} />
+              <EventList eventList={list} />              
+            </View>
+            {load ? <Image source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif'}} style={{width: 100, height: 100, alignSelf:'center'}} />:null} 
+          </>
+        }
+      />      
+    </View>
   )
 }
 

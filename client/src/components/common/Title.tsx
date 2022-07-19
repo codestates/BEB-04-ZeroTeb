@@ -18,7 +18,7 @@ const Title: React.FC<titleProps> = ({ title, size }) => {
 const style = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
-    marginHorizontal: moderateScale(20),
+    marginHorizontal: moderateScale(20),    
   },
 })
 
