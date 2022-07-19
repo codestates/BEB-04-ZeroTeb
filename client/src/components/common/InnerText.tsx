@@ -18,7 +18,7 @@ const InnerText: React.FC<InnerTextProps> = ({ innerText, size }) => {
 const style = StyleSheet.create({
   innerTextContainer: {
     alignItems: 'flex-start',
-    marginHorizontal: moderateScale(5),
+    marginHorizontal: moderateScale(10),
   },
 })
 

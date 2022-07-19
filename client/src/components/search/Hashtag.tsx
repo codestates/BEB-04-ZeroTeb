@@ -46,7 +46,7 @@ const style = ScaledSheet.create({
     borderColor: '#FEE396',
     borderWidth: 1,
   },
-  hashtagText: { color: '#544612' },
+  hashtagText: { color: '#544612', fontSize: '12@msr' },
 })
 
 export default Hashtag
