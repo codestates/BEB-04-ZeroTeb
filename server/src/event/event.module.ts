@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EventSchema } from './schemas/event.schema';
 import { EventResultSchema } from './schemas/eventResult.schema';
 import { LikedEventSchema } from './schemas/likedEvent.schema';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { LikedEventSchema } from './schemas/likedEvent.schema';
       { name: 'EventResult', schema: EventResultSchema },
       { name: 'LikedEvent', schema: LikedEventSchema },
     ]),
+    ScheduleModule.forRoot(),
   ],
   controllers: [EventController],
   providers: [EventService],
