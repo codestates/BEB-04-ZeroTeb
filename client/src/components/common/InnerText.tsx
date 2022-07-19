@@ -10,7 +10,9 @@ interface InnerTextProps {
 const InnerText: React.FC<InnerTextProps> = ({ innerText, size }) => {
   return (
     <View style={style.innerTextContainer}>
-      <Text style={{ fontSize: moderateScale(size) }}>{innerText}</Text>
+      <Text style={{ fontSize: moderateScale(size), color: '#333333' }}>
+        {innerText}
+      </Text>
     </View>
   )
 }
@@ -18,7 +20,7 @@ const InnerText: React.FC<InnerTextProps> = ({ innerText, size }) => {
 const style = StyleSheet.create({
   innerTextContainer: {
     alignItems: 'flex-start',
-    marginHorizontal: moderateScale(5),
+    marginHorizontal: moderateScale(10),
   },
 })
 

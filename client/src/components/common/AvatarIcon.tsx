@@ -16,7 +16,7 @@ const AvatarIcon: React.FC<avatarProps> = ({ size, color, title }) => {
           justifyContent: 'center',
           width: moderateScale(size),
           height: moderateScale(size),
-          borderRadius: moderateScale(35),
+          borderRadius: 35,
           backgroundColor: color || 'skyblue',
         }}
       >

@@ -25,8 +25,8 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 export default function Home() {
   const navigation = useNavigation()
 
-  const [list, setList] = useState<EventType[]>([...DummyDate.event]);
-  const [load, setLoad] = useState<boolean>(false);
+  const [list, setList] = useState<EventType[]>([...DummyDate.event])
+  const [load, setLoad] = useState<boolean>(false)
 
   const getEventList = async () => {
     try {
@@ -47,10 +47,10 @@ export default function Home() {
     getEventList()
   }, [])
 
-  const endReached = async () =>{
-    setLoad(true);    
+  const endReached = async () => {
+    setLoad(true)
     setList([...list, ...list])
-    setLoad(false);
+    setLoad(false)
   }
 
   return (
@@ -60,7 +60,7 @@ export default function Home() {
         data={['0']}
         onEndReached={endReached}
         onEndReachedThreshold={0.5}
-        renderItem={() => 
+        renderItem={() => (
           <>
             <View>
               <Title title={'찾았다 내 취향 💕'} size={22} />
@@ -69,19 +69,26 @@ export default function Home() {
               <Pressable //입력창 누르면 Search tab으로 이동
                 onPressIn={() => navigation.navigate('SearchStackScreen')}
               >
-              <SearchBar
-                editable={false} //터치했을때 키보드 안나오게
-              />
+                <SearchBar
+                  editable={false} //터치했을때 키보드 안나오게
+                />
               </Pressable>
             </View>
             <View>
               <Title title={'다가오는 공연'} size={17} />
-              <EventList eventList={list} />              
+              <EventList eventList={list} />
             </View>
-            {load ? <Image source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif'}} style={{width: 100, height: 100, alignSelf:'center'}} />:null} 
+            {load ? (
+              <Image
+                source={{
+                  uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif',
+                }}
+                style={{ width: 100, height: 100, alignSelf: 'center' }}
+              />
+            ) : null}
           </>
-        }
-      />      
+        )}
+      />
     </View>
   )
 }

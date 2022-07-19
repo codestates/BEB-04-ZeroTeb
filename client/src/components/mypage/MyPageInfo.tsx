@@ -57,7 +57,6 @@ const MyPageInfo: React.FC<infoProps> = props => {
         keyExtractor={keyExtractor}
         contentContainerStyle={{
           paddingTop: headerHeight,
-          minHeight: window.height + headerHeight - tabBarHeight,
         }}
         scrollEventThrottle={16}
         onScroll={
