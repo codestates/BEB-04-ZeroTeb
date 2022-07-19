@@ -29,8 +29,9 @@ export class AuthService {
     this.LikedEventModel = mongooseConnection.model('LikedEvent');
   }
 
-  async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
+  async signIn(signInReqDto: SignInReqDto): Promise<[SignInResDto, string]> {
     const signInResDto: SignInResDto = new SignInResDto();
+    let accessToken = '';
 
     // Request Klip Result
     const axiosConfig: AxiosRequestConfig = {
@@ -71,6 +72,7 @@ export class AuthService {
           newUser.test_private_key = testWallet.privateKey;
 
           await this.userModel.create(newUser);
+          accessToken = this.signInJWT(signInResDto);
         }
 
         signInResDto.setAddress(userInfo.get('address'));
@@ -84,7 +86,7 @@ export class AuthService {
       signInResDto.setMessage('로그인에 실패했습니다.');
       signInResDto.setStatus('failure');
     }
-    return signInResDto;
+    return [signInResDto, accessToken];
   }
 
   signInJWT(signInResDto: SignInResDto) {
@@ -92,9 +94,7 @@ export class AuthService {
       address: signInResDto.address,
       username: signInResDto.username,
     };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return this.jwtService.sign(payload);
   }
 
   verifyJWT(jwt: string) {
