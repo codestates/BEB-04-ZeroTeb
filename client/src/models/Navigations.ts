@@ -5,7 +5,11 @@ export type RootTabParamList = {
   MyPageStackScreen: undefined
 }
 
-export type HomeStackParamList = { Home: undefined; SignIn: undefined }
+export type HomeStackParamList = {
+  Home: undefined
+  SignIn: undefined
+  EventDetail: undefined
+}
 
 export type CategoryStackParamList = {
   Category: undefined
