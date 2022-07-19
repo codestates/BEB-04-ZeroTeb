@@ -17,15 +17,7 @@ function CategoryListup() {
 
   return (
     <View style={styles.categoryListupContainer}>
-      <TouchableOpacity
-        onPress={() => {
-          if (navigation.canGoBack()) {
-            navigation.goBack()
-          }
-        }}
-      >
-        <GoBackButton />
-      </TouchableOpacity>
+      <GoBackButton />
       <EventList eventList={[]} />
     </View>
   )
