@@ -30,16 +30,30 @@ export default function LocationButton() {
       const { latitude, longitude } = location.coords
       setMyLosition([latitude, longitude])
 
-      console.log('주변정보 호출');
-      const result = await axios.get(`http://server.beeimp.com:18080/event/location?lat=${latitude}&lon=${longitude}`)
-      .then((res)=>{
-        return res.data;
-      })
-      if(result.message){
-        alert(result.message);
-      }else{
-        console.log('around Event:',result);
-        setAround(result);
+      let lat = latitude
+      let lon = longitude
+
+      if (lat < 0) {
+        lat = lat * -1
+      }
+      if (lon < 0) {
+        lon = lon * -1
+      }
+      console.log('위치 정보:', lat, lon)
+      lat = 35.33598
+      lon = 129.027419
+      const result = await axios
+        .get(
+          `http://server.beeimp.com:18080/event/location?lat=${lat}&lon=${lon}`,
+        )
+        .then(res => {
+          return res.data
+        })
+      if (result.message) {
+        alert(result.message)
+      } else {
+        console.log('around Event:', result)
+        setAround(result)
       }
     } catch (err) {
       alert(err)
@@ -49,7 +63,6 @@ export default function LocationButton() {
   useEffect(() => {
     setMyLosition(myLosition)
     console.log(myLosition[0])
-    
   }, [loadMyLosition])
 
   return (

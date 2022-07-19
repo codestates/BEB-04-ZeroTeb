@@ -22,6 +22,8 @@ const SignIn: React.FC<SignInProps> = () => {
   //지갑 연동하는 함수 실행
   const getUserData = () => {
     KlipAPI.getAddress(async (address: string) => {
+      console.log('callback', address)
+
       setMyAddress(address)
       dispatch(signinActions.setKilpAddress(address))
     })

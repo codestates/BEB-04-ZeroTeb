@@ -13,7 +13,7 @@ export default function MyPageStackScreen() {
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
-
+  console.log('data:', KilpAddress)
   return (
     <MyPageStack.Navigator>
       {KilpAddress ? (
