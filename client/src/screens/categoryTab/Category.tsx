@@ -9,7 +9,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 function Category() {
   const navigation = useNavigation()
   const pressHandler = () => {
-    navigation.navigate('CategoryDetail', { catagoryName: '' })
+    navigation.navigate('CategoryListup', { catagoryName: '' })
   }
 
   return (

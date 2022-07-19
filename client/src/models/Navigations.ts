@@ -13,21 +13,20 @@ export type HomeStackParamList = {
 
 export type CategoryStackParamList = {
   Category: undefined
-  CategoryDetail: { catagoryName: string }
-}
-
-export type EnrollStackParamList = {
-  Enroll: undefined
+  CategoryListup: { catagoryName: string }
+  EventDetail: undefined
 }
 
 export type SearchStackParamList = {
   Search: undefined
-  SearchDetail: { searchWord: string }
+  SearchListup: { searchWord: string }
+  EventDetail: undefined
 }
 
 export type MyPageStackParamList = {
   SignIn: undefined
   MyPage: { kilpAddress?: string }
+  Enroll: undefined
 }
 
 export interface RootStackParamList

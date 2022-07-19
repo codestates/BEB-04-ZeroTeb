@@ -1,18 +1,30 @@
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import Category from '../screens/categoryTab/Category'
-import CategoryDetail from '../screens/categoryTab/CategoryListup'
 import { CategoryStackParamList } from '../models/Navigations'
+import Category from '../screens/categoryTab/Category'
+import CategoryListup from '../screens/categoryTab/CategoryListup'
+import EventDetail from '../screens/common/EventDetail'
 
 export default function CategoryStackScreen() {
   const CategoryStack = createNativeStackNavigator<CategoryStackParamList>()
 
   return (
-    <CategoryStack.Navigator
-      screenOptions={({ route }) => ({ headerShown: false })}
-    >
-      <CategoryStack.Screen name="Category" component={Category} />
-      <CategoryStack.Screen name="CategoryDetail" component={CategoryDetail} />
+    <CategoryStack.Navigator>
+      <CategoryStack.Screen
+        name="Category"
+        component={Category}
+        options={{ headerShown: false }}
+      />
+      <CategoryStack.Screen
+        name="CategoryListup"
+        component={CategoryListup}
+        options={{ headerTitle: '' }}
+      />
+      <CategoryStack.Screen
+        name="EventDetail"
+        component={EventDetail}
+        options={{ headerTitle: '' }}
+      />
     </CategoryStack.Navigator>
   )
 }
