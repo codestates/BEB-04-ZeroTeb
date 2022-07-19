@@ -5,6 +5,7 @@ import { EventResult } from './schemas/eventResult.schema';
 import { LikedEvent } from './schemas/likedEvent.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import 'dotenv/config';
 
@@ -32,6 +33,7 @@ export class EventService {
       }
       const {
         title,
+        promoter,
         address,
         location,
         category,
@@ -64,6 +66,7 @@ export class EventService {
       const eventData = {
         event_id: next_event_id,
         title,
+        promoter,
         address,
         location,
         category,
@@ -207,7 +210,7 @@ export class EventService {
   async findAroundEvent(lat: number, lon: number) {
     console.log('findAroundEvent');
     try {
-      const threshold = 20; // 내 주변 탐색 범위 (단위 km)
+      const threshold = 50; // 내 주변 탐색 범위 (단위 km)
       // API 사용을 위한 key를 헤더에 셋팅
       const header = { Authorization: process.env.KAKAO_API };
       // 사용자의 좌표 받아서 사용자가 있는 장소(행정구역) 구하기
@@ -257,5 +260,11 @@ export class EventService {
     else dist = Math.round(dist / 100) * 100;
 
     return dist / 1000;
+  }
+
+  //이벤트 리스트 받아서 holdings에 업데이트
+  @Cron('* * * * * *')
+  getEventList() {
+    console.log('이벤트 리스트 받기');
   }
 }

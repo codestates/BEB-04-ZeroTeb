@@ -5,6 +5,7 @@ import { Nonce } from './schemas/token.schema';
 import axios from 'axios';
 import 'dotenv/config';
 import { Holding } from './schemas/holding.schema';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class TokenService {
@@ -155,23 +156,9 @@ export class TokenService {
     }
   }
 
-  // create(createTokenDto: CreateTokenDto) {
-  //   return 'This action adds a new token';
-  // }
-
-  // findAll() {
-  //   return `This action returns all token`;
-  // }
-
-  // findOne(id: number) {
-  //   return `This action returns a #${id} token`;
-  // }
-
-  // update(id: number, updateTokenDto: UpdateTokenDto) {
-  //   return `This action updates a #${id} token`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} token`;
-  // }
+  //사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
+  @Cron('* * * * * *')
+  getHoldingData() {
+    console.log('address에 따른 토큰 정보 받기');
+  }
 }
