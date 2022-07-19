@@ -9,7 +9,8 @@ import HomeStackScreen from './HomeStackScreen'
 import CategoryStackScreen from './CategoryStackScreen'
 import SearchStackScreen from './SearchStackScreen'
 import MyPageStackScreen from './MyPageStackScreen'
-import { RootTabParamList } from '../models/Navigations'
+import EnrollStackScreen from './EnrollStackScreen'
+import { RootStackParamList, RootTabParamList } from '../models/Navigations'
 
 export default function TabNavigation() {
   const Tab = createBottomTabNavigator<RootTabParamList>()
