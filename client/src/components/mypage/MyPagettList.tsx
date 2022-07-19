@@ -54,13 +54,12 @@ const MyPagettList: React.FC<ttListProps> = props => {
           }
         }}
         data={Data}
+        numColumns={3}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         horizontal={false}
-        numColumns={3}
         contentContainerStyle={{
           paddingTop: headerHeight,
-          minHeight: window.height + headerHeight - tabBarHeight,
         }}
         scrollEventThrottle={16}
         onScroll={
