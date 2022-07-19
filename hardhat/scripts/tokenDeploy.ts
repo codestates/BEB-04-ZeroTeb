@@ -14,12 +14,21 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+  // KIP17 - NFT
   const kip17 = await ethers.getContractFactory("MyNFT");
   const ZTEB_NFT = await kip17.deploy("ZeroTEB Token", "ZTEB");
 
   await ZTEB_NFT.deployed();
 
-  console.log("ZeroTEB deployed to:", ZTEB_NFT.address);
+  console.log("ZeroTEB's MyNFT deployed to:", ZTEB_NFT.address);
+
+  // SBT
+  const sbt = await ethers.getContractFactory("MySBT");
+  const ZTEB_SBT = await sbt.deploy("ZeroTEB Token", "ZTEB");
+
+  await ZTEB_SBT.deployed();
+
+  console.log("ZeroTEB's MySBT deployed to:", ZTEB_SBT.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

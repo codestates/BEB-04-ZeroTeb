@@ -1,21 +1,20 @@
-// contracts/GLDToken.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@klaytn/contracts/KIP/token/KIP17/KIP17.sol";
 import "@klaytn/contracts/utils/Counters.sol";
 import "@klaytn/contracts/access/Ownable.sol";
-import "@klaytn/contracts/KIP/token/KIP17/extensions/KIP17URIStorage.sol";
+import "./SBTURIStorage.sol";
+import "./SBT.sol";
 
-contract MyNFT is Ownable, KIP17URIStorage {
+contract MySBT is Ownable, SBTURIStorage {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
     constructor(string memory _name, string memory _symbol)
-        KIP17(_name, _symbol)
+        SoulBoundToken(_name, _symbol)
     {}
 
-    function mintNFT(address recipient, string memory tokenURI)
+    function mintSBT(address recipient, string memory tokenURI)
         public
         onlyOwner
         returns (uint256)
