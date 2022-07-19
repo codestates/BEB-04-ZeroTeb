@@ -9,9 +9,7 @@ import HomeStackScreen from './HomeStackScreen'
 import CategoryStackScreen from './CategoryStackScreen'
 import SearchStackScreen from './SearchStackScreen'
 import MyPageStackScreen from './MyPageStackScreen'
-import { RootStackParamList, RootTabParamList } from '../models/Navigations'
-
-export const navigationRef = createNavigationContainerRef<RootStackParamList>
+import { RootTabParamList } from '../models/Navigations'
 
 export default function TabNavigation() {
   const Tab = createBottomTabNavigator<RootTabParamList>()
