@@ -18,6 +18,8 @@ export interface EventType {
   created_date: number
   modified_date: number
   __v: number
+  promoter: string
+  remaining: number
 }
 
 export interface EventEnroll {
