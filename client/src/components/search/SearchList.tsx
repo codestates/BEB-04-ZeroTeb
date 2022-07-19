@@ -14,7 +14,7 @@ import { getDate } from '../../utils/unixTime'
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const SearchList = ({ sendList }: EventType[]) => {
-  const [list, setList] = useState<EventType[]>([...sendList])
+  const [list, setList] = useState<EventType[]>([...DummyDate.event])
 
   return (
     <View style={style.SearchListOuterContainer}>
@@ -36,7 +36,7 @@ const SearchList = ({ sendList }: EventType[]) => {
                 <View style={style.textWrapper}>
                   <Text style={style.SearchListTitle}>{event.title}</Text>
                   <Text style={style.SearchListSeat}>
-                    남은 좌석 : 0 /{' '}
+                    남은 좌석 : {event.remaining} /{' '}
                     {event.price[0].count + event.price[1].count}{' '}
                   </Text>
                   <Text style={style.SearchListDate}>
