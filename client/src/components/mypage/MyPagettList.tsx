@@ -1,30 +1,32 @@
 import React, { useCallback } from 'react'
-import { View, StyleSheet, Text, Animated, Dimensions } from 'react-native'
+import { View, StyleSheet, Animated, Dimensions, Image } from 'react-native'
+import DummyDate from '../../data/DummyData.json'
 
-const sampleData = new Array(100).fill(0)
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
+
+const Data = DummyDate.event
 const window = Dimensions.get('window')
 
-interface flatListProps {
+interface ttListProps {
   headerHeight: number
   tabBarHeight: number
   tabRoute: any
   listArrRef: any
   isTabFocused: boolean
+  scrollY: number
 }
 
-const CollapsibleFlatList: React.FC<flatListProps> = props => {
+const MyPagettList: React.FC<ttListProps> = props => {
   const { headerHeight, tabBarHeight, tabRoute, listArrRef, isTabFocused } =
     props
 
   const renderItem = useCallback(({ item, index }) => {
     return (
-      <View
-        style={{
-          ...styles.itemContainer,
-          backgroundColor: index % 2 === 0 ? '#587498' : '#E86850',
-        }}
-      >
-        <Text style={styles.itemText}>{index}</Text>
+      <View style={styles.itemContainer}>
+        <Image
+          source={{ uri: item.token_image_url }}
+          style={{ width: SCREEN_WIDTH / 3, height: SCREEN_WIDTH / 3 }}
+        />
       </View>
     )
   }, [])
@@ -51,9 +53,11 @@ const CollapsibleFlatList: React.FC<flatListProps> = props => {
             }
           }
         }}
-        data={sampleData}
+        data={Data}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        horizontal={false}
+        numColumns={3}
         contentContainerStyle={{
           paddingTop: headerHeight,
           minHeight: window.height + headerHeight - tabBarHeight,
@@ -77,19 +81,8 @@ const CollapsibleFlatList: React.FC<flatListProps> = props => {
 }
 
 const styles = StyleSheet.create({
-  rootContainer: {
-    flex: 1,
-  },
-  itemContainer: {
-    width: '100%',
-    height: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  itemText: {
-    fontSize: 25,
-    color: '#FFD800',
-  },
+  rootContainer: {},
+  itemContainer: {},
 })
 
-export default CollapsibleFlatList
+export default MyPagettList
