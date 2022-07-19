@@ -16,6 +16,10 @@ export type CategoryStackParamList = {
   CategoryDetail: { catagoryName: string }
 }
 
+export type EnrollStackParamList = {
+  Enroll: undefined
+}
+
 export type SearchStackParamList = {
   Search: undefined
   SearchDetail: { searchWord: string }

@@ -29,10 +29,7 @@ export interface EventEnroll {
   start_time: string
   end_time: string
   place: string
-  price: string
   content: string
   token_url: string
   concert_type: string
-  gender: string
-  age: string
 }
