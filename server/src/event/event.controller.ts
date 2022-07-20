@@ -13,8 +13,12 @@ export class EventController {
   }
 
   @Get('list')
-  findEventList(@Query('page') page: number, @Query('count') count: number) {
-    return this.eventService.findList(page, count);
+  findEventList(
+    @Query('page') page: number,
+    @Query('count') count: number,
+    @Query('category') category: string,
+  ) {
+    return this.eventService.findList(page, count, category);
   }
 
   @Get('item')
