@@ -10,7 +10,9 @@ interface titleProps {
 const Title: React.FC<titleProps> = ({ title, size }) => {
   return (
     <View style={style.titleContainer}>
-      <Text style={{ fontSize: moderateScale(size) }}>{title}</Text>
+      <Text style={{ fontSize: moderateScale(size), fontWeight: '500' }}>
+        {title}
+      </Text>
     </View>
   )
 }
@@ -18,7 +20,7 @@ const Title: React.FC<titleProps> = ({ title, size }) => {
 const style = StyleSheet.create({
   titleContainer: {
     alignItems: 'flex-start',
-    marginHorizontal: moderateScale(20),    
+    marginHorizontal: moderateScale(20),
   },
 })
 

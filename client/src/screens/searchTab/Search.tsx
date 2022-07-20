@@ -1,16 +1,18 @@
+import { useNavigation } from '@react-navigation/native'
+import axios, { AxiosRequestConfig } from 'axios'
 import * as React from 'react'
 import { useState } from 'react'
-import { View, StyleSheet, StatusBar, Platform, Dimensions } from 'react-native'
+import { View, StatusBar, Platform } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import Hashtag from '../../components/search/Hashtag'
 import Searchbar from '../../components/search/Searchbar'
-import SearchList from '../../components/search/SearchList'
 import DummyDate from '../../data/DummyData.json'
 import { EventType } from '../../models/Event'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
 export default function Search() {
+  const navigation = useNavigation()
   const [enteredSearch, setEnteredSearch] = useState<string>('')
 
   function searchInputHandler(enteredText: string) {
@@ -18,9 +20,28 @@ export default function Search() {
   }
   const [sendList, setSendList] = useState<EventType[]>([...DummyDate.event])
 
-  function searchEnterHandler(e: any) {}
+  const searchEnterHandler = async () => {
+    try {
+      if (enteredSearch === '') {
+        return
+      }
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/event/search?keyword=${enteredSearch}`,
+        withCredentials: true,
+      }
+      const res = await axios(config)
+      setSendList(res.data)
+      navigation.navigate('SearchListup', { searchEventList: sendList })
+      setEnteredSearch('')
+    } catch (err) {
+      alert(err)
+    }
+  }
 
-  function pressHandler() {}
+  function pressHandler(e) {
+    console.log(e.target)
+  }
 
   return (
     <View style={style.searchContainer}>
@@ -29,13 +50,10 @@ export default function Search() {
         onChangeText={searchInputHandler}
         onSubmitEditing={searchEnterHandler}
       />
-      {/* 나중에 인기 검색어 추가 부분 */}
       <Hashtag
         hashtags={['김영현', '이지민', '최정환', '채희수']}
         onPress={pressHandler}
       />
-
-      {/* <SearchList sendList={sendList} /> */}
     </View>
   )
 }

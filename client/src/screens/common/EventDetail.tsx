@@ -4,10 +4,9 @@ import {
   View,
   Text,
   Dimensions,
-  Platform,
-  StatusBar,
   ScrollView,
   Pressable,
+  GestureResponderEvent,
 } from 'react-native'
 import InnerText from '../../components/common/InnerText'
 import { EventType } from '../../models/Event'
@@ -16,8 +15,17 @@ import { ScaledSheet } from 'react-native-size-matters'
 import DummyDate from '../../data/DummyData.json'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
+import Title from '../../components/common/Title'
+import MapLocation from '../../components/common/MapLocation'
+import SaleRefundPolicy from '../../components/event/SaleRefundPolicy'
+import EntryRefundPolicy from '../../components/event/EntryRefundPolicy'
+import EntryLotPolicy from '../../components/event/EntryLotPolicy'
+import EntryPrecaution from '../../components/event/EntryPrecaution'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/Index'
+import { useNavigation, useRoute } from '@react-navigation/native'
 
-const eventDetail = DummyDate.event[2]
+const eventDetail = DummyDate.event[1]
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 interface eventDetailProps {
@@ -25,6 +33,18 @@ interface eventDetailProps {
 }
 
 const EventDetail: React.FC<eventDetailProps> = ({}) => {
+  const route = useRoute()
+  const navigation = useNavigation()
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
+
+  const pressButtonHendler = (event: GestureResponderEvent) => {
+    if (KilpAddress === '') {
+      navigation.navigate('SignIn')
+    }
+  }
+
   return (
     <ScrollView style={style.eventOuterContainer}>
       <View style={style.eventImgContainer}>
@@ -64,7 +84,10 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
             </View>
           )}
 
-          <Pressable style={style.eventButtonContainer}>
+          <Pressable
+            style={style.eventButtonContainer}
+            onPress={pressButtonHendler}
+          >
             <View style={style.eventButton}>
               <Text style={style.eventText}>
                 {eventDetail.type === 'sale' ? '구매' : '응모'}
@@ -79,13 +102,33 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         <InnerText innerText={eventDetail.promoter} size={20} />
       </View>
       <Unserbar />
+      <Text></Text>
+      <Title title={'이벤트 내용'} size={20} />
       <View style={style.eventContentContainer}>
-        <Text></Text>
-        <InnerText innerText={'기획자 : '} size={10} />
-        <InnerText innerText={'남은 좌석 : '} size={10} />
-        <InnerText innerText={'기획자 : '} size={10} />
-        <InnerText innerText={'남은 좌석 : '} size={10} />
+        <InnerText innerText={eventDetail.contents} size={15} />
       </View>
+      {eventDetail.type === 'sale' ? (
+        <>
+          <Unserbar />
+          <Text></Text>
+          <Title title={'위치 및 장소'} size={20} />
+          <View style={style.eventContentContainer}>
+            <InnerText innerText={eventDetail.location} size={15} />
+            <MapLocation x={eventDetail.x} y={eventDetail.y} />
+          </View>
+          <Unserbar />
+          <SaleRefundPolicy />
+        </>
+      ) : (
+        <>
+          <Unserbar />
+          <EntryLotPolicy />
+          <Unserbar />
+          <EntryPrecaution />
+          <Unserbar />
+          <EntryRefundPolicy />
+        </>
+      )}
     </ScrollView>
   )
 }
@@ -133,18 +176,17 @@ const style = ScaledSheet.create({
     borderColor: '#FEE396',
     borderWidth: 1,
   },
-  eventText: { color: '#333333', fontSize: '12@msr' },
+  eventText: { color: '#666666', fontSize: '12@msr' },
   promoterContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: '15@msr',
+    paddingHorizontal: '20@msr',
   },
   eventContentContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    flex: 2,
-    marginTop: '5@msr',
+    paddingVertical: '15@msr',
+    paddingHorizontal: '10@msr',
   },
 })
 

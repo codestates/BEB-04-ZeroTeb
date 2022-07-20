@@ -1,3 +1,5 @@
+import { EventType } from './Event'
+
 export type RootTabParamList = {
   HomeStackScreen: undefined
   CategoryStackScreen: undefined
@@ -19,7 +21,7 @@ export type CategoryStackParamList = {
 
 export type SearchStackParamList = {
   Search: undefined
-  SearchListup: { searchWord: string }
+  SearchListup: { searchEventList: EventType[] }
   EventDetail: undefined
 }
 

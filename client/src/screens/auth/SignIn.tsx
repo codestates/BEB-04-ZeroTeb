@@ -8,6 +8,7 @@ import * as KlipAPI from '../../components/kilps/modal/WalletInfo'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
 import { ScaledSheet } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/native'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
 
@@ -18,6 +19,7 @@ const SignIn: React.FC<SignInProps> = () => {
   const [myAddress, setMyAddress] = useState(DEFAULT_ADDRESS)
 
   const dispatch = useDispatch()
+  const navigation = useNavigation()
 
   //지갑 연동하는 함수 실행
   const getUserData = () => {
@@ -26,6 +28,9 @@ const SignIn: React.FC<SignInProps> = () => {
 
       setMyAddress(address)
       dispatch(signinActions.setKilpAddress(address))
+      if (navigation.canGoBack()) {
+        navigation.goBack()
+      }
     })
   }
 

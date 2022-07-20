@@ -27,22 +27,23 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                 <Text></Text>
                 <InnerText innerText={event.title} size={15} />
               </View>
-
-              <View style={style.eventContentContainer}>
-                <Text></Text>
-                <InnerText innerText={'기획자 : '} size={10} />
-                <InnerText innerText={'남은 좌석 : '} size={10} />
-                <InnerText
-                  innerText={`공연 기간 : ${getDate(
-                    event.event_start_date,
-                  )} - ${getDate(event.event_end_date)}`}
-                  size={10}
-                />
-              </View>
+            <View style={style.eventContentContainer}>
+              <Text></Text>
+              <InnerText innerText={`기획자 : ${event.promoter}`} size={10} />
+              <InnerText
+                innerText={`남은 좌석 : ${event.remaining}`}
+                size={10}
+              />
+              <InnerText
+                innerText={`공연 기간 : ${getDate(
+                  event.event_start_date,
+                )} - ${getDate(event.event_end_date)}`}
+                size={10}
+              />
             </View>
-          )
-        })}
-      </View>
+          </View>
+        )
+      })}
     </View>
   )
 }
