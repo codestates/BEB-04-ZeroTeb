@@ -30,8 +30,11 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
 
             <View style={style.eventContentContainer}>
               <Text></Text>
-              <InnerText innerText={'기획자 : '} size={10} />
-              <InnerText innerText={'남은 좌석 : '} size={10} />
+              <InnerText innerText={`기획자 : ${event.promoter}`} size={10} />
+              <InnerText
+                innerText={`남은 좌석 : ${event.remaining}`}
+                size={10}
+              />
               <InnerText
                 innerText={`공연 기간 : ${getDate(
                   event.event_start_date,
@@ -39,7 +42,6 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                 size={10}
               />
             </View>
-            {console.log('tt')}
           </View>
         )
       })}

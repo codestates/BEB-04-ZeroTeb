@@ -20,7 +20,7 @@ export default function MyPageStackScreen() {
         <MyPageStack.Screen
           name="MyPage"
           component={MyPage}
-          // initialParams={{ kilpAddress: KilpAddress }}
+          initialParams={{ kilpAddress: KilpAddress }}
         />
       ) : (
         <MyPageStack.Screen
