@@ -47,6 +47,11 @@ export class EventController {
     return this.eventService.findAroundEvent(lat, lon);
   }
 
+  @Get('banner')
+  findBanner() {
+    return this.eventService.getBanner();
+  }
+
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
   //   return this.eventService.update(+id, updateEventDto);

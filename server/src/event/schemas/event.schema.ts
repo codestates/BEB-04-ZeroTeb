@@ -27,6 +27,8 @@ export const EventSchema = new mongoose.Schema({
   x: { type: Number, required: true },
   y: { type: Number, required: true },
   status: { type: String, required: true },
+  remaining: { type: Number, required: true },
+  banner: { type: Boolean, default: false },
 });
 
 export interface Event {
@@ -51,4 +53,6 @@ export interface Event {
   x: number;
   y: number;
   status: string;
+  remaining: number;
+  banner: boolean;
 }

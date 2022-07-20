@@ -49,6 +49,7 @@ export class EventService {
         event_end_date,
         created_date,
         modified_date,
+        remaining,
       } = createEventDto;
       // location의 데이터를 분리해서 도, 시 까지만 사용
       const sliceLocation = location.split(' ');
@@ -85,6 +86,7 @@ export class EventService {
         x: point.documents[0].x, //location 기반 좌표 lat
         y: point.documents[0].y, //location 기반 좌표 lon
         status: '진행 중',
+        remaining,
       };
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
@@ -260,6 +262,17 @@ export class EventService {
     else dist = Math.round(dist / 100) * 100;
 
     return dist / 1000;
+  }
+
+  async getBanner() {
+    console.log('getBanner');
+    try {
+      const bannerEvent = await this.EventModel.find({ banner: true });
+      return bannerEvent;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail to import ad' };
+    }
   }
 
   //이벤트 리스트 받아서 holdings에 업데이트

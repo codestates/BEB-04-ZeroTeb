@@ -17,4 +17,6 @@ export class CreateEventDto {
   event_end_date: string;
   created_date: string;
   modified_date: string;
+  remaining: number;
+  banner: boolean;
 }
