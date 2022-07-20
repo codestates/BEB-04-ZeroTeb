@@ -23,6 +23,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
     struct Event {
         string name;
+        uint8 eventType; // 0 - sale, 1 - entry
         string tokenImageUri;
         address creator;
         uint256 classCount;
@@ -51,7 +52,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
      */
     modifier isEndEvent(uint256 _eventId) {
         require(
-            block.timestamp < _events[_eventId].endTime,
+            block.timestamp > _events[_eventId].endTime,
             "This Event is not close."
         );
         _;
@@ -64,13 +65,19 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _;
     }
 
+    modifier isSale(uint256 _eventId) {
+        require(_events[_eventId].eventType == 0, "This event is not sale.");
+        _;
+    }
+
+    modifier isEntry(uint256 _eventId) {
+        require(_events[_eventId].eventType == 1, "This event is not entry.");
+        _;
+    }
+
     constructor(string memory _name, string memory _symbol)
         KIP17(_name, _symbol)
     {}
-
-    // function getEvent(uint _eventId) public view returns (Event memory) {
-    //     return _events[_eventId];
-    // }
 
     function eventOf(uint _tokenId) public view returns (uint) {
         return _tokenExtentions[_tokenId].eventId;
@@ -79,32 +86,46 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     function createEvent(
         address _creator,
         string memory _eventName,
+        uint8 _eventType,
         string memory _tokenImageUri,
-        string[] memory _names,
-        uint256[] memory _prices,
-        uint256[] memory _counts,
+        string[] memory _classNames,
+        uint256[] memory _classPrices,
+        uint256[] memory _classCounts,
         uint256 _openTime,
         uint256 _closeTime,
         uint256 _endTime
-    ) public override onlyOwner returns (uint256 _eventId) {
+    ) public payable override onlyOwner returns (uint256 _eventId) {
+        uint256 _total = 0;
+        uint256 _deposit = 0;
+        for (uint256 i = 0; i < _classPrices.length; i++) {
+            _total = _total + (_classPrices[i] * _classCounts[i]);
+        }
+        _total = _total * 1 ether;
+        _deposit = (_total / 100) * 5;
+        require(_deposit == msg.value, "The deposit does not fit.");
         // 이벤트 아이디
         uint256 _newEventId = _eventIds.current();
 
         // 신규 이벤트 매핑
         _events[_newEventId].name = _eventName;
+        _events[_newEventId].eventType = _eventType;
         _events[_newEventId].tokenImageUri = _tokenImageUri;
         _events[_newEventId].creator = _creator;
         _events[_newEventId].openTime = _openTime;
         _events[_newEventId].closeTime = _closeTime;
         _events[_newEventId].endTime = _endTime;
-        _events[_newEventId].classCount = _names.length;
+        _events[_newEventId].classCount = _classNames.length;
 
-        for (uint8 i = 0; i < _names.length; i++) {
-            _events[_newEventId].class[i].name = _names[i];
-            _events[_newEventId].class[i].count = _counts[i];
-            _events[_newEventId].class[i].price = _prices[i];
-            _events[_newEventId].class[i].tokens = new uint256[](_names.length);
-            _events[_newEventId].class[i].owners = new address[](_names.length);
+        for (uint8 i = 0; i < _classNames.length; i++) {
+            _events[_newEventId].class[i].name = _classNames[i];
+            _events[_newEventId].class[i].count = _classPrices[i];
+            _events[_newEventId].class[i].price = _classCounts[i];
+            _events[_newEventId].class[i].tokens = new uint256[](
+                _classNames.length
+            );
+            _events[_newEventId].class[i].owners = new address[](
+                _classNames.length
+            );
         }
 
         // 이벤트 아이디 증가
@@ -112,6 +133,36 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
         // 반환
         _eventId = _newEventId;
+    }
+
+    function getEvent(uint _eventId)
+        public
+        view
+        returns (
+            string memory _name,
+            string memory _tokenImageUri,
+            address _creator,
+            uint256 _classCount,
+            uint256 _openTime,
+            uint256 _closeTime,
+            uint256 _endTime
+        )
+    {
+        _name = _events[_eventId].name;
+        _tokenImageUri = _events[_eventId].tokenImageUri;
+        _creator = _events[_eventId].creator;
+        _classCount = _events[_eventId].classCount;
+        _openTime = _events[_eventId].openTime;
+        _closeTime = _events[_eventId].closeTime;
+        _endTime = _events[_eventId].endTime;
+    }
+
+    function getEventClass(uint256 _eventId, uint8 _eventClassId)
+        public
+        view
+        returns (EventClass memory)
+    {
+        return _events[_eventId].class[_eventClassId];
     }
 
     function mintToken(
@@ -143,14 +194,14 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _eventId,
         uint8 _classId,
         uint8 _number
-    ) public payable override {
+    ) public payable override isSale(_eventId) {
         uint256 _tokenId = _events[_eventId].class[_classId].tokens[_number];
         require(
             _tokenExtentions[_tokenId].isTrade,
             "This token is not traded."
         );
         require(
-            _events[_eventId].class[_classId].price == msg.value,
+            _events[_eventId].class[_classId].price * 1 ether == msg.value,
             "This amount is not the same."
         );
         require(
@@ -180,9 +231,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         public
         payable
         override
+        isEntry(_eventId)
     {
         require(
-            _events[_eventId].class[_classId].price == msg.value,
+            _events[_eventId].class[_classId].price * 1 ether == msg.value,
             "This amount is not the same."
         );
         require(
@@ -193,6 +245,13 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             block.timestamp < _events[_eventId].closeTime,
             "The time is close."
         );
+        // 중복 신청 방지
+        for (uint256 i = 0; i < _eventParticipants[_eventId].length; i++) {
+            require(
+                _eventParticipants[_eventId][i] != msg.sender,
+                "You already applied."
+            );
+        }
         _eventParticipants[_eventId].push(msg.sender);
     }
 
@@ -205,18 +264,121 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventParticipants[_eventId];
     }
 
-    function _eventWinner() private returns (address[] memory) {}
+    function _eventWinners(uint256 _eventId, uint8 _eventClassId) private {
+        uint256 _randNum = 0;
+        address _temp;
+        for (uint256 j = 0; j < 10; j++) {
+            _randNum =
+                uint256(
+                    keccak256(
+                        abi.encodePacked(j + block.timestamp, block.difficulty)
+                    )
+                ) %
+                _eventParticipants[_eventId].length;
 
-    function approveEventWinner(uint256 _eventId)
+            _temp = _eventParticipants[_eventId][j];
+            _eventParticipants[_eventId][j] = _eventParticipants[_eventId][
+                _randNum
+            ];
+            _eventParticipants[_eventId][_randNum] = _temp;
+        }
+        for (uint256 j = _eventParticipants[_eventId].length; j > 0; j--) {
+            _randNum =
+                uint256(
+                    keccak256(
+                        abi.encodePacked(j + block.timestamp, block.difficulty)
+                    )
+                ) %
+                _eventParticipants[_eventId].length;
+            address temp = _eventParticipants[_eventId][j];
+            _eventParticipants[_eventId][j] = _eventParticipants[_eventId][
+                _randNum
+            ];
+            _eventParticipants[_eventId][_randNum] = temp;
+        }
+    }
+
+    function transferEventWinner(uint256 _eventId, uint8 _eventClassId)
         public
         override
+        onlyOwner
         returns (address[] memory)
-    {}
+    {
+        address _owner = owner();
+        _eventWinners(_eventId, _eventClassId);
+
+        for (uint256 i = 0; i < _eventParticipants[_eventId].length; i++) {
+            _transfer(
+                _owner,
+                _eventParticipants[_eventId][i],
+                _events[_eventId].class[_eventClassId].tokens[i]
+            );
+            _events[_eventId].class[_eventClassId].owners[
+                i
+            ] = _eventParticipants[_eventId][i];
+        }
+
+        // 이벤트를 응모에서 판매 상태로 변경
+        _events[_eventId].eventType = 0;
+
+        return _events[_eventId].class[_eventClassId].owners;
+    }
 
     function endEvent(uint256 _eventId, uint8 _eventEndStatus)
         public
         override
-    {}
+        onlyOwner
+        isEndEvent(_eventId)
+    {
+        uint256 _deposit = 100 * 1 ether;
+        uint256 _compensation = 0; // 실패 시 사용자 보상
+        address _owner = owner();
+
+        // 이벤트가 성공적으로 이루어진 경우
+        if (_eventEndStatus == 1) {
+            payable(_owner).transfer((_deposit / 10) * 4);
+            payable(_events[_eventId].creator).transfer((_deposit / 10) * 6);
+
+            // 이벤트가 실패한 경우
+        } else if (_eventEndStatus == 0) {
+            uint8 _eventType = _events[_eventId].eventType;
+
+            // Sale
+            if (_eventType == 0) {
+                for (uint8 i = 0; i < _events[_eventId].classCount; i++) {
+                    if (_events[_eventId].class[i].price == 0) continue;
+                    uint256 _compensation = _events[_eventId].class[i].price *
+                        1 ether;
+                    _compensation = _compensation + ((_compensation / 100) * 3);
+                    for (
+                        uint256 j = 0;
+                        j < _events[_eventId].class[i].owners.length;
+                        i++
+                    ) {
+                        // address가 0이 아닐 경우 보상
+                        if (
+                            _events[_eventId].class[i].owners[j] != address(0)
+                        ) {
+                            payable(_events[_eventId].class[i].owners[j])
+                                .transfer(_compensation);
+                        }
+                    }
+                }
+                // Entry
+            } else if (_eventType == 1) {
+                _compensation = _deposit / _eventParticipants[_eventId].length;
+                for (
+                    uint256 i = 0;
+                    i < _eventParticipants[_eventId].length;
+                    i++
+                ) {
+                    payable(_eventParticipants[_eventId][i]).transfer(
+                        _compensation
+                    );
+                }
+            }
+        }
+    }
 
     /**
      * @dev See {IKIP17-transferFrom}.
@@ -287,7 +449,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 tokenId,
         bytes memory _data
     ) internal virtual override isEndEvent(tokenId) isNFT(tokenId) {
-        _transfer(from, to, tokenId);
+        revert();
+        // _transfer(from, to, tokenId);
         // require(
         //     _checkOnKIP17Received(from, to, tokenId, _data) ||
         //         _checkOnERC721Received(from, to, tokenId, _data),

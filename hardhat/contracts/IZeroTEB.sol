@@ -8,6 +8,7 @@ interface IZeroTEB {
     function createEvent(
         address _creator,
         string memory _eventName,
+        uint8 _eventType,
         string memory _tokenImageUri,
         string[] memory _names,
         uint256[] memory _prices,
@@ -15,7 +16,7 @@ interface IZeroTEB {
         uint256 _openTime,
         uint256 _closeTime,
         uint256 _endTime
-    ) external returns (uint256 _eventId);
+    ) external payable returns (uint256 _eventId);
 
     /*
      * 이벤트 토큰 발행
@@ -58,14 +59,15 @@ interface IZeroTEB {
         returns (address[] memory);
 
     /*
-     * 이벤트 당첨자 권한 부여
+     * 이벤트 당첨자 토큰 전송
      */
-    function approveEventWinner(uint256 _eventId)
+    function transferEventWinner(uint256 _eventId, uint8 _eventClassId)
         external
         returns (address[] memory);
 
     /*
      * 이벤트 종료
+     * _eventEndStatus : 0 - 실패, 1 - 성공
      */
     function endEvent(uint256 _eventId, uint8 _eventEndStatus) external;
 }
