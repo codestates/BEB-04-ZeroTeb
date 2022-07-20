@@ -13,21 +13,20 @@ interface eventListProps {
 const EventList: React.FC<eventListProps> = ({ eventList }) => {
   return (
     <View style={style.eventOuterContainer}>
-      {eventList.map((event, index) => {
-        return (
-          <View style={style.eventInnerContainer} key={index}>
-            <View style={style.eventImgContainer}>
-              <Image
-                style={style.eventImg}
-                source={{ uri: event.thumnail }}
-              ></Image>
-            </View>
-
-            <View style={style.eventTitleContainer}>
-              <Text></Text>
-              <InnerText innerText={event.title} size={15} />
-            </View>
-
+      <View style={style.eventMiddleContainer}>
+        {eventList.map((event, index) => {
+          return (
+            <View style={style.eventInnerContainer} key={index}>
+              <View style={style.eventImgContainer}>
+                <Image
+                  style={style.eventImg}
+                  source={{ uri: event.thumnail }}
+                ></Image>
+              </View>
+              <View style={style.eventTitleContainer}>
+                <Text></Text>
+                <InnerText innerText={event.title} size={15} />
+              </View>
             <View style={style.eventContentContainer}>
               <Text></Text>
               <InnerText innerText={`기획자 : ${event.promoter}`} size={10} />
@@ -51,25 +50,29 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
 
 const style = ScaledSheet.create({
   eventOuterContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
+    alignItems: 'center',
     margin: '5@msr',
     padding: '5@msr',
-    height: 'auto',
+  },
+  eventMiddleContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: SCREEN_WIDTH * 0.015,
+    width: SCREEN_WIDTH * 0.95,
   },
   eventInnerContainer: {
-    // justifyContent: 'space-between',
-    margin: 5,
-    // padding: 10,
+    marginHorizontal: SCREEN_WIDTH * 0.02,
+    marginTop: 10,
     paddingVertical: 10,
     borderColor: 'lightgray',
     borderWidth: 1,
-    width: SCREEN_WIDTH * 0.43,
+    width: SCREEN_WIDTH * 0.42,
     borderRadius: 10,
   },
   eventImgContainer: {
     alignItems: 'center',
+    overflow: 'hidden',
+    marginHorizontal: SCREEN_WIDTH * 0.01,
     flex: 2,
   },
   eventImg: {
@@ -81,7 +84,6 @@ const style = ScaledSheet.create({
   eventTitleContainer: {
     marginTop: 10,
     flex: 1,
-    // alignItems: 'flex-start',
   },
   eventContentContainer: {
     alignItems: 'flex-start',

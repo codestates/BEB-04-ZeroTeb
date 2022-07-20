@@ -10,7 +10,7 @@ import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
-export default function CategoryButton({ onPress }) {
+export default function CategoryButton(prop) {
   return (
     <View style={style.categoryButtonOuterContainer}>
       <Pressable
@@ -18,90 +18,15 @@ export default function CategoryButton({ onPress }) {
           style.categoryButtonInnerContainer,
           pressed ? style.Pressed : null,
         ]}
-        onPress={onPress}
+        onPress={prop.onPress}
       >
         <ImageBackground
-          source={require('../../../assets/categoryImg/consert.png')}
+          source={{ uri: prop.contentURL }}
           resizeMode="cover"
           style={style.categoryImg}
           imageStyle={{ borderRadius: 10 }}
         >
-          <Text style={style.categoryText}>Consert</Text>
-        </ImageBackground>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.categoryButtonInnerContainer,
-          pressed ? style.Pressed : null,
-        ]}
-      >
-        <ImageBackground
-          source={require('../../../assets/categoryImg/theater.png')}
-          resizeMode="cover"
-          style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <Text style={style.categoryText}>Theater</Text>
-        </ImageBackground>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.categoryButtonInnerContainer,
-          pressed ? style.Pressed : null,
-        ]}
-      >
-        <ImageBackground
-          source={require('../../../assets/categoryImg/kids.png')}
-          resizeMode="cover"
-          style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <Text style={style.categoryText}>Kids</Text>
-        </ImageBackground>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.categoryButtonInnerContainer,
-          pressed ? style.Pressed : null,
-        ]}
-      >
-        <ImageBackground
-          source={require('../../../assets/categoryImg/musical.png')}
-          resizeMode="cover"
-          style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <Text style={style.categoryText}>Musical</Text>
-        </ImageBackground>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.categoryButtonInnerContainer,
-          pressed ? style.Pressed : null,
-        ]}
-      >
-        <ImageBackground
-          source={require('../../../assets/categoryImg/exhibition.png')}
-          resizeMode="cover"
-          style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <Text style={style.categoryText}>Exhibition</Text>
-        </ImageBackground>
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          style.categoryButtonInnerContainer,
-          pressed ? style.Pressed : null,
-        ]}
-      >
-        <ImageBackground
-          source={require('../../../assets/categoryImg/sport.png')}
-          resizeMode="cover"
-          style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <Text style={style.categoryText}>Leisure Sport</Text>
+          <Text style={style.categoryText}>{prop.contentTitle}</Text>
         </ImageBackground>
       </Pressable>
     </View>
