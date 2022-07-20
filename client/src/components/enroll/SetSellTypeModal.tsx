@@ -10,42 +10,22 @@ import {
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
-const PlaceModal = (props: any) => {
+const SetSellTypeModal = (props: any) => {
   const setContent = props.setContent
-  const place = [
-    '서울특별시',
-    '부산광역시',
-    '대구광역시',
-    '인천광역시',
-    '광주광역시',
-    '대전광역시',
-    '울산광역시',
-    '세종특별자치시',
-    '경기도',
-    '강원도',
-    '충청북도',
-    '충청남도',
-    '전라북도',
-    '전라남도',
-    '경상북도',
-    '경상남도',
-    '제주특별자치도',
-  ]
-
+  const list = ['sale', 'entry']
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
   const onStart = () => {
     setModalVisible(true)
   }
-
-  const onSelectPlace = (e: any) => {
+  const onSelectType = (e: any) => {
     setModalVisible(false)
-    setContent({ ...props.content, place: e })
+    setContent({ ...props.content, type: e })
   }
   return (
     <View style={style.modalWrapper}>
       <TouchableOpacity onPress={onStart}>
         <View style={style.enrollInput}>
-          <Text style={style.enrollContentText}>{props.content.place}</Text>
+          <Text style={style.enrollContentText}>{props.content.type}</Text>
         </View>
       </TouchableOpacity>
       <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
@@ -55,12 +35,12 @@ const PlaceModal = (props: any) => {
             onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
           />
           <View style={style.modalSelectBody}>
-            {place.map((keyword, index) => {
+            {list.map((keyword, index) => {
               return (
                 <TouchableOpacity
                   key={index}
                   style={style.modalSelect}
-                  onPress={() => onSelectPlace(keyword)}
+                  onPress={() => onSelectType(keyword)}
                 >
                   <Text style={style.modalText}>{keyword}</Text>
                 </TouchableOpacity>
@@ -84,31 +64,34 @@ const style = StyleSheet.create({
     marginRight: 15,
     marginTop: 5,
     marginBottom: 10,
+    maxHeight: 30,
     borderWidth: 1,
     borderRadius: 10,
   },
   modalContainer: {
     flex: 1,
+
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalSelectBody: {
     overflow: 'scroll',
     width: SCREEN_WIDTH / 2,
+    height: SCREEN_HEIGHT / 2,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
   },
   modalSelect: {
-    width: SCREEN_WIDTH / 4,
+    width: SCREEN_WIDTH / 3,
     backgroundColor: '#3AACFF',
     borderRadius: 10,
     borderWidth: 0.5,
-    margin: 3,
+    margin: 5,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: 20,
     color: 'white',
     textAlign: 'center',
   },
@@ -121,4 +104,4 @@ const style = StyleSheet.create({
   },
 })
 
-export default PlaceModal
+export default SetSellTypeModal
