@@ -24,6 +24,7 @@ export interface EventType {
 
 export interface EventEnroll {
   title: string
+  type: string
   start_date: string
   end_date: string
   start_time: string

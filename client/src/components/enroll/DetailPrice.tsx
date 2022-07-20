@@ -1,50 +1,109 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, TextInput, Dimensions } from 'react-native'
-import { useState } from 'react'
+import {
+  View,
+  StyleSheet,
+  Text,
+  TextInput,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const DetailList = (props: any) => {
-  const [value, setValue] = useState<{
-    class: string
-    price: string
-    count: string
-  }>({
-    class: '',
-    price: '',
-    count: '',
-  })
+  const propertiesHandler = (e: any, index: any, name: string) => {
+    props.setprice({
+      ...props.price,
+      attributes: [
+        ...props.price.attributes.slice(0, index),
+        {
+          ...props.price.attributes[index],
+          [name]: e,
+        },
+        ...props.price.attributes.slice(index + 1),
+      ],
+    })
+  }
+
+  const addPropertiesHandler = () => {
+    props.setprice({
+      ...props.price,
+      attributes: [
+        ...props.price.attributes,
+        {
+          class: '',
+          price: '',
+          count: '',
+        },
+      ],
+    })
+  }
+
+  const removePropertiesHandler = (e: any, index: any) => {
+    const removeProperties = props.price.attributes.filter(
+      (item: any, itemIndex: any) => index !== itemIndex,
+    )
+    props.setprice({
+      ...props.price.attributes,
+      attributes: removeProperties,
+    })
+  }
+
   return (
     <View>
-      {props.countList &&
-        props.countList.map((item: any, i: any) => (
-          <View key={i} style={style.InputPriceWrapper}>
+      {props.price.attributes.map((attribute: any, index: any) => {
+        return (
+          <View key={index} style={style.InputPriceWrapper}>
             <View style={style.InputPrice}>
               <TextInput
-                placeholder="class input"
-                style={style.InputContent}
-                value={value.class}
-                onChangeText={text => setValue({ ...value, class: text })}
+                testID="class"
+                placeholder={'class input..'}
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'class')
+                }}
+                value={attribute.class}
               ></TextInput>
             </View>
             <View style={style.InputPrice}>
               <TextInput
-                placeholder="price input"
-                style={style.InputContent}
-                value={value.price}
-                onChangeText={text => setValue({ ...value, price: text })}
+                testID="price"
+                placeholder={'price input..'}
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'price')
+                }}
+                value={attribute.price}
               ></TextInput>
             </View>
             <View style={style.InputPrice}>
               <TextInput
-                placeholder="좌석수 input"
-                style={style.InputContent}
-                value={value.count}
-                onChangeText={text => setValue({ ...value, count: text })}
+                testID="count"
+                placeholder={'count input..'}
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'count')
+                }}
+                value={attribute.count}
               ></TextInput>
             </View>
+            <TouchableOpacity
+              style={{ marginLeft: 10, marginTop: 5 }}
+              onPress={e => {
+                removePropertiesHandler(e, index)
+              }}
+            >
+              <AntDesign name="minuscircle" size={24} color="black" />
+            </TouchableOpacity>
           </View>
-        ))}
+        )
+      })}
+      <View>
+        <TouchableOpacity
+          style={{ marginLeft: 20, marginBottom: 5 }}
+          onPress={addPropertiesHandler}
+        >
+          <AntDesign name="pluscircle" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
     </View>
   )
 }
