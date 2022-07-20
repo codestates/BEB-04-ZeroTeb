@@ -30,6 +30,7 @@ export default function LocationButton() {
       const { latitude, longitude } = location.coords
       setMyLosition([latitude, longitude])
 
+      // 로드된 위도, 경도로 주변 이벤트 호출
       let lat = latitude
       let lon = longitude
 
@@ -40,6 +41,7 @@ export default function LocationButton() {
         lon = lon * -1
       }
       console.log('위치 정보:', lat, lon)
+      //임시 값 - 현재 주변에 이벤트가 없어서 보여주기 위함
       lat = 35.33598
       lon = 129.027419
       const result = await axios
