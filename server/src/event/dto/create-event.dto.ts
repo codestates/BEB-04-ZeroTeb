@@ -11,12 +11,12 @@ export class CreateEventDto {
   price: [];
   contents: string;
   option: [];
-  recruit_start_date: string;
-  recruit_end_date: string;
-  event_start_date: string;
-  event_end_date: string;
-  created_date: string;
-  modified_date: string;
+  recruit_start_date: number;
+  recruit_end_date: number;
+  event_start_date: number;
+  event_end_date: number;
+  created_date: number;
+  modified_date: number;
   remaining: number;
   banner: boolean;
 }
