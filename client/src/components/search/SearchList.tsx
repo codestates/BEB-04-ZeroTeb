@@ -5,23 +5,30 @@ import {
   StyleSheet,
   ImageBackground,
   Dimensions,
+  ScrollView,
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
-import DummyDate from '../../data/DummyData.json'
 import { getDate } from '../../utils/unixTime'
+import { countSeat } from '../../utils/count'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-const SearchList = ({ sendList }: EventType[]) => {
-  const [list, setList] = useState<EventType[]>([...DummyDate.event])
+interface searchListProps {
+  sendList: EventType[]
+}
+
+const SearchList: React.FC<searchListProps> = ({ sendList }) => {
+  const [list, setList] = useState<EventType[]>(sendList)
 
   return (
-    <View style={style.SearchListOuterContainer}>
+    <ScrollView style={style.SearchListOuterContainer}>
       <View>
         <Text>검색목록</Text>
+        <Text></Text>
       </View>
-      {list.slice(0, 4).map((event: EventType, index: number) => {
+
+      {list.map((event: EventType, index: number) => {
         if (event.category) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
@@ -33,23 +40,24 @@ const SearchList = ({ sendList }: EventType[]) => {
                     imageStyle={{ borderRadius: 50 }}
                   ></ImageBackground>
                 </View>
-                <View style={style.textWrapper}>
-                  <Text style={style.SearchListTitle}>{event.title}</Text>
-                  <Text style={style.SearchListSeat}>
-                    남은 좌석 : {event.remaining} /{' '}
-                    {event.price[0].count + event.price[1].count}{' '}
-                  </Text>
-                  <Text style={style.SearchListDate}>
-                    공연 기간 : {getDate(event.event_start_date)} ~{' '}
-                    {getDate(event.event_end_date)}
-                  </Text>
+                <View style={style.SearchListTextContainer}>
+                  <View style={style.textWrapper}>
+                    <Text style={style.SearchListTitle}>{event.title}</Text>
+                    <Text style={style.SearchListSeat}>
+                      남은 좌석 : {event.remaining} / {countSeat(event.price)}
+                    </Text>
+                    <Text style={style.SearchListDate}>
+                      공연 기간 : {getDate(event.event_start_date)} ~{' '}
+                      {getDate(event.event_end_date)}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
           )
         }
       })}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -65,14 +73,13 @@ const style = StyleSheet.create({
   },
 
   Wrapper: {
-    // flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
+    padding: 10,
   },
 
   ImageWrapper: {
     flex: 1,
-    // maxHeight: 100,
     maxWidth: 80,
   },
 
@@ -104,6 +111,7 @@ const style = StyleSheet.create({
     textAlign: 'right',
     color: 'black',
   },
+  SearchListTextContainer: { flex: 1 },
 })
 
 export default SearchList

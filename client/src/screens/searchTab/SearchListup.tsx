@@ -1,14 +1,16 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useRoute } from '@react-navigation/native'
 import SearchList from '../../components/search/SearchList'
 
-function SearchListup() {
-  const navigation = useNavigation()
+interface searchListProps {}
+
+const SearchListup: React.FC<searchListProps> = () => {
+  const route = useRoute()
 
   return (
     <View style={styles.searchListupContainer}>
-      <SearchList sendList={[]} />
+      <SearchList sendList={route.params?.searchEventList} />
     </View>
   )
 }

@@ -14,10 +14,11 @@ import MyPageInfo from '../../components/mypage/MyPageInfo'
 const TABBAR_HEIGHT = 60
 
 interface Props {
-  props: any
+  route: Object
 }
 
-const MyPage: React.FC<Props> = props => {
+const MyPage: React.FC<Props> = ({ route }) => {
+  console.log(route.params.kilpAddress)
   const [headerHeight, setHeaderHeight] = useState(0)
   const [tabRoutes, setTabRoutes] = useState([
     { key: 'screen1', title: 'tt' },
