@@ -2,11 +2,10 @@ import { useNavigation } from '@react-navigation/native'
 import axios, { AxiosRequestConfig } from 'axios'
 import * as React from 'react'
 import { useState } from 'react'
-import { View, StatusBar, Platform } from 'react-native'
+import { View, StatusBar, Platform, Pressable } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import Hashtag from '../../components/search/Hashtag'
 import Searchbar from '../../components/search/Searchbar'
-import DummyDate from '../../data/DummyData.json'
 import { EventType } from '../../models/Event'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
@@ -18,21 +17,15 @@ export default function Search() {
   function searchInputHandler(enteredText: string) {
     setEnteredSearch(enteredText)
   }
-  const [sendList, setSendList] = useState<EventType[]>([...DummyDate.event])
+  const [sendList, setSendList] = useState<EventType[]>([])
 
   const searchEnterHandler = async () => {
     try {
       if (enteredSearch === '') {
         return
       }
-      const config: AxiosRequestConfig = {
-        method: 'get',
-        url: `http://server.beeimp.com:18080/event/search?keyword=${enteredSearch}`,
-        withCredentials: true,
-      }
-      const res = await axios(config)
-      setSendList(res.data)
-      navigation.navigate('SearchListup', { searchEventList: sendList })
+      console.log('enteredSearch----------' + enteredSearch)
+      navigation.navigate('SearchListup', { searchWord: enteredSearch })
       setEnteredSearch('')
     } catch (err) {
       alert(err)
