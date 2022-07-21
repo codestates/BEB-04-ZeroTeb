@@ -5,10 +5,17 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
-import { ContractEventDto, ContracCreateEventkDto } from './klaytn.entity';
+import {
+  ContractEventDto,
+  ContracCreateEventkDto,
+  ContractEventClassType,
+  ContractBuyerType,
+} from './klaytn.entity';
 const CONTRACT_ADDRESS =
   process.env.CONTRACT_ADDRESS || '0xcDeCE0A0074e1805820B6938ee4D6443e6fDA61e';
 const GAS = '200000000';
+const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
+const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
 
 @Injectable()
 export class KlaytnService {
@@ -134,5 +141,93 @@ export class KlaytnService {
     contractEventDto.endTime = Number(event._endTime);
 
     return contractEventDto;
+  }
+
+  async getEventClass(eventId: number, eventClassId): Promise<ContractEventClassType> {
+    const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+
+    return {
+      class: receipt[0],
+      price: Number(receipt[1]),
+      count: Number(receipt[2]),
+    };
+  }
+
+  async mintToken(eventId: number, tokenType: number): Promise<void> {
+    if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
+      this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
+    }
+    const event = await this.getEvent(eventId);
+    event.prices.forEach(async (price, index) => {
+      await this.contract.methods.mintToken(eventId, tokenType, index).send({
+        from: OWNER_ADDRESS,
+        gas: GAS,
+      });
+    });
+  }
+
+  async buyToken(
+    buyerAddress: string,
+    eventId: number,
+    classId: number,
+    number?: number,
+  ): Promise<boolean> {
+    try {
+      const isSelect = number !== undefined;
+      number = isSelect ? number : 0;
+
+      const user = await this.UserModel.findOne({ test_address: buyerAddress });
+
+      if (!this.caver.wallet.isExisted(user.test_address)) {
+        this.singleKeyring(user.test_address, user.test_private_key);
+      }
+
+      const eventClass = await this.getEventClass(eventId, classId);
+
+      const receipt = await this.contract.methods
+        .buyToken(eventId, classId, number, isSelect)
+        .send({
+          from: user.test_address,
+          gas: GAS,
+          value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
+        });
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
+  }
+
+  async getEventBuyers(eventId, eventClassId): Promise<ContractBuyerType[]> {
+    const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+    console.log(receipt);
+    return receipt.owners.map((owner, index) => ({
+      id: index,
+      address: owner,
+      tokenId: Number(receipt.tokens[index]),
+    }));
+  }
+
+  async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
+    try {
+      const user = await this.UserModel.findOne({ test_address: applicantAddress });
+
+      if (!this.caver.wallet.isExisted(user.test_address)) {
+        this.singleKeyring(user.test_address, user.test_private_key);
+      }
+
+      const eventClass = await this.getEventClass(eventId, 0);
+      await this.contract.methods.applyToken(eventId, 0).send({
+        from: user.test_address,
+        gas: GAS,
+        value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
+      });
+
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   }
 }
