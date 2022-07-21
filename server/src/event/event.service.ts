@@ -8,6 +8,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import 'dotenv/config';
+import { decodeJwt } from 'lib/jwt';
+import { User, UserDocument } from 'src/auth/schemas/user.schema';
 
 @Injectable()
 export class EventService {
@@ -15,13 +17,19 @@ export class EventService {
     @InjectModel('Event') private readonly EventModel: Model<Event>,
     @InjectModel('EventResult') private readonly EventResultModel: Model<EventResult>,
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
+    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
   ) {}
 
   // 이벤트 등록 함수
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto, access_token: string) {
     console.log('create');
-    // 유효성 검사 필요
     try {
+      // 유효성 검사
+      const jwtPayload = decodeJwt(access_token ?? '');
+      if (!jwtPayload) throw new Error('accessToken이 유효하지 않습니다.');
+      const user = await this.UserModel.findOne({ address: jwtPayload.address });
+      if (!user) throw new Error('user가 존재하지 않습니다.');
+
       // 최신 event_id 가져와서 다음 evnet_id 생성
       // 기존 데이터 없으면 오류 발생해서 next_evnet_id는 0으로 사용
       let next_event_id = 0;
