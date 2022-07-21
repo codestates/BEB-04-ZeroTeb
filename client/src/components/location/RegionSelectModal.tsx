@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, StyleSheet, View, Dimensions } from 'react-native'
+import { Modal, StyleSheet, View, Dimensions, Text } from 'react-native'
 import RegionButton from './RegionBtton'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -10,7 +10,7 @@ interface Props {
   body: any
 }
 const RegionSelectModal = (props: Props) => {
-  const regionList = ['전국', '서울시', '부산시', '경남', '경북']
+  const [regionList, setRegionList] = useState(['전국', '서울시', '부산시', '경남', '경북'])
   const [region, setRegion] = useState('전국')
 
   return (
@@ -27,9 +27,13 @@ const RegionSelectModal = (props: Props) => {
         {props.body}
       </View>
       <View style={styles.selectSpace}>
+        <Text style={styles.regionTitle}>지역 선택</Text>
+        <View style={styles.line}></View>
+        <View  style={styles.regionSpace}>
         {regionList.map(ele => {
-          ;<RegionButton region={ele}></RegionButton>
+          <RegionButton region={ele}></RegionButton>
         })}
+        </View>
       </View>
     </Modal>
   )
@@ -46,8 +50,9 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     backgroundColor: '#000000',
     opacity: 0.3,
-  },
+  },  
   selectSpace: {
+    flexDirection: 'column',
     position: 'absolute',
     width: SCREEN_WIDTH * 0.8,
     height: SCREEN_HEIGHT * 0.5,
@@ -55,6 +60,29 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     right: SCREEN_WIDTH * 0.1,
     bottom: SCREEN_HEIGHT * 0.25,
+    padding: 10,
   },
+  regionTitle:{
+    marginTop: 15,
+    fontSize: 25,
+    alignSelf: 'center',
+  },
+  line:{
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'gray',
+  },
+  regionSpace:{
+    flexDirection: "row",
+    flexWrap: 'wrap',
+    marginTop: 5,
+    padding: 5,
+
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: 'lightgray',
+    borderRadius: 10,
+    height: SCREEN_HEIGHT * 0.4,
+  }
 })
 export default RegionSelectModal
