@@ -27,7 +27,7 @@ export type SearchStackParamList = {
 
 export type MyPageStackParamList = {
   SignIn: { gotoMyPage: boolean }
-  MyPage: { kilpAddress?: string }
+  MyPage: { kilpAddress?: string; accessToken?: string }
   Enroll: undefined
 }
 

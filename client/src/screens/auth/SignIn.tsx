@@ -31,17 +31,24 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
 
   //지갑 연동하는 함수 실행
   const getUserData = () => {
-    KlipAPI.getAddress(async (address: string) => {
-      console.log('callback', address)
+    KlipAPI.getAddress(
+      async (address: string) => {
+        setMyAddress(address)
+        dispatch(signinActions.setKilpAddress(address))
+      },
+      async (accessToken: string) => {
+        dispatch(signinActions.setAccessToken(accessToken))
 
-      setMyAddress(address)
-      dispatch(signinActions.setKilpAddress(address))
-      if (route.params.gotoMyPage) {
-        navigation.navigate('MyPage', { kilpAddress: myAddress })
-      } else if (navigation.canGoBack()) {
-        navigation.goBack()
-      }
-    })
+        if (route.params.gotoMyPage) {
+          navigation.navigate('MyPage', {
+            kilpAddress: myAddress,
+            accessToken: accessToken,
+          })
+        } else if (navigation.canGoBack()) {
+          navigation.goBack()
+        }
+      },
+    )
   }
 
   return (
