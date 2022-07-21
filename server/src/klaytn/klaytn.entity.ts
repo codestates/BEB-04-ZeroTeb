@@ -16,12 +16,20 @@ export class ContractEventDto {
   tokenImageUri: string;
   creator: string;
   classCount: number;
-  prices: {
-    class: string;
-    price: number;
-    count: number;
-  }[];
+  prices: ContractEventClassType[];
   openTime: number;
   closeTime: number;
   endTime: number;
+}
+
+export interface ContractEventClassType {
+  class: string;
+  price: number;
+  count: number;
+}
+
+export interface ContractBuyerType {
+  id: number;
+  address: string;
+  tokenId: number;
 }
