@@ -19,6 +19,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 count;
         uint256[] tokens;
         address[] owners;
+        uint256 index;
+        uint256 ownerTotal;
     }
 
     struct Event {
@@ -43,9 +45,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     /*
      * Mapping
      */
-    mapping(uint256 => Event) _events;
+    mapping(uint256 => Event) private _events;
     mapping(uint256 => TokenExtention) private _tokenExtentions;
-    mapping(uint256 => address[]) _eventParticipants; // 이벤트 응모 참가자
+    mapping(uint256 => address[]) private _eventParticipants; // 이벤트 응모 참가자
+    mapping(uint256 => uint256) private _deposits;
 
     /*
      * Modifier
@@ -87,6 +90,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventIds.current();
     }
 
+    function eventType(uint256 _eventId) public view returns (uint8) {
+        return _events[_eventId].eventType;
+    }
+
     function createEvent(
         address _creator,
         string memory _eventName,
@@ -107,6 +114,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _total = _total * 1 ether;
         _deposit = (_total / 100) * 5;
         require(_deposit == msg.value, "The deposit does not fit.");
+        address _owner = owner();
+        payable(_owner).transfer((_deposit / 10) * 4);
+        _deposits[_eventId] = (_deposit / 10) * 6;
         // 이벤트 아이디
         uint256 _newEventId = _eventIds.current();
 
@@ -125,11 +135,13 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             _events[_newEventId].class[i].count = _classPrices[i];
             _events[_newEventId].class[i].price = _classCounts[i];
             _events[_newEventId].class[i].tokens = new uint256[](
-                _classNames.length
+                _classCounts[i]
             );
             _events[_newEventId].class[i].owners = new address[](
-                _classNames.length
+                _classCounts[i]
             );
+            _events[_newEventId].class[i].index = 0;
+            _events[_newEventId].class[i].ownerTotal = 0;
         }
 
         // 이벤트 아이디 증가
@@ -139,6 +151,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _eventId = _newEventId;
     }
 
+    // 이벤트 조회
     function getEvent(uint _eventId)
         public
         view
@@ -161,6 +174,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _endTime = _events[_eventId].endTime;
     }
 
+    // 이벤트 클래스 조회
     function getEventClass(uint256 _eventId, uint8 _eventClassId)
         public
         view
@@ -169,6 +183,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _events[_eventId].class[_eventClassId];
     }
 
+    // 티켓 토큰 민트
     function mintToken(
         uint256 _eventId,
         uint8 _tokenType, // 0 : NFT, 1: SBT
@@ -194,16 +209,13 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventId;
     }
 
+    // 토큰 구매
     function buyToken(
         uint256 _eventId,
         uint8 _classId,
-        uint8 _number
+        uint256 _number,
+        bool _isSelect
     ) public payable override isSale(_eventId) {
-        uint256 _tokenId = _events[_eventId].class[_classId].tokens[_number];
-        require(
-            _tokenExtentions[_tokenId].isTrade,
-            "This token is not traded."
-        );
         require(
             _events[_eventId].class[_classId].price * 1 ether == msg.value,
             "This amount is not the same."
@@ -216,12 +228,42 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             block.timestamp < _events[_eventId].closeTime,
             "The time is close."
         );
+        require(
+            _events[_eventId].class[_classId].ownerTotal <=
+                _events[_eventId].class[_classId].count,
+            "Sold out."
+        );
+
+        uint256 _tokenId;
+
+        // 자리를 선택하는 경우
+        if (_isSelect) {
+            _tokenId = _events[_eventId].class[_classId].tokens[_number];
+            // 자리를 선택 하지 않는 경우
+        } else {
+            for (
+                uint256 i = _events[_eventId].class[_classId].index;
+                i < _events[_eventId].class[_classId].count;
+                i++
+            ) {
+                _tokenId = _events[_eventId].class[_classId].tokens[i];
+                if (_tokenExtentions[_tokenId].isTrade) {
+                    break;
+                }
+            }
+        }
+        require(
+            _tokenExtentions[_tokenId].isTrade,
+            "This token is not traded."
+        );
         address _owner = owner();
         _transfer(_owner, msg.sender, _tokenId);
         _events[_eventId].class[_classId].owners[_number] = msg.sender;
         _tokenExtentions[_tokenId].isTrade = false;
+        _events[_eventId].class[_classId].ownerTotal += 1;
     }
 
+    // 토큰 구매자 조회
     function getEventBuyers(uint256 _eventId, uint8 _classId)
         public
         view
@@ -231,6 +273,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _events[_eventId].class[_classId].owners;
     }
 
+    // 이벤트 토큰 응모
     function applyToken(uint256 _eventId, uint8 _classId)
         public
         payable
@@ -259,6 +302,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _eventParticipants[_eventId].push(msg.sender);
     }
 
+    // 이벤트 응모자 조회
     function getEventParticipants(uint256 _eventId)
         public
         view
@@ -334,14 +378,13 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         onlyOwner
         isEndEvent(_eventId)
     {
-        uint256 _deposit = 100 * 1 ether;
+        uint256 _deposit = _deposits[_eventId];
         uint256 _compensation = 0; // 실패 시 사용자 보상
         address _owner = owner();
 
         // 이벤트가 성공적으로 이루어진 경우
         if (_eventEndStatus == 1) {
-            payable(_owner).transfer((_deposit / 10) * 4);
-            payable(_events[_eventId].creator).transfer((_deposit / 10) * 6);
+            payable(_events[_eventId].creator).transfer(_deposit);
 
             // 이벤트가 실패한 경우
         } else if (_eventEndStatus == 0) {
