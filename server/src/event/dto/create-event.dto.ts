@@ -8,7 +8,7 @@ export class CreateEventDto {
   type: string;
   thumnail: string;
   token_image_url: string;
-  price: [];
+  price: { class: string; price: number; count: number }[];
   contents: string;
   option: [];
   recruit_start_date: number;
