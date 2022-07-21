@@ -6,6 +6,7 @@ import { EventSchema } from './schemas/event.schema';
 import { EventResultSchema } from './schemas/eventResult.schema';
 import { LikedEventSchema } from './schemas/likedEvent.schema';
 import { ScheduleModule } from '@nestjs/schedule';
+import { User, UserSchema } from 'src/auth/schemas/user.schema';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: 'Event', schema: EventSchema },
       { name: 'EventResult', schema: EventResultSchema },
       { name: 'LikedEvent', schema: LikedEventSchema },
+      { name: User.name, schema: UserSchema },
     ]),
     ScheduleModule.forRoot(),
   ],

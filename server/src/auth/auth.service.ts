@@ -98,7 +98,7 @@ export class AuthService {
   verifyJWT(jwt: string) {
     const accessToken = this.jwtService.verify(jwt);
     console.log(accessToken);
-    return 'good';
+    return { message: 'good' };
   }
 
   async userInfo(address: string): Promise<UserInfoDto | { message: string }> {
