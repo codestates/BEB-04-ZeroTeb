@@ -32,7 +32,6 @@ export class AuthController {
 
   @Get('/verify')
   verify(@Req() req: Request) {
-    console.log(req);
     const { access_token } = req.cookies;
     if (access_token === undefined) new BadRequestException();
     return this.authService.verifyJWT(access_token);
