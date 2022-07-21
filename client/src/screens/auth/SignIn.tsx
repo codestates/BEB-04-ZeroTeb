@@ -9,8 +9,8 @@ import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
 import { ScaledSheet } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
-
-const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/Index'
 
 interface SignInProps {
   route: {
@@ -24,32 +24,41 @@ interface SignInProps {
 
 const SignIn: React.FC<SignInProps> = ({ route }) => {
   const [isChecked, setisChecked] = useState(false)
-  const [myAddress, setMyAddress] = useState(DEFAULT_ADDRESS)
 
   const dispatch = useDispatch()
   const navigation = useNavigation()
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
+  const AccessToken = useSelector(
+    (state: RootState) => state.signin.AccessToken,
+  )
 
   //지갑 연동하는 함수 실행
-  const getUserData = () => {
-    KlipAPI.getAddress(
+  const getUserData = async () => {
+    await KlipAPI.getAddress(
       async (address: string) => {
-        setMyAddress(address)
         dispatch(signinActions.setKilpAddress(address))
       },
       async (accessToken: string) => {
         dispatch(signinActions.setAccessToken(accessToken))
-
-        if (route.params.gotoMyPage) {
-          navigation.navigate('MyPage', {
-            kilpAddress: myAddress,
-            accessToken: accessToken,
-          })
-        } else if (navigation.canGoBack()) {
-          navigation.goBack()
-        }
       },
     )
   }
+
+  React.useEffect(() => {
+    if (AccessToken === '' && KilpAddress === '') {
+    } else {
+      if (route.params.gotoMyPage) {
+        navigation.navigate('MyPage', {
+          kilpAddress: KilpAddress,
+          accessToken: AccessToken,
+        })
+      } else if (navigation.canGoBack()) {
+        navigation.goBack()
+      }
+    }
+  }, [KilpAddress, AccessToken])
 
   return (
     <View
