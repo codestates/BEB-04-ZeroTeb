@@ -157,8 +157,8 @@ export class TokenService {
   }
 
   //사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  @Cron('* * * * * *')
-  getHoldingData() {
-    console.log('address에 따른 토큰 정보 받기');
-  }
+  // @Cron('* * * * * *')
+  // getHoldingData() {
+  //   console.log('address에 따른 토큰 정보 받기');
+  // }
 }
