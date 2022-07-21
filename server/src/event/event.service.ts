@@ -107,7 +107,7 @@ export class EventService {
     if (ctg === undefined) {
       ctg = '';
     }
-    if (rg === undefined) {
+    if (rg === undefined || rg === '전국') {
       rg = '';
     }
 
