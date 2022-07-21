@@ -66,10 +66,10 @@ export class TokenService {
         saveResult = await newNonce.save();
       }
       //유효기한이 남았으면 유효기한 연장? 같은거 아직 뭐할지 안정함
-      else if (this.checkEx(noncedata.date)) {
-        console.log('유효기한 남음');
-        return { message: 'QR is expired' };
-      }
+      // else if (this.checkEx(noncedata.date)) {
+      //   console.log('유효기한 남음');
+      //   return { message: 'QR is expired' };
+      // }
       // 유효기한 갱싱
       else {
         console.log('유효기한 지남');
