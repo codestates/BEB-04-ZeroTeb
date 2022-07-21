@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, StyleSheet, Text, Dimensions, Pressable } from 'react-native'
 import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
@@ -15,8 +15,10 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
   const navigation = useNavigation()
 
   function firstLetter(name: string) {
-    return name.slice(0, 1)
+    return name?.slice(0, 1)
   }
+
+  useEffect(() => {}, [userInfo])
 
   return (
     <View style={styles.rootContainer}>

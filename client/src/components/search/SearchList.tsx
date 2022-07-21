@@ -20,8 +20,6 @@ interface searchListProps {
 }
 
 const SearchList: React.FC<searchListProps> = ({ sendList }) => {
-  // const [list, setList] = useState<EventType[]>(sendList)
-
   const checkWin = () =>{
     console.log('당첨')
   }
@@ -30,6 +28,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList }) => {
     <ScrollView style={style.SearchListOuterContainer}>
       <Text style={style.listTitle}>검색목록</Text>
       {sendList.map((event: EventType, index: number) => {        
+
           return (
             <View key={index} style={style.SearchListInnerContainer}>
               <View style={style.Wrapper}>

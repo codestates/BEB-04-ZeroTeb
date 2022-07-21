@@ -13,6 +13,8 @@ import MyPageInfo from '../../components/mypage/MyPageInfo'
 import axios, { AxiosRequestConfig } from 'axios'
 import { UserType } from '../../models/User'
 import LoadingImg from '../../components/common/LoadingImg'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/Index'
 
 const TABBAR_HEIGHT = 60
 
@@ -28,8 +30,9 @@ interface Props {
 }
 
 const MyPage: React.FC<Props> = ({ route }) => {
-  const KilpAddress = route.params.kilpAddress
-  const AccessToken = route.params.accessToken
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
 
   const [myState, setMyState] = useState<UserType>({
     username: 'tt',
