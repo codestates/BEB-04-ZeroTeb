@@ -14,7 +14,7 @@ const ipfsImageUpload = async (file, metadata) => {
     method: 'post',
     url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
     headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+      Authorization: `Bearer ${process.env.PINATA_JWT}`,
     },
     data: data,
   };
@@ -43,7 +43,7 @@ const ipfsMetadataUpload = async (metadata) => {
     method: 'post',
     url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
     headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+      Authorization: `Bearer ${process.env.PINATA_JWT}`,
     },
     data: data,
   };
