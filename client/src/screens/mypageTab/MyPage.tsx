@@ -12,6 +12,7 @@ import MyPagettList from '../../components/mypage/MyPagettList'
 import MyPageInfo from '../../components/mypage/MyPageInfo'
 import axios, { AxiosRequestConfig } from 'axios'
 import { UserType } from '../../models/User'
+import LoadingImg from '../../components/common/LoadingImg'
 
 const TABBAR_HEIGHT = 60
 
@@ -21,12 +22,14 @@ interface Props {
     name: string
     params: {
       kilpAddress: string
+      accessToken: string
     }
   }
 }
 
 const MyPage: React.FC<Props> = ({ route }) => {
   const KilpAddress = route.params.kilpAddress
+  const AccessToken = route.params.accessToken
 
   const [myState, setMyState] = useState<UserType>({
     username: 'tt',
@@ -37,7 +40,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
       sale: 0,
       liked: 0,
     },
-    tokens: [],
+    tokens: [{}],
   })
 
   const getUserInfo = async () => {
@@ -48,7 +51,6 @@ const MyPage: React.FC<Props> = ({ route }) => {
         withCredentials: true,
       }
       const res = await axios(config)
-      console.log(res.data)
       setMyState(res.data)
     } catch (err) {
       alert(err)
@@ -221,26 +223,32 @@ const MyPage: React.FC<Props> = ({ route }) => {
   )
 
   return (
-    <View style={styles.rootContainer}>
-      {headerHeight > 0 ? (
-        <TabView
-          navigationState={{ index: tabIndex, routes: tabRoutes }}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={onTabIndexChange}
-        />
-      ) : null}
-      <Animated.View
-        style={{
-          ...styles.headerContainer,
-          transform: [{ translateY: headerTranslateY }],
-        }}
-        onLayout={headerOnLayout}
-        pointerEvents="box-none"
-      >
-        <MyPageHeader userInfo={myState} />
-      </Animated.View>
-    </View>
+    <>
+      {myState.username === 'tt' ? (
+        <LoadingImg />
+      ) : (
+        <View style={styles.rootContainer}>
+          {headerHeight > 0 ? (
+            <TabView
+              navigationState={{ index: tabIndex, routes: tabRoutes }}
+              renderScene={renderScene}
+              renderTabBar={renderTabBar}
+              onIndexChange={onTabIndexChange}
+            />
+          ) : null}
+          <Animated.View
+            style={{
+              ...styles.headerContainer,
+              transform: [{ translateY: headerTranslateY }],
+            }}
+            onLayout={headerOnLayout}
+            pointerEvents="box-none"
+          >
+            <MyPageHeader userInfo={myState} />
+          </Animated.View>
+        </View>
+      )}
+    </>
   )
 }
 

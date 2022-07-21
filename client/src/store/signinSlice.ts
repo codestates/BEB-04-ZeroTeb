@@ -4,12 +4,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 interface SignInState {
   KilpAddress: string
   balance: number
+  AccessToken: string
 }
 
 // Define the initial state using that type
 const initialState: SignInState = {
   KilpAddress: '',
   balance: 0,
+  AccessToken: '',
 }
 
 export const signinSlice = createSlice({
@@ -22,6 +24,9 @@ export const signinSlice = createSlice({
     },
     setbalance: (state, action: PayloadAction<number>) => {
       state.balance = action.payload
+    },
+    setAccessToken: (state, action: PayloadAction<string>) => {
+      state.AccessToken = action.payload
     },
   },
 })
