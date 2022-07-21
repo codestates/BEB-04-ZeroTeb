@@ -3,6 +3,7 @@ import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Request } from 'express';
 
+
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
@@ -19,8 +20,9 @@ export class EventController {
     @Query('page') page: number,
     @Query('count') count: number,
     @Query('category') category: string,
+    @Query('region') region: string,
   ) {
-    return this.eventService.findList(page, count, category);
+    return this.eventService.findList(page, count, category, region);
   }
 
   @Get('item')
@@ -57,14 +59,4 @@ export class EventController {
   findBanner() {
     return this.eventService.getBanner();
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-  //   return this.eventService.update(+id, updateEventDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.eventService.remove(+id);
-  // }
 }
