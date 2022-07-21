@@ -24,15 +24,16 @@ export default function MyPageStackScreen() {
         />
       ) : (
         <MyPageStack.Screen
-          name="Enroll"
-          component={Enroll}
-          options={{ headerTitle: '' }}
+          name="SignIn"
+          component={SignIn}
+          options={{ headerShown: false }}
+          initialParams={{ gotoMyPage: true }}
         />
       )}
       <MyPageStack.Screen
-        name="SignIn"
-        component={SignIn}
-        options={{ headerShown: false }}
+        name="Enroll"
+        component={Enroll}
+        options={{ headerTitle: '' }}
       />
     </MyPageStack.Navigator>
   )

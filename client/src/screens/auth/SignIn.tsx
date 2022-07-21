@@ -12,9 +12,17 @@ import { useNavigation } from '@react-navigation/native'
 
 const DEFAULT_ADDRESS = '0x00000000000000000000000000000'
 
-interface SignInProps {}
+interface SignInProps {
+  route: {
+    key: string
+    name: string
+    params: {
+      gotoMyPage: boolean
+    }
+  }
+}
 
-const SignIn: React.FC<SignInProps> = () => {
+const SignIn: React.FC<SignInProps> = ({ route }) => {
   const [isChecked, setisChecked] = useState(false)
   const [myAddress, setMyAddress] = useState(DEFAULT_ADDRESS)
 
@@ -28,7 +36,9 @@ const SignIn: React.FC<SignInProps> = () => {
 
       setMyAddress(address)
       dispatch(signinActions.setKilpAddress(address))
-      if (navigation.canGoBack()) {
+      if (route.params.gotoMyPage) {
+        navigation.navigate('MyPage', { kilpAddress: myAddress })
+      } else if (navigation.canGoBack()) {
         navigation.goBack()
       }
     })
@@ -49,7 +59,7 @@ const SignIn: React.FC<SignInProps> = () => {
         <Ionicons
           name="checkmark-circle-outline"
           size={25}
-          color={isChecked ? 'green' : 'gray'}
+          color={isChecked ? '#FFCC00' : 'gray'}
           onPress={() => {
             setisChecked(!isChecked)
           }}

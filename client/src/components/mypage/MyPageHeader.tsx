@@ -1,38 +1,65 @@
 import React from 'react'
-import { View, StyleSheet, Text, Dimensions } from 'react-native'
+import { View, StyleSheet, Text, Dimensions, Pressable } from 'react-native'
 import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
+import { UserType } from '../../models/User'
+import { useNavigation } from '@react-navigation/native'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-interface profileProps {}
+interface profileProps {
+  userInfo: UserType
+}
 
-const MyPageHeader: React.FC<profileProps> = () => {
+const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
+  const navigation = useNavigation()
   return (
     <View style={styles.rootContainer}>
       <View style={styles.profileContainer}>
-        <AvatarIcon size={65} color={'skyblue'} title={''} />
-        <Text style={styles.profileText}>username</Text>
+        <AvatarIcon
+          size={65}
+          color={userInfo.profile_url}
+          title={userInfo.username.slice(0, 1)}
+        />
+        <Text style={styles.profileText}>{userInfo.username}</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.infoIconContainer}>
           <View style={styles.infoIconInnerContainer}>
             <Text style={styles.infoText}>등록</Text>
-            <Entypo name="squared-plus" size={19} color="black" />
+            <Pressable onPress={() => navigation.navigate('Enroll')}>
+              <Entypo name="squared-plus" size={19} color="black" />
+            </Pressable>
           </View>
-          <AvatarIcon size={40} color={'lightgrey'} title={'10'} />
+          <AvatarIcon
+            size={40}
+            color={'lightgrey'}
+            title={userInfo.history.created}
+          />
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>응모</Text>
-          <AvatarIcon size={40} color={'lightgrey'} title={'11'} />
+          <AvatarIcon
+            size={40}
+            color={'lightgrey'}
+            title={userInfo.history.entry}
+          />
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>구매</Text>
-          <AvatarIcon size={40} color={'lightgrey'} title={'4'} />
+          <AvatarIcon
+            size={40}
+            color={'lightgrey'}
+            title={userInfo.history.sale}
+          />
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>관심</Text>
-          <AvatarIcon size={40} color={'lightgrey'} title={'21'} />
+          <AvatarIcon
+            size={40}
+            color={'lightgrey'}
+            title={userInfo.history.liked}
+          />
         </View>
       </View>
     </View>
@@ -52,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
   },
-  profileText: { fontSize: 30, paddingLeft: 10 },
+  profileText: { fontSize: 20, paddingLeft: 10 },
   headerText: {
     fontSize: 25,
     color: '#FFD800',
