@@ -34,7 +34,8 @@ interface IZeroTEB {
     function buyToken(
         uint256 _eventId,
         uint8 _classId,
-        uint8 _number
+        uint256 _number,
+        bool _isSelect
     ) external payable;
 
     /*

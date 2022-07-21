@@ -24,13 +24,11 @@ export class EventService {
   ) {}
 
   // 이벤트 등록 함수
-  async create(createEventDto: CreateEventDto, access_token: string) {
+  async create(createEventDto: CreateEventDto, jwtUser: any) {
     console.log('create');
     try {
       // 유효성 검사
-      const jwtPayload = decodeJwt(access_token ?? '');
-      if (!jwtPayload) throw new Error('accessToken이 유효하지 않습니다.');
-      const user = await this.UserModel.findOne({ address: jwtPayload.address });
+      const user = await this.UserModel.findOne({ address: jwtUser.address });
       if (!user) throw new Error('user가 존재하지 않습니다.');
 
       // 최신 event_id 가져와서 다음 evnet_id 생성
