@@ -47,6 +47,7 @@ export class EventService {
         promoter,
         address,
         location,
+        sub_location,
         category,
         type,
         thumnail,
@@ -63,8 +64,8 @@ export class EventService {
         remaining,
       } = createEventDto;
       // location의 데이터를 분리해서 도, 시 까지만 사용
-      const sliceLocation = location.split(' ');
-      const sL = `${sliceLocation[0]} ${sliceLocation[1]}`;
+      const sliceLocation = sub_location.split(' ');
+      const sL = `${location} ${sliceLocation[0]}`;
       // 한글로 입력된 이벤트 장소를 좌표로 바꿈
       const header = { Authorization: process.env.KAKAO_API };
       const point = await axios
@@ -81,6 +82,7 @@ export class EventService {
         promoter,
         address,
         location,
+        sub_location,
         category,
         type,
         thumnail,
@@ -100,19 +102,19 @@ export class EventService {
         remaining,
       };
       // Contract - 이벤트 등록
-      const ContracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
-      ContracCreateEventkDto.creator = user.test_address;
-      ContracCreateEventkDto.eventName = title;
-      ContracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
-      ContracCreateEventkDto.tokenImageUri = token_image_url;
-      ContracCreateEventkDto.classNames = price.map((v) => v.class);
-      ContracCreateEventkDto.classPrices = price.map((v) => v.price);
-      ContracCreateEventkDto.classCounts = price.map((v) => v.count);
-      ContracCreateEventkDto.openTime = recruit_start_date;
-      ContracCreateEventkDto.closeTime = recruit_end_date;
-      ContracCreateEventkDto.endTime = event_end_date;
+      const contracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
+      contracCreateEventkDto.creator = user.test_address;
+      contracCreateEventkDto.eventName = title;
+      contracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
+      contracCreateEventkDto.tokenImageUri = token_image_url;
+      contracCreateEventkDto.classNames = price.map((v) => v.class);
+      contracCreateEventkDto.classPrices = price.map((v) => v.price);
+      contracCreateEventkDto.classCounts = price.map((v) => v.count);
+      contracCreateEventkDto.openTime = recruit_start_date;
+      contracCreateEventkDto.closeTime = recruit_end_date;
+      contracCreateEventkDto.endTime = event_end_date;
 
-      await this.klaytnService.createEvent(ContracCreateEventkDto);
+      await this.klaytnService.createEvent(contracCreateEventkDto);
 
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();

@@ -4,6 +4,7 @@ export class CreateEventDto {
   promoter: string;
   address: string;
   location: string;
+  sub_location: string;
   category: string;
   type: string;
   thumnail: string;
