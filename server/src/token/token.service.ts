@@ -92,7 +92,6 @@ export class TokenService {
         qr_code_text: text,
         image_format: 'SVG',
         image_width: 100,
-        qr_code_logo: 'scan-me-square',
       };
       //address와 token_id로 qrcode 생성
       const qr = await axios
