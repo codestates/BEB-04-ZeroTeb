@@ -7,34 +7,33 @@ import {
   StatusBar,
   Platform,
   ScrollView,
-  Button,
   Image,
   TouchableOpacity,
-  Modal,
   Dimensions,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import { useNavigation } from '@react-navigation/native'
 import { EventType, EventEnroll } from '../../models/Event'
 import { useState } from 'react'
-import { AntDesign } from '@expo/vector-icons'
-import GoBackButton from '../../components/common/GoBackButton'
+import SetSellTypeModal from '../../components/enroll/SetSellTypeModal'
 import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
 import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
+
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-//import { getDateAndTime, getDate } from '../../utils/unixTime'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
-export default function Enroll() {
-  const navigation = useNavigation()
-  const [list, setList] = useState<EventType>() // 최종적인 저장
+interface Props {
+  props: any
+}
 
+const Enroll: React.FC<Props> = props => {
+  const [list, setList] = useState<EventType>() // 최종적인 저장
   // Enroll에서 작성한 것들 저장
   const [content, setContent] = useState<EventEnroll>({
     title: '',
+    type: 'entry',
     start_date: '',
     end_date: '',
     start_time: '',
@@ -47,6 +46,14 @@ export default function Enroll() {
   const [image, setImage] = useState<string>(' ') // 이미지 받기
   const [startDate, setStartDate] = useState(new Date()) // 시작 날짜, 시간
   const [endDate, setEndDate] = useState(new Date()) // 끝나는 날짜, 시간
+  const [entryPrice, setEntryPrice] = useState({
+    class: 'A',
+    price: '',
+    count: '',
+  })
+  const [price, setprice] = useState({
+    attributes: [],
+  })
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -61,30 +68,13 @@ export default function Enroll() {
     }
   }
 
-  // 가격 부분 버튼 누를 때마다 컴포넌트 생성
-  const [countList, setCountList] = useState([0])
-  const [price, setprice] = useState<object>({}) // 가격 부분
-
-  const onAddDetailDiv = () => {
-    let countArr = [...countList]
-    let counter = countArr.slice(-1)[0]
-    counter += 1
-    countArr.push(counter) // index 사용 X
-    // countArr[counter] = counter	// index 사용 시 윗줄 대신 사용
-    setCountList(countArr)
+  const onCheckEnroll = () => {
+    alert('onCheckEnroll 에서 보내는 작업 + 빈칸 확인')
+    console.log(price)
   }
 
   return (
     <View style={style.enrollContainer}>
-      <TouchableOpacity
-        onPress={() => {
-          if (navigation.canGoBack()) {
-            navigation.goBack()
-          }
-        }}
-      >
-        <GoBackButton />
-      </TouchableOpacity>
       <ScrollView decelerationRate="fast">
         <View style={style.enrollTitle}>
           <Text style={style.enrollTitleText}>이벤트 등록</Text>
@@ -104,18 +94,23 @@ export default function Enroll() {
           <View style={style.enrollContents}>
             <Text style={style.enrollContentText}>기간</Text>
             <View style={style.doubleContent}>
-              <SetDateAndTime
-                setStartDate={setStartDate}
-                setEndDate={undefined}
-                value={startDate}
-                mode="date"
-              />
-              <SetDateAndTime
-                setStartDate={undefined}
-                setEndDate={setEndDate}
-                value={endDate}
-                mode="date"
-              />
+              <View style={style.DateTimeContent}>
+                <SetDateAndTime
+                  setStartDate={setStartDate}
+                  setEndDate={undefined}
+                  value={startDate}
+                  mode="date"
+                />
+              </View>
+              <Text>~</Text>
+              <View style={style.DateTimeContent}>
+                <SetDateAndTime
+                  setStartDate={undefined}
+                  setEndDate={setEndDate}
+                  value={endDate}
+                  mode="date"
+                />
+              </View>
             </View>
           </View>
 
@@ -123,18 +118,23 @@ export default function Enroll() {
           <View style={style.enrollContents}>
             <Text style={style.enrollContentText}>시간</Text>
             <View style={style.doubleContent}>
-              <SetDateAndTime
-                setStartDate={setStartDate}
-                setEndDate={undefined}
-                value={startDate}
-                mode="time"
-              />
-              <SetDateAndTime
-                setStartDate={undefined}
-                setEndDate={setEndDate}
-                value={endDate}
-                mode="time"
-              />
+              <View style={style.DateTimeContent}>
+                <SetDateAndTime
+                  setStartDate={setStartDate}
+                  setEndDate={undefined}
+                  value={startDate}
+                  mode="time"
+                />
+              </View>
+              <Text>~</Text>
+              <View style={style.DateTimeContent}>
+                <SetDateAndTime
+                  setStartDate={undefined}
+                  setEndDate={setEndDate}
+                  value={endDate}
+                  mode="time"
+                />
+              </View>
             </View>
           </View>
 
@@ -145,17 +145,59 @@ export default function Enroll() {
             <PlaceModalSelect content={content} setContent={setContent} />
           </View>
 
-          {/* 가격 (3개의 칸) */}
+          {/* 판매 타입 */}
           <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>가격</Text>
-
-            <View style={style.priceWrapper}>
-              <DetailPrice countList={countList} setprice={setprice} />
-              <TouchableOpacity onPress={onAddDetailDiv}>
-                <AntDesign name="pluscircle" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
+            <Text style={style.enrollContentText}>판매 타입(응모, 구매)</Text>
+            {/* 판매 타입 고르기 */}
+            <SetSellTypeModal content={content} setContent={setContent} />
           </View>
+
+          {/* 가격 (3개의 칸) */}
+          {content.type === 'sale' ? (
+            <View style={style.enrollContents}>
+              <Text style={style.enrollContentText}>가격</Text>
+
+              <View style={style.priceWrapper}>
+                <DetailPrice price={price} setprice={setprice} />
+              </View>
+            </View>
+          ) : (
+            <View style={style.enrollContents}>
+              <Text style={style.enrollContentText}>가격</Text>
+
+              <View style={style.priceWrapper}>
+                <View style={style.InputPriceWrapper}>
+                  <View style={style.InputPrice}>
+                    <Text style={{ fontSize: 20, textAlign: 'center' }}>
+                      {entryPrice.class}
+                    </Text>
+                  </View>
+                  <View style={style.InputPrice}>
+                    <TextInput
+                      style={{ textAlign: 'center' }}
+                      testID="price"
+                      placeholder={'price input..'}
+                      onChangeText={(e: any) => {
+                        setEntryPrice({ ...entryPrice, price: e })
+                      }}
+                      value={entryPrice.price}
+                    ></TextInput>
+                  </View>
+                  <View style={style.InputPrice}>
+                    <TextInput
+                      style={{ textAlign: 'center' }}
+                      testID="count"
+                      placeholder={'count input..'}
+                      onChangeText={(e: any) => {
+                        setEntryPrice({ ...entryPrice, count: e })
+                      }}
+                      value={entryPrice.count}
+                    ></TextInput>
+                  </View>
+                </View>
+              </View>
+            </View>
+          )}
 
           {/* 내용 (!TextInput 칸 넓이 증가) */}
           <View style={style.enrollContents}>
@@ -177,6 +219,7 @@ export default function Enroll() {
                 <Image
                   source={{ uri: image }}
                   style={{
+                    margin: 10,
                     width: SCREEN_WIDTH - 60,
                     height: 180,
                   }}
@@ -185,10 +228,10 @@ export default function Enroll() {
             </TouchableOpacity>
           </View>
 
-          {/* 콘서트 종류 */}
+          {/* 이벤트 종류 */}
           <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>콘서트 종류</Text>
-            {/* 콘서트 종류 고르기 */}
+            <Text style={style.enrollContentText}>이벤트 종류</Text>
+            {/* 이벤트 종류 고르기 */}
             <ConcertTypes content={content} setContent={setContent} />
           </View>
         </View>
@@ -197,8 +240,7 @@ export default function Enroll() {
       {/* 등록 버튼 */}
       <TouchableOpacity
         onPress={() => {
-          console.log(content)
-          console.log(countList)
+          onCheckEnroll()
         }}
       >
         <Text style={style.enrollSubmmit}>등록</Text>
@@ -211,7 +253,6 @@ const style = StyleSheet.create({
   enrollContainer: {
     flex: 1,
     backgroundColor: 'white',
-    marginTop: STATUSBAR_HEIGHT,
   },
   enrollTitle: {
     flex: 1,
@@ -235,6 +276,32 @@ const style = StyleSheet.create({
     left: 20,
     fontSize: 20,
   },
+  DateTimeContent: {
+    marginLeft: 12,
+    marginRight: 12,
+    marginTop: 5,
+    marginBottom: 10,
+    width: SCREEN_WIDTH / 2 - 30,
+    maxHeight: 30,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  InputPriceWrapper: {
+    flexDirection: 'row',
+  },
+  InputPrice: {
+    marginLeft: 15,
+    marginTop: 5,
+    marginBottom: 10,
+    width: SCREEN_WIDTH / 4,
+    height: 30,
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  InputContent: {
+    flex: 1,
+    textAlign: 'center',
+  },
   enrollInput: {
     marginLeft: 15,
     marginRight: 15,
@@ -252,9 +319,6 @@ const style = StyleSheet.create({
     height: 200,
     borderWidth: 1,
     borderRadius: 10,
-  },
-  InputContent: {
-    flex: 1,
   },
   priceWrapper: {
     flex: 1,
@@ -275,3 +339,5 @@ const style = StyleSheet.create({
     backgroundColor: '#3AACFF',
   },
 })
+
+export default Enroll

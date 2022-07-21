@@ -30,12 +30,12 @@ const SetDateAndTime = (props: any) => {
     <View>
       <TouchableOpacity onPress={showpicker}>
         {props.mode === 'date' ? (
-          <Text>
-            {props.value.getFullYear()}년 {props.value.getMonth()}월{' '}
+          <Text style={style.dateTimeCSS}>
+            {props.value.getFullYear()}년 {props.value.getMonth() + 1}월{' '}
             {props.value.getDate()}일
           </Text>
         ) : (
-          <Text>
+          <Text style={style.dateTimeCSS}>
             {props.value.getHours()}시 {props.value.getMinutes()}분
           </Text>
         )}
@@ -63,6 +63,10 @@ const style = StyleSheet.create({
     maxHeight: 30,
     borderWidth: 1,
     borderRadius: 10,
+  },
+  dateTimeCSS: {
+    textAlign: 'center',
+    fontSize: 20,
   },
 })
 
