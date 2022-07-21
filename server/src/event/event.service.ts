@@ -99,13 +99,18 @@ export class EventService {
   }
 
   // 이벤트 목록을 반환하는 함수 - 아마도 페이지와 띄울 컨텐츠 갯수라고 생각하고 작성
-  async findList(page: number, count: number, category: string) {
+  async findList(page: number, count: number, category: string, region: string) {
     console.log('findList');
-    console.log(page, count, category);
+    console.log('data:', page, count, category, region);
     let ctg = category;
+    let rg = region;
     if (ctg === undefined) {
       ctg = '';
     }
+    if (rg === undefined) {
+      rg = '';
+    }
+
     try {
       // 현재 페이지에 나오는 event_id 계산
       const content_count: number = page * count;
@@ -113,6 +118,7 @@ export class EventService {
       // 조건에 맞는 이벤트 찾기
       const eventList = await this.EventModel.find({
         category: { $regex: '.*' + ctg + '.*' },
+        location: { $regex: '.*' + rg + '.*' },
         event_id: {
           // $lte: content_count,
           $gte: data,
