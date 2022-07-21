@@ -83,6 +83,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _tokenExtentions[_tokenId].eventId;
     }
 
+    function totalEvent() public view returns (uint256) {
+        return _eventIds.current();
+    }
+
     function createEvent(
         address _creator,
         string memory _eventName,
@@ -94,7 +98,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _openTime,
         uint256 _closeTime,
         uint256 _endTime
-    ) public payable override onlyOwner returns (uint256 _eventId) {
+    ) public payable override returns (uint256 _eventId) {
         uint256 _total = 0;
         uint256 _deposit = 0;
         for (uint256 i = 0; i < _classPrices.length; i++) {

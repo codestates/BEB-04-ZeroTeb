@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { EventModule } from './event/event.module';
 import { TokenModule } from './token/token.module';
 import { AuthModule } from './auth/auth.module';
+import { KlaytnModule } from './klaytn/klaytn.module';
 import 'dotenv/config';
 
 @Module({
@@ -13,6 +14,7 @@ import 'dotenv/config';
     EventModule,
     TokenModule,
     AuthModule,
+    KlaytnModule.forRoot(),
   ],
   controllers: [],
   providers: [],
