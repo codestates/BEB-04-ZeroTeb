@@ -13,13 +13,18 @@ interface profileProps {
 
 const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
   const navigation = useNavigation()
+
+  function firstLetter(name: string) {
+    return name.slice(0, 1)
+  }
+
   return (
     <View style={styles.rootContainer}>
       <View style={styles.profileContainer}>
         <AvatarIcon
           size={65}
           color={userInfo.profile_url}
-          title={userInfo.username.slice(0, 1)}
+          title={firstLetter(userInfo.username)}
         />
         <Text style={styles.profileText}>{userInfo.username}</Text>
       </View>
