@@ -9,6 +9,7 @@ import Enroll from '../screens/mypageTab/Enroll'
 import TicketDetail from '../screens/mypageTab/TicketDetail'
 import QRLoad from '../screens/mypageTab/QRLoad'
 import QRread from '../screens/mypageTab/QRRead'
+import MyList from '../screens/mypageTab/MyList'
 
 export default function MyPageStackScreen() {
   const MyPageStack = createNativeStackNavigator<MyPageStackParamList>()
@@ -20,7 +21,11 @@ export default function MyPageStackScreen() {
   return (
     
     <MyPageStack.Navigator>
-      
+      <MyPageStack.Screen
+        name="MyList"
+        component={MyList}
+        options={{ headerTitle: '' }}
+      />
       {KilpAddress ? (
         <MyPageStack.Screen
           name="MyPage"

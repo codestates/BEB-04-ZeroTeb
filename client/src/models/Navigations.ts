@@ -32,6 +32,7 @@ export type MyPageStackParamList = {
   QRLoad: { qrcodeXML: any }
   QRread: undefined
   Enroll: undefined
+  MyList: undefined
 }
 
 export interface RootStackParamList
