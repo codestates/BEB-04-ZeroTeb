@@ -11,7 +11,7 @@ import 'dotenv/config';
 import { decodeJwt } from 'lib/jwt';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 import { KlaytnService } from 'src/klaytn/klaytn.service';
-import { CreateEventContrackDto } from 'src/klaytn/klaytn.entity';
+import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
 
 @Injectable()
 export class EventService {
@@ -100,19 +100,19 @@ export class EventService {
         remaining,
       };
       // Contract - 이벤트 등록
-      const createEventContrackDto: CreateEventContrackDto = new CreateEventContrackDto();
-      createEventContrackDto.creator = user.test_address;
-      createEventContrackDto.eventName = title;
-      createEventContrackDto.eventType = type === 'sale' ? 0 : 1;
-      createEventContrackDto.tokenImageUri = token_image_url;
-      createEventContrackDto.classNames = price.map((v) => v.class);
-      createEventContrackDto.classPrices = price.map((v) => v.price);
-      createEventContrackDto.classCounts = price.map((v) => v.count);
-      createEventContrackDto.openTime = recruit_start_date;
-      createEventContrackDto.closeTime = recruit_end_date;
-      createEventContrackDto.endTime = event_end_date;
+      const ContracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
+      ContracCreateEventkDto.creator = user.test_address;
+      ContracCreateEventkDto.eventName = title;
+      ContracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
+      ContracCreateEventkDto.tokenImageUri = token_image_url;
+      ContracCreateEventkDto.classNames = price.map((v) => v.class);
+      ContracCreateEventkDto.classPrices = price.map((v) => v.price);
+      ContracCreateEventkDto.classCounts = price.map((v) => v.count);
+      ContracCreateEventkDto.openTime = recruit_start_date;
+      ContracCreateEventkDto.closeTime = recruit_end_date;
+      ContracCreateEventkDto.endTime = event_end_date;
 
-      await this.klaytnService.createEvent(createEventContrackDto);
+      await this.klaytnService.createEvent(ContracCreateEventkDto);
 
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
