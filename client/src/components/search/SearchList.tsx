@@ -19,16 +19,14 @@ interface searchListProps {
 }
 
 const SearchList: React.FC<searchListProps> = ({ sendList }) => {
-  const [list, setList] = useState<EventType[]>(sendList)
-
   return (
     <ScrollView style={style.SearchListOuterContainer}>
       <View>
-        <Text>검색목록</Text>
+        <Text style={{ fontSize: 20 }}>검색목록</Text>
         <Text></Text>
       </View>
 
-      {list.map((event: EventType, index: number) => {
+      {sendList?.map((event: EventType, index: number) => {
         if (event.category) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
