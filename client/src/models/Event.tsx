@@ -5,13 +5,14 @@ export interface EventType {
   promoter: string
   address: string
   location: string
+  sub_location: string
   category: string
   type: string
   thumnail: string
   token_image_url: string
-  price: []
+  price: object[]
   contents: string
-  option: []
+  option: object[]
   recruit_start_date: number
   recruit_end_date: number
   event_start_date: number
