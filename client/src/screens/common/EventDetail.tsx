@@ -41,7 +41,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
     if (KilpAddress === '') {
-      navigation.navigate('SignIn')
+      navigation.navigate('SignIn', { gotoMyPage: false })
     }
   }
 

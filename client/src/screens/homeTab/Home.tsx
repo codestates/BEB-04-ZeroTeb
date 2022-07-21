@@ -18,7 +18,6 @@ import DummyDate from '../../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../../models/Event'
 import { useNavigation } from '@react-navigation/native'
-import { moderateScale } from 'react-native-size-matters'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
@@ -32,8 +31,7 @@ export default function Home() {
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
-        // url: 'http://localhost:8080/event/list?page=2&count=5',
-        url: 'http://f82ebb62-8f0d-4fdf-b843-4bf1034e484e.mock.pstmn.io/event/list?page=2&count=5',
+        url: 'http://server.beeimp.com:18080/event/list?page=2&count=5',
         withCredentials: true,
       }
       const res = await axios(config)

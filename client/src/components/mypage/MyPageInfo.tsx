@@ -1,21 +1,20 @@
 import React, { useCallback } from 'react'
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native'
+import { UserType } from '../../models/User'
 
 const Data = ['지갑정보', '구매내역', '응모내역', '공지사항', '문의하기']
-const window = Dimensions.get('window')
 
 interface infoProps {
   headerHeight: number
-  tabBarHeight: number
   tabRoute: any
   listArrRef: any
   isTabFocused: boolean
   scrollY: number
+  userInfo: UserType
 }
 
 const MyPageInfo: React.FC<infoProps> = props => {
-  const { headerHeight, tabBarHeight, tabRoute, listArrRef, isTabFocused } =
-    props
+  const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo } = props
 
   const renderItem = useCallback(({ item, index }) => {
     return (
