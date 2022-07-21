@@ -10,6 +10,8 @@ import axios from 'axios';
 import 'dotenv/config';
 import { decodeJwt } from 'lib/jwt';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
+import { KlaytnService } from 'src/klaytn/klaytn.service';
+import { CreateEventContrackDto } from 'src/klaytn/klaytn.entity';
 
 @Injectable()
 export class EventService {
@@ -18,6 +20,7 @@ export class EventService {
     @InjectModel('EventResult') private readonly EventResultModel: Model<EventResult>,
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    private readonly klaytnService: KlaytnService,
   ) {}
 
   // 이벤트 등록 함수
@@ -96,9 +99,25 @@ export class EventService {
         status: '진행 중',
         remaining,
       };
+      // Contract - 이벤트 등록
+      const createEventContrackDto: CreateEventContrackDto = new CreateEventContrackDto();
+      createEventContrackDto.creator = user.test_address;
+      createEventContrackDto.eventName = title;
+      createEventContrackDto.eventType = type === 'sale' ? 0 : 1;
+      createEventContrackDto.tokenImageUri = token_image_url;
+      createEventContrackDto.classNames = price.map((v) => v.class);
+      createEventContrackDto.classPrices = price.map((v) => v.price);
+      createEventContrackDto.classCounts = price.map((v) => v.count);
+      createEventContrackDto.openTime = recruit_start_date;
+      createEventContrackDto.closeTime = recruit_end_date;
+      createEventContrackDto.endTime = event_end_date;
+
+      await this.klaytnService.createEvent(createEventContrackDto);
+
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
       console.log(createEventDto);
+
       return saveResult;
     } catch (e) {
       console.log(e);
@@ -109,16 +128,11 @@ export class EventService {
   // 이벤트 목록을 반환하는 함수 - 아마도 페이지와 띄울 컨텐츠 갯수라고 생각하고 작성
   async findList(page: number, count: number, category: string, region: string) {
     console.log('findList');
-    console.log('data:', page, count, category, region);
+    console.log(page, count, category);
     let ctg = category;
-    let rg = region;
     if (ctg === undefined) {
       ctg = '';
     }
-    if (rg === undefined || rg === '전국') {
-      rg = '';
-    }
-
     try {
       // 현재 페이지에 나오는 event_id 계산
       const content_count: number = page * count;
@@ -126,7 +140,6 @@ export class EventService {
       // 조건에 맞는 이벤트 찾기
       const eventList = await this.EventModel.find({
         category: { $regex: '.*' + ctg + '.*' },
-        location: { $regex: '.*' + rg + '.*' },
         event_id: {
           // $lte: content_count,
           $gte: data,
@@ -137,7 +150,7 @@ export class EventService {
       }
       return eventList;
     } catch (e) {
-      console.log(e);
+      console.log('err :', e);
       return { message: 'Failed to find eventList' };
     }
   }
@@ -300,8 +313,9 @@ export class EventService {
   }
 
   //이벤트 리스트 받아서 holdings에 업데이트
-  @Cron('* * * * * *')
-  getEventList() {
-    console.log('이벤트 리스트 받기');
-  }
+  // @Cron('* * * * * *')
+  // async getEventList(): Promise<void> {
+  //   console.log('이벤트 리스트 받기');
+  //   console.log('Event :', await this.klaytnService.getEvent(0));
+  // }
 }
