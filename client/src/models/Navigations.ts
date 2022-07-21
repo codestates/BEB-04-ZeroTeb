@@ -30,7 +30,9 @@ export type MyPageStackParamList = {
   MyPage: { kilpAddress?: string; accessToken?: string }
   TicketDetail: undefined
   QRLoad: { qrcodeXML: any }
+  QRread: undefined
   Enroll: undefined
+  MyList: undefined
 }
 
 export interface RootStackParamList

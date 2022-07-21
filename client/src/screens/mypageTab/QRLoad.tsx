@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import {
   View,
   StyleSheet,
-  Text,
-  ImageBackground,
   Dimensions,
 } from 'react-native'
-import { UserType } from '../../models/User'
 import InnerText from '../../components/common/InnerText'
-import axios, { AxiosRequestConfig } from 'axios'
 import {SvgXml} from 'react-native-svg';
-import { BottomTabBarHeightCallbackContext } from '@react-navigation/bottom-tabs'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 

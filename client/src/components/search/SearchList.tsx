@@ -6,36 +6,37 @@ import {
   ImageBackground,
   Dimensions,
   ScrollView,
+  Pressable,
 } from 'react-native'
 import { useState } from 'react'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { countSeat } from '../../utils/count'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 
 interface searchListProps {
   sendList: EventType[]
 }
 
 const SearchList: React.FC<searchListProps> = ({ sendList }) => {
+  const checkWin = () =>{
+    console.log('당첨')
+  }
+
   return (
     <ScrollView style={style.SearchListOuterContainer}>
-      <View>
-        <Text style={{ fontSize: 20 }}>검색목록</Text>
-        <Text></Text>
-      </View>
+      <Text style={style.listTitle}>검색목록</Text>
+      {sendList.map((event: EventType, index: number) => {        
 
-      {sendList?.map((event: EventType, index: number) => {
-        if (event.category) {
           return (
             <View key={index} style={style.SearchListInnerContainer}>
               <View style={style.Wrapper}>
                 <View style={style.ImageWrapper}>
                   <ImageBackground
                     source={{ uri: event.thumnail }}
+                    resizeMode='stretch'
                     style={style.consertImage}
-                    imageStyle={{ borderRadius: 50 }}
                   ></ImageBackground>
                 </View>
                 <View style={style.SearchListTextContainer}>
@@ -48,68 +49,97 @@ const SearchList: React.FC<searchListProps> = ({ sendList }) => {
                       공연 기간 : {getDate(event.event_start_date)} ~{' '}
                       {getDate(event.event_end_date)}
                     </Text>
+                    <Pressable onPress={checkWin}>
+                      <View style={style.checkBtn}>
+                        <Text>당첨 확인</Text>
+                      </View>
+                    </Pressable>
                   </View>
                 </View>
               </View>
             </View>
-          )
-        }
+          )        
       })}
     </ScrollView>
   )
 }
 
 const style = StyleSheet.create({
-  SearchListOuterContainer: {
-    left: 20,
-    maxWidth: SCREEN_WIDTH * 0.9,
+  listTitle:{
+    marginTop: 5,
+    marginBottom: 10,
+    fontWeight: 'bold'
   },
-  SearchListInnerContainer: {
-    padding: 4,
+  SearchListOuterContainer: {    
+    marginTop: 5,
+    alignSelf: 'center',
+    maxWidth: SCREEN_WIDTH * 0.95,
+  },
+  SearchListInnerContainer: {    
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+    padding: 2,
 
+  },
   Wrapper: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    padding: 10,
-  },
-
-  ImageWrapper: {
-    flex: 1,
-    maxWidth: 80,
-  },
-
-  consertImage: {
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 80,
+    padding: 10,
+    height: SCREEN_HEIGHT*0.18,    
   },
+  ImageWrapper: {    
+    width: SCREEN_WIDTH*0.25,
+    height: SCREEN_WIDTH*0.25,
+    borderRadius: 50,    
+    overflow: 'hidden',    
+    justifyContent: 'center',
+    borderColor: 'lightgray',
+    borderWidth: 1,
+    marginRight: 10
 
+  },
+  consertImage: {
+    width: SCREEN_WIDTH*0.4,
+    height: SCREEN_WIDTH*0.3,
+    alignItems: 'center',    
+    justifyContent: 'center'
+  },
+  SearchListTextContainer: { 
+    width: '65%' 
+  },
   textWrapper: {
     flex: 1,
-    paddingTop: 25,
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
-
   SearchListTitle: {
-    fontSize: 13,
+    fontSize: 17,
+    fontWeight: '800',
     textAlign: 'right',
     color: 'black',
   },
   SearchListSeat: {
-    fontSize: 14,
+    fontSize: 13,
     alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
   },
   SearchListDate: {
-    fontSize: 12,
+    fontSize: 11,
     alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
   },
-  SearchListTextContainer: { flex: 1 },
+  checkBtn:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 100,
+    height: 30,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 12,
+    marginTop: 7
+  }
 })
 
 export default SearchList
