@@ -3,7 +3,6 @@ import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { Request } from 'express';
 
-
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
