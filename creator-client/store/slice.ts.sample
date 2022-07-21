@@ -1,0 +1,23 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+// Define a type for the slice state
+interface sampleState {
+  data: string;
+}
+
+// Define the initial state using that type
+const initialState: sampleState = {
+  data: ''
+};
+
+export const sampleSlice = createSlice({
+  name: 'sample',
+  initialState,
+  reducers: {
+    setSample: (state, action: PayloadAction<string>) => {
+      state.data = action.payload;
+    },
+  },
+});
+
+export const sampleActions = { ...sampleSlice.actions };
