@@ -33,7 +33,7 @@ const TicketDetail: React.FC<UserType> = props =>{
         try {
             const config: AxiosRequestConfig = {
                 method: 'get',
-                url: `http://server.beeimp.com:18080/token/qrcode?address=0xf0a29e430d12065bfa9a5e0bc694f26accb151f4&token_id=8`,
+                url: `http://server.beeimp.com:18080/token/qrcode?address=0xf0a29e430d12065bfa9a5e0bc694f26accb151f4&token_id=10`,
                 withCredentials: true,
             }
 
