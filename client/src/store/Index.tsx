@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { signinSlice } from './signinSlice'
+import { regionSlice } from './regionReducer'
 
 export const store = configureStore({
   reducer: {
     signin: signinSlice.reducer,
+    region: regionSlice.reducer,
   },
 })
 

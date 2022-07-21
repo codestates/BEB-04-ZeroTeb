@@ -7,7 +7,11 @@ import * as Location from 'expo-location'
 import RegionSelectModal from './RegionSelectModal'
 import axios from 'axios'
 
-export default function LocationButton() {
+interface Props{
+  region: string
+}
+
+export default function LocationButton(props: Props) {
   const [myLosition, setMyLosition] = useState<[number, number]>([0, 0])
   const [modalVisible, setModalVisible] = useState(false)
   const [arount, setAround] = useState([])
@@ -70,7 +74,7 @@ export default function LocationButton() {
   return (
     <View style={style.locationButtonContainer}>
       <Pressable style={style.allLocationButtonContainner} onPress={onStart}>
-        <Text style={style.allLocationButtonText}>전국</Text>
+        <Text style={style.allLocationButtonText}>{props.region}</Text>
         <FontAwesome5
           name="arrow-circle-down"
           size={moderateScale(17)}

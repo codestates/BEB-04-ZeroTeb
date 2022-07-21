@@ -18,28 +18,52 @@ import DummyDate from '../../data/DummyData.json'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../../models/Event'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/Index'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
 export default function Home() {
   const navigation = useNavigation()
-
-  const [list, setList] = useState<EventType[]>([...DummyDate.event])
+  const region = useSelector(
+    (state: RootState) => state.region.region,
+  )
+  const [list, setList] = useState<EventType[]>([])
   const [load, setLoad] = useState<boolean>(false)
-
+  const [page, setPage] = useState(1)
+  
   const getEventList = async () => {
     try {
-      const config: AxiosRequestConfig = {
-        method: 'get',
-        url: 'http://server.beeimp.com:18080/event/list?page=2&count=5',
-        withCredentials: true,
+      if(page >= 1){
+        const config: AxiosRequestConfig = {
+          method: 'get',
+          url: `http://server.beeimp.com:18080/event/list?page=${page}&count=5&region=${region}`,
+          withCredentials: true,
+        }
+        console.log('지역',region)
+        const res = await axios(config)
+        if(res.data.message){
+          console.log(res.data.message)
+          setPage(0)
+        }else{
+          console.log('검색됨==============')
+          setPage(page+1)
+          setList([...list,...res.data])
+        }
       }
-      const res = await axios(config)
-      setList(res.data)
     } catch (err) {
       alert(err)
     }
   }
+  useEffect(()=>{
+    setLoad(true)
+    setList([])
+    setPage(1)
+    getEventList()
+    .then(()=>{
+      setLoad(false)
+    })
+  },[region])
 
   useEffect(() => {
     getEventList()
@@ -47,13 +71,16 @@ export default function Home() {
 
   const endReached = async () => {
     setLoad(true)
-    setList([...list, ...list])
-    setLoad(false)
+    getEventList()
+    .then(()=>{
+      setLoad(false)
+    })
+    
   }
 
   return (
     <View style={style.homeContainer}>
-      <LocationButton />
+      <LocationButton region={region}/>
       <FlatList
         data={['0']}
         onEndReached={endReached}

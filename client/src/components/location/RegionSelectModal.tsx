@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, StyleSheet, View, Dimensions, Text, ScrollView } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { regionActions } from '../../store/regionReducer'
 import RegionButton from './RegionBtton'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -10,11 +12,13 @@ interface Props {
   body: any
 }
 const RegionSelectModal = (props: Props) => {
-  const [regionList, setRegionList] = useState(['전국', '서울시', '부산시', '경남', '경북', '충북', '충남', '강원도', '제주도', '전북', '전남', '대구', '인천'])
+  const [regionList, setRegionList] = useState(['전국', '서울', '부산', '경남', '경북', '충북', '충남', '강원', '전북', '전남', '대구', '인천', '경기', '대전', '울산', '세종'])
   const [region, setRegion] = useState('전국')
+  const dispatch = useDispatch()
 
   const selectRegion = (target: string)=>{
     console.log(target);
+    dispatch(regionActions.setRegion(target))
     setRegion(target)
     props.setModalVisible(false)
   }
@@ -62,15 +66,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     width: SCREEN_WIDTH * 0.8,
-    height: SCREEN_HEIGHT * 0.7,
+    height: SCREEN_HEIGHT * 0.75,
     backgroundColor: 'white',
     borderRadius: 10,
     right: SCREEN_WIDTH * 0.1,
-    bottom: SCREEN_HEIGHT * 0.15,
+    bottom: SCREEN_HEIGHT * 0.125,
     padding: 10,
   },
   regionTitle:{
     marginTop: 15,
+    marginBottom: 5,
     fontSize: 25,
     alignSelf: 'center',
   },
