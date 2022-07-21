@@ -7,25 +7,20 @@ import {
   StatusBar,
   Platform,
   ScrollView,
-  Button,
   Image,
   TouchableOpacity,
-  Modal,
   Dimensions,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import { useNavigation } from '@react-navigation/native'
 import { EventType, EventEnroll } from '../../models/Event'
 import { useState } from 'react'
-
 import SetSellTypeModal from '../../components/enroll/SetSellTypeModal'
 import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
 import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
-import { clearAllListeners } from '@reduxjs/toolkit'
+
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-//import { getDateAndTime, getDate } from '../../utils/unixTime'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
@@ -233,10 +228,10 @@ const Enroll: React.FC<Props> = props => {
             </TouchableOpacity>
           </View>
 
-          {/* 콘서트 종류 */}
+          {/* 이벤트 종류 */}
           <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>콘서트 종류</Text>
-            {/* 콘서트 종류 고르기 */}
+            <Text style={style.enrollContentText}>이벤트 종류</Text>
+            {/* 이벤트 종류 고르기 */}
             <ConcertTypes content={content} setContent={setContent} />
           </View>
         </View>

@@ -4,7 +4,7 @@ import { View, Text } from 'react-native'
 interface avatarProps {
   size: number
   color: string
-  title: string
+  title: string | number
 }
 
 const AvatarIcon: React.FC<avatarProps> = ({ size, color, title }) => {

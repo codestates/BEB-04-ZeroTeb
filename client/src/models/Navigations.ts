@@ -9,7 +9,7 @@ export type RootTabParamList = {
 
 export type HomeStackParamList = {
   Home: undefined
-  SignIn: undefined
+  SignIn: { gotoMyPage: boolean }
   EventDetail: undefined
 }
 
@@ -26,7 +26,7 @@ export type SearchStackParamList = {
 }
 
 export type MyPageStackParamList = {
-  SignIn: undefined
+  SignIn: { gotoMyPage: boolean }
   MyPage: { kilpAddress?: string }
   Enroll: undefined
 }

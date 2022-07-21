@@ -10,15 +10,55 @@ import { TabView } from 'react-native-tab-view'
 import MyPageHeader from '../../components/mypage/MyPageHeader'
 import MyPagettList from '../../components/mypage/MyPagettList'
 import MyPageInfo from '../../components/mypage/MyPageInfo'
+import axios, { AxiosRequestConfig } from 'axios'
+import { UserType } from '../../models/User'
 
 const TABBAR_HEIGHT = 60
 
 interface Props {
-  route: Object
+  route: {
+    key: string
+    name: string
+    params: {
+      kilpAddress: string
+    }
+  }
 }
 
 const MyPage: React.FC<Props> = ({ route }) => {
-  console.log(route.params.kilpAddress)
+  const KilpAddress = route.params.kilpAddress
+
+  const [myState, setMyState] = useState<UserType>({
+    username: 'tt',
+    profile_url: 'CCCCFF',
+    history: {
+      created: 0,
+      entry: 0,
+      sale: 0,
+      liked: 0,
+    },
+    tokens: [],
+  })
+
+  const getUserInfo = async () => {
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/auth/userInfo?address=${KilpAddress}`,
+        withCredentials: true,
+      }
+      const res = await axios(config)
+      console.log(res.data)
+      setMyState(res.data)
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  useEffect(() => {
+    getUserInfo()
+  }, [])
+
   const [headerHeight, setHeaderHeight] = useState(0)
   const [tabRoutes, setTabRoutes] = useState([
     { key: 'screen1', title: 'tt' },
@@ -155,7 +195,6 @@ const MyPage: React.FC<Props> = ({ route }) => {
       return tabRoutes[tabIndex].key === 'screen1' ? (
         <MyPagettList
           headerHeight={headerHeight}
-          tabBarHeight={TABBAR_HEIGHT}
           scrollY={scrollY}
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
@@ -167,7 +206,6 @@ const MyPage: React.FC<Props> = ({ route }) => {
       ) : (
         <MyPageInfo
           headerHeight={headerHeight}
-          tabBarHeight={TABBAR_HEIGHT}
           scrollY={scrollY}
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
@@ -175,6 +213,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
           tabRoute={route}
           listArrRef={listArrRef}
           isTabFocused={isFocused}
+          userInfo={myState}
         />
       )
     },
@@ -199,7 +238,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
         onLayout={headerOnLayout}
         pointerEvents="box-none"
       >
-        <MyPageHeader />
+        <MyPageHeader userInfo={myState} />
       </Animated.View>
     </View>
   )

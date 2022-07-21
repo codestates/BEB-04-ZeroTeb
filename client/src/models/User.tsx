@@ -9,8 +9,8 @@ export interface UserType {
   }
   tokens: [
     {
-      token_id: string
-      token_image_url: string
+      token_id?: string
+      token_image_url?: string
     },
   ]
 }
