@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Modal, StyleSheet, View, Dimensions, Text } from 'react-native'
+import { Modal, StyleSheet, View, Dimensions, Text, ScrollView } from 'react-native'
 import RegionButton from './RegionBtton'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -10,9 +10,14 @@ interface Props {
   body: any
 }
 const RegionSelectModal = (props: Props) => {
-  const [regionList, setRegionList] = useState(['전국', '서울시', '부산시', '경남', '경북'])
+  const [regionList, setRegionList] = useState(['전국', '서울시', '부산시', '경남', '경북', '충북', '충남', '강원도', '제주도', '전북', '전남', '대구', '인천'])
   const [region, setRegion] = useState('전국')
 
+  const selectRegion = (target: string)=>{
+    console.log(target);
+    setRegion(target)
+    props.setModalVisible(false)
+  }
   return (
     <Modal
       animationType={'fade'}
@@ -30,8 +35,10 @@ const RegionSelectModal = (props: Props) => {
         <Text style={styles.regionTitle}>지역 선택</Text>
         <View style={styles.line}></View>
         <View  style={styles.regionSpace}>
-        {regionList.map(ele => {
-          <RegionButton region={ele}></RegionButton>
+        {regionList.map((ele, index) => {
+          return(            
+            <RegionButton region={ele} key={index} selectRegion={selectRegion}></RegionButton>
+          )
         })}
         </View>
       </View>
@@ -55,11 +62,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     width: SCREEN_WIDTH * 0.8,
-    height: SCREEN_HEIGHT * 0.5,
+    height: SCREEN_HEIGHT * 0.7,
     backgroundColor: 'white',
     borderRadius: 10,
     right: SCREEN_WIDTH * 0.1,
-    bottom: SCREEN_HEIGHT * 0.25,
+    bottom: SCREEN_HEIGHT * 0.15,
     padding: 10,
   },
   regionTitle:{
@@ -73,16 +80,19 @@ const styles = StyleSheet.create({
     borderColor: 'gray',
   },
   regionSpace:{
-    flexDirection: "row",
+    flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignSelf: 'center',
     marginTop: 5,
-    padding: 5,
+    padding: 18,
 
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: 'lightgray',
-    borderRadius: 10,
-    height: SCREEN_HEIGHT * 0.4,
+    // borderWidth: 1,
+    // borderStyle: 'solid',
+    // borderColor: 'lightgray',
+    // borderRadius: 10,
+    height: SCREEN_HEIGHT * 0.5,
+    width: 300
   }
 })
 export default RegionSelectModal
