@@ -6,6 +6,8 @@ import { RootState } from '../store/Index'
 import MyPage from '../screens/mypageTab/MyPage'
 import SignIn from '../screens/auth/SignIn'
 import Enroll from '../screens/mypageTab/Enroll'
+import TicketDetail from '../screens/mypageTab/TicketDetail'
+import QRLoad from '../screens/mypageTab/QRLoad'
 
 export default function MyPageStackScreen() {
   const MyPageStack = createNativeStackNavigator<MyPageStackParamList>()
@@ -16,6 +18,11 @@ export default function MyPageStackScreen() {
   console.log('data:', KilpAddress)
   return (
     <MyPageStack.Navigator>
+      <MyPageStack.Screen
+        name="TicketDetail"
+        component={TicketDetail}
+        options={{ headerTitle: ''}}
+      />
       {KilpAddress ? (
         <MyPageStack.Screen
           name="MyPage"
@@ -35,6 +42,12 @@ export default function MyPageStackScreen() {
         component={Enroll}
         options={{ headerTitle: '' }}
       />
+      <MyPageStack.Screen
+        name="QRLoad"
+        component={QRLoad}
+        options={{ headerTitle: '' }}
+      />
+      
     </MyPageStack.Navigator>
   )
 }

@@ -28,6 +28,8 @@ export type SearchStackParamList = {
 export type MyPageStackParamList = {
   SignIn: { gotoMyPage: boolean }
   MyPage: { kilpAddress?: string }
+  TicketDetail: undefined
+  QRLoad: { qrcodeXML: any }
   Enroll: undefined
 }
 
