@@ -46,9 +46,7 @@ export default function MyList() {
 
   return (
     <ScrollView style={styles.container}>
-    {/* <View style={styles.container}> */}
         <SearchList sendList={typeList}></SearchList>
-    {/* </View> */}
     </ScrollView>
   )
 }
