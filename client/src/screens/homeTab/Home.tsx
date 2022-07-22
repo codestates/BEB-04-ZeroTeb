@@ -80,6 +80,7 @@ export default function Home() {
     getBannerList()
   }, [])
 
+  // 지역 변경 시 발생
   useEffect(() => {
     console.log('지역 변경');
     setLoad(true)
@@ -91,7 +92,7 @@ export default function Home() {
   }, [region])
 
   
-
+  //무한 스크롤 이벤트
   const endReached = async () => {
     console.log('length:',list.length);
     if(list.length<=0 || list.length >= 6){
@@ -104,9 +105,14 @@ export default function Home() {
     
   }
 
+  //
+  const setListHendler = (list: []) => {
+    setList(list)
+  }
   return (
     <View style={style.homeContainer}>
-      <LocationButton region={region} />
+      
+      <LocationButton region={region}/>
       <FlatList
         data={['0']}
         onEndReached={endReached}
@@ -150,5 +156,9 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
+  },
+  locationContainer: {
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
   },
 })
