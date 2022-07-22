@@ -107,7 +107,7 @@ export class EventService {
         totalSeat,
       };
       // Contract - 이벤트 등록
-      const eventUri = await ipfsMetadataUpload(`${eventId}-${title}`, JSON.stringify(eventData));
+      const eventUri = await ipfsMetadataUpload(`${eventId}-${title}`, eventData);
 
       const contracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
       contracCreateEventkDto.creator = user.test_address || user.address;
@@ -330,13 +330,13 @@ export class EventService {
   }
 
   // 이벤트 리스트 받아서 holdings에 업데이트
-  @Cron('*/10 * * * * *')
-  async getEventList(): Promise<void> {
-    console.log('이벤트 리스트 받기');
-    const eventLength = await this.klaytnService.getEventLength();
-    console.log(eventLength);
-    for (let i = 0; i < eventLength; i++) {
-      console.log(`Event(${i}) :`, await this.klaytnService.getEvent(i));
-    }
-  }
+  // @Cron('*/10 * * * * *')
+  // async getEventList(): Promise<void> {
+  //   console.log('이벤트 리스트 받기');
+  //   const eventLength = await this.klaytnService.getEventLength();
+  //   console.log(eventLength);
+  //   for (let i = 1; i <= eventLength; i++) {
+  //     console.log(`Event(${i}) :`, await this.klaytnService.getEvent(i));
+  //   }
+  // }
 }
