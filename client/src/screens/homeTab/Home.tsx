@@ -29,7 +29,8 @@ export default function Home() {
   const [list, setList] = useState<EventType[]>([])
   const [load, setLoad] = useState<boolean>(false)
   const [page, setPage] = useState(1)
-
+  
+  // 배너 데이터 호출
   const getBannerList = async () => {
     try {
       if (page >= 1) {
@@ -42,14 +43,14 @@ export default function Home() {
         if (res.data.message) {
           console.log(res.data.message)
         } else {
-          setBannerList([...list, ...res.data])
+          setBannerList([...res.data])
         }
       }
     } catch (err) {
       alert(err)
     }
   }
-
+  // 이벤트 리스트 호출
   const getEventList = async () => {
     try {
       if (page >= 1) {
@@ -73,7 +74,15 @@ export default function Home() {
       alert(err)
     }
   }
+  //페이지 로딩시 배너 호출
   useEffect(() => {
+    // getEventList()
+    getBannerList()
+  }, [])
+
+  // 지역 변경 시 발생
+  useEffect(() => {
+    console.log('지역 변경');
     setLoad(true)
     setList([])
     setPage(1)
@@ -82,21 +91,28 @@ export default function Home() {
     })
   }, [region])
 
-  useEffect(() => {
-    getEventList()
-    getBannerList()
-  }, [])
-
+  
+  //무한 스크롤 이벤트
   const endReached = async () => {
-    setLoad(true)
-    getEventList().then(() => {
-      setLoad(false)
-    })
+    console.log('length:',list.length);
+    if(list.length<=0 || list.length >= 6){
+      console.log('무한 스크롤');
+      setLoad(true)
+      getEventList().then(() => {
+        setLoad(false)
+      })
+    }
+    
   }
 
+  //
+  const setListHendler = (list: []) => {
+    setList(list)
+  }
   return (
     <View style={style.homeContainer}>
-      <LocationButton region={region} />
+      
+      <LocationButton region={region}/>
       <FlatList
         data={['0']}
         onEndReached={endReached}
@@ -140,5 +156,9 @@ const style = StyleSheet.create({
     alignItems: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
+  },
+  locationContainer: {
+    alignItems: 'flex-start',
+    backgroundColor: 'white',
   },
 })
