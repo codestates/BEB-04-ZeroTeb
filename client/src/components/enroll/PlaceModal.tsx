@@ -6,30 +6,30 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
+  TextInput,
 } from 'react-native'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const PlaceModal = (props: any) => {
-  const setContent = props.setContent
-  const place = [
-    '서울특별시',
-    '부산광역시',
-    '대구광역시',
-    '인천광역시',
-    '광주광역시',
-    '대전광역시',
-    '울산광역시',
-    '세종특별자치시',
-    '경기도',
-    '강원도',
-    '충청북도',
-    '충청남도',
-    '전라북도',
-    '전라남도',
-    '경상북도',
-    '경상남도',
-    '제주특별자치도',
+  const setList = props.setList
+
+  const location = [
+    '서울',
+    '부산',
+    '경남',
+    '경북',
+    '충북',
+    '충남',
+    '강원',
+    '전북',
+    '전남',
+    '대구',
+    '인천',
+    '경기',
+    '대전',
+    '울산',
+    '세종',
   ]
 
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
@@ -39,36 +39,49 @@ const PlaceModal = (props: any) => {
 
   const onSelectPlace = (e: any) => {
     setModalVisible(false)
-    setContent({ ...props.content, place: e })
+    setList({ ...props.list, location: e })
   }
   return (
-    <View style={style.modalWrapper}>
-      <TouchableOpacity onPress={onStart}>
-        <View style={style.enrollInput}>
-          <Text style={style.enrollContentText}>{props.content.place}</Text>
-        </View>
-      </TouchableOpacity>
-      <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
-        <View style={style.modalContainer}>
-          <View
-            style={style.blankSpace}
-            onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
-          />
-          <View style={style.modalSelectBody}>
-            {place.map((keyword, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={style.modalSelect}
-                  onPress={() => onSelectPlace(keyword)}
-                >
-                  <Text style={style.modalText}>{keyword}</Text>
-                </TouchableOpacity>
-              )
-            })}
+    <View>
+      <Text style={style.enrollContentText}>장소</Text>
+      <View style={style.modalWrapper}>
+        <TouchableOpacity onPress={onStart}>
+          <View style={style.enrollInput}>
+            <Text style={{ left: 20, fontSize: 20 }}>
+              {props.list.location}
+            </Text>
           </View>
-        </View>
-      </Modal>
+        </TouchableOpacity>
+        <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
+          <View style={style.modalContainer}>
+            <View
+              style={style.blankSpace}
+              onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
+            />
+            <View style={style.modalSelectBody}>
+              {location.map((keyword, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={style.modalSelect}
+                    onPress={() => onSelectPlace(keyword)}
+                  >
+                    <Text style={style.modalText}>{keyword}</Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </View>
+        </Modal>
+      </View>
+      <Text style={style.enrollContentText}>장소 (세부사항)</Text>
+      <View style={style.enrollInput}>
+        <TextInput
+          style={{ left: 20, fontSize: 20 }}
+          value={props.list.sub_location}
+          onChangeText={text => setList({ ...props.list, sub_location: text })}
+        ></TextInput>
+      </View>
     </View>
   )
 }
@@ -78,6 +91,7 @@ const style = StyleSheet.create({
   enrollContentText: {
     left: 20,
     fontSize: 20,
+    fontWeight: 'bold',
   },
   enrollInput: {
     marginLeft: 15,

@@ -11,44 +11,47 @@ import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const SetSellTypeModal = (props: any) => {
-  const setContent = props.setContent
-  const list = ['sale', 'entry']
+  const setList = props.setList
+  const type = ['sale', 'entry']
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
   const onStart = () => {
     setModalVisible(true)
   }
   const onSelectType = (e: any) => {
     setModalVisible(false)
-    setContent({ ...props.content, type: e })
+    setList({ ...props.list, type: e })
   }
   return (
-    <View style={style.modalWrapper}>
-      <TouchableOpacity onPress={onStart}>
-        <View style={style.enrollInput}>
-          <Text style={style.enrollContentText}>{props.content.type}</Text>
-        </View>
-      </TouchableOpacity>
-      <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
-        <View style={style.modalContainer}>
-          <View
-            style={style.blankSpace}
-            onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
-          />
-          <View style={style.modalSelectBody}>
-            {list.map((keyword, index) => {
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={style.modalSelect}
-                  onPress={() => onSelectType(keyword)}
-                >
-                  <Text style={style.modalText}>{keyword}</Text>
-                </TouchableOpacity>
-              )
-            })}
+    <View>
+      <Text style={style.enrollContentText}>판매 타입(응모, 구매)</Text>
+      <View style={style.modalWrapper}>
+        <TouchableOpacity onPress={onStart}>
+          <View style={style.enrollInput}>
+            <Text style={{ left: 20, fontSize: 20 }}>{props.list.type}</Text>
           </View>
-        </View>
-      </Modal>
+        </TouchableOpacity>
+        <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
+          <View style={style.modalContainer}>
+            <View
+              style={style.blankSpace}
+              onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
+            />
+            <View style={style.modalSelectBody}>
+              {type.map((keyword, index) => {
+                return (
+                  <TouchableOpacity
+                    key={index}
+                    style={style.modalSelect}
+                    onPress={() => onSelectType(keyword)}
+                  >
+                    <Text style={style.modalText}>{keyword}</Text>
+                  </TouchableOpacity>
+                )
+              })}
+            </View>
+          </View>
+        </Modal>
+      </View>
     </View>
   )
 }
@@ -58,6 +61,7 @@ const style = StyleSheet.create({
   enrollContentText: {
     left: 20,
     fontSize: 20,
+    fontWeight: 'bold',
   },
   enrollInput: {
     marginLeft: 15,
