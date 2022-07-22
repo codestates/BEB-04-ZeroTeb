@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Caver, { AbiItem, Contract, KeyringContainer, Result } from 'caver-js';
+import { ipfsMetadataUpload } from 'lib/pinata';
+import { setMyInterval, sleep } from 'lib/timer';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 
@@ -12,8 +14,8 @@ import {
   ContractBuyerType,
 } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0xcDeCE0A0074e1805820B6938ee4D6443e6fDA61e';
-const GAS = '200000000';
+  process.env.CONTRACT_ADDRESS || '0x217e2CaAD66DE4954EA7e71cA8608bF904EcF21f';
+const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
 
@@ -97,6 +99,7 @@ export class KlaytnService {
       event.classPrices,
       event.classCounts,
       event.openTime,
+      event.startTime,
       event.closeTime,
       event.endTime,
     ];
@@ -106,15 +109,25 @@ export class KlaytnService {
     }
     price *= 0.05;
     price *= 10 ** 18;
-    console.log(price, 'KLAY');
     const user = await this.UserModel.findOne({ test_address: event.creator });
     if (!this.caver.wallet.isExisted(user.test_address)) {
       this.singleKeyring(user.test_address, user.test_private_key);
     }
+    console.log('address :', user.test_address);
+    console.log(
+      'balance :',
+      this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
+      'KLAY',
+    );
+    console.log(
+      'Send :',
+      this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
+      'KLAY',
+    );
     const receipt = await this.contract.methods.createEvent(...inputData).send({
       from: user.test_address,
       gas: GAS,
-      value: this.caver.utils.toPeb(price, 'peb'),
+      value: this.caver.utils.convertToPeb(String(price), 'peb'),
     });
     console.log(receipt);
   }
@@ -138,6 +151,7 @@ export class KlaytnService {
     contractEventDto.prices = prices;
     contractEventDto.openTime = Number(event._openTime);
     contractEventDto.closeTime = Number(event._closeTime);
+    contractEventDto.startTime = Number(event._startTime);
     contractEventDto.endTime = Number(event._endTime);
 
     return contractEventDto;
@@ -154,16 +168,39 @@ export class KlaytnService {
   }
 
   async mintToken(eventId: number, tokenType: number): Promise<void> {
-    if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
-      this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
+    try {
+      if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
+        this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
+      }
+      const event = await this.getEvent(eventId);
+
+      for (let classId = 0; classId < event.prices.length; classId++) {
+        const price = event.prices[classId];
+        await setMyInterval(
+          async (i) => {
+            const metaData = {
+              title: event.name,
+              class: price.class,
+              number: i,
+            };
+            const name = `${metaData.title} class ${metaData.class} #${metaData.number}`;
+            console.log(name);
+            const tokenUri = await ipfsMetadataUpload(name, metaData);
+
+            await this.contract.methods.mintToken(eventId, tokenType, classId, i, tokenUri).send({
+              from: OWNER_ADDRESS,
+              gas: GAS,
+            });
+          },
+          500,
+          price.count,
+        );
+      }
+
+      console.log('민팅 완료!');
+    } catch (err) {
+      console.error(err);
     }
-    const event = await this.getEvent(eventId);
-    event.prices.forEach(async (price, index) => {
-      await this.contract.methods.mintToken(eventId, tokenType, index).send({
-        from: OWNER_ADDRESS,
-        gas: GAS,
-      });
-    });
   }
 
   async buyToken(
@@ -176,13 +213,26 @@ export class KlaytnService {
       const isSelect = number !== undefined;
       number = isSelect ? number : 0;
 
-      const user = await this.UserModel.findOne({ test_address: buyerAddress });
+      const user = await this.UserModel.findOne({ address: buyerAddress });
+      if (!user) throw new Error('user is undefined.');
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
         this.singleKeyring(user.test_address, user.test_private_key);
       }
 
       const eventClass = await this.getEventClass(eventId, classId);
+
+      console.log('address :', user.test_address);
+      console.log(
+        'balance :',
+        this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
+        'KLAY',
+      );
+      console.log(
+        'Send :',
+        this.caver.utils.fromPeb(this.caver.utils.toPeb(eventClass.price, 'KLAY'), 'KLAY'),
+        'KLAY',
+      );
 
       const receipt = await this.contract.methods
         .buyToken(eventId, classId, number, isSelect)
@@ -192,10 +242,10 @@ export class KlaytnService {
           value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
         });
 
-      return true;
+      return false;
     } catch (err) {
       console.error(err);
-      return false;
+      return true;
     }
   }
 
@@ -211,7 +261,7 @@ export class KlaytnService {
 
   async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
     try {
-      const user = await this.UserModel.findOne({ test_address: applicantAddress });
+      const user = await this.UserModel.findOne({ address: applicantAddress });
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
         this.singleKeyring(user.test_address, user.test_private_key);

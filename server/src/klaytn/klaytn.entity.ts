@@ -8,6 +8,7 @@ export class ContracCreateEventkDto {
   classCounts: number[];
   openTime: number;
   closeTime: number;
+  startTime: number;
   endTime: number;
 }
 
@@ -19,6 +20,7 @@ export class ContractEventDto {
   prices: ContractEventClassType[];
   openTime: number;
   closeTime: number;
+  startTime: number;
   endTime: number;
 }
 

@@ -177,9 +177,14 @@
         "type": "uint8"
       },
       {
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "_number",
-        "type": "uint8"
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isSelect",
+        "type": "bool"
       }
     ],
     "name": "buyToken",
@@ -232,6 +237,11 @@
       {
         "internalType": "uint256",
         "name": "_closeTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTime",
         "type": "uint256"
       },
       {
@@ -292,6 +302,25 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
+    "name": "eventType",
+    "outputs": [
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
       }
@@ -340,6 +369,11 @@
       {
         "internalType": "uint256",
         "name": "_openTime",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_startTime",
         "type": "uint256"
       },
       {
@@ -421,6 +455,16 @@
             "internalType": "address[]",
             "name": "owners",
             "type": "address[]"
+          },
+          {
+            "internalType": "uint256",
+            "name": "index",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ownerTotal",
+            "type": "uint256"
           }
         ],
         "internalType": "struct ZeroTEB.EventClass",
@@ -490,6 +534,11 @@
         "internalType": "uint8",
         "name": "_classId",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_number",
+        "type": "uint256"
       },
       {
         "internalType": "string",
@@ -675,6 +724,19 @@
         "internalType": "string",
         "name": "",
         "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalEvent",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",

@@ -15,6 +15,7 @@ interface IZeroTEB {
         uint256[] memory _counts,
         uint256 _openTime,
         uint256 _closeTime,
+        uint256 _startTime,
         uint256 _endTime
     ) external payable returns (uint256 _eventId);
 
@@ -25,6 +26,7 @@ interface IZeroTEB {
         uint256 _eventId,
         uint8 _tokenType,
         uint8 _classId,
+        uint256 _number,
         string memory _tokenUri
     ) external returns (uint256);
 
