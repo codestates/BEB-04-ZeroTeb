@@ -26,7 +26,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     struct Event {
         string name;
         uint8 eventType; // 0 - sale, 1 - entry
-        string tokenImageUri;
+        string eventUri;
         address creator;
         uint256 classCount;
         uint256 openTime;
@@ -110,7 +110,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         address _creator,
         string memory _eventName,
         uint8 _eventType,
-        string memory _tokenImageUri,
+        string memory _eventUri,
         string[] memory _classNames,
         uint256[] memory _classPrices,
         uint256[] memory _classCounts,
@@ -138,7 +138,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         // 신규 이벤트 매핑
         _events[_newEventId].name = _eventName;
         _events[_newEventId].eventType = _eventType;
-        _events[_newEventId].tokenImageUri = _tokenImageUri;
+        _events[_newEventId].eventUri = _eventUri;
         _events[_newEventId].creator = _creator;
         _events[_newEventId].openTime = _openTime;
         _events[_newEventId].closeTime = _closeTime;
@@ -171,7 +171,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         view
         returns (
             string memory _name,
-            string memory _tokenImageUri,
+            string memory _eventUri,
             address _creator,
             uint256 _classCount,
             uint256 _openTime,
@@ -181,7 +181,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         )
     {
         _name = _events[_eventId].name;
-        _tokenImageUri = _events[_eventId].tokenImageUri;
+        _eventUri = _events[_eventId].eventUri;
         _creator = _events[_eventId].creator;
         _classCount = _events[_eventId].classCount;
         _openTime = _events[_eventId].openTime;

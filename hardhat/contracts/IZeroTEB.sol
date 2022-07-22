@@ -9,7 +9,7 @@ interface IZeroTEB {
         address _creator,
         string memory _eventName,
         uint8 _eventType,
-        string memory _tokenImageUri,
+        string memory _eventUri,
         string[] memory _names,
         uint256[] memory _prices,
         uint256[] memory _counts,
