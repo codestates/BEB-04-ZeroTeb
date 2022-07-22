@@ -10,6 +10,7 @@ import { newWallet } from 'lib/mnemonic';
 import { UserInfoDto } from './dto/userInfo.dto';
 import { LikedEvent } from 'src/event/schemas/likedEvent.schema';
 import { Event } from 'src/event/schemas/event.schema';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class AuthService {
@@ -122,4 +123,13 @@ export class AuthService {
       };
     }
   }
+
+  // Test
+  // @Cron('*/5 * * * * *')
+  // async getEventList(): Promise<void> {
+  //   const index = await this.userModel.count().exec();
+  //   const userData = await this.userModel.find({ username: '느린 미디움씨그린 리틀 제이지' });
+  //   const usernameData = await this.usernameModel.find({ '"username"': userData[0].username });
+  //   console.log(usernameData, userData);
+  // }
 }
