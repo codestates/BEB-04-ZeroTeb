@@ -15,6 +15,8 @@ import { UserType } from '../../models/User'
 import LoadingImg from '../../components/common/LoadingImg'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
+import { useDispatch } from 'react-redux'
+import { signinActions } from '../../store/signinSlice'
 
 const TABBAR_HEIGHT = 60
 
@@ -33,6 +35,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
+  const dispatch = useDispatch()
 
   const [myState, setMyState] = useState<UserType>({
     username: 'tt',
@@ -54,7 +57,9 @@ const MyPage: React.FC<Props> = ({ route }) => {
         withCredentials: true,
       }
       const res = await axios(config)
+
       setMyState(res.data)
+      dispatch(signinActions.setUsername(res.data.username))
     } catch (err) {
       alert(err)
     }
