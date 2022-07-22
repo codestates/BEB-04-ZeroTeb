@@ -1,14 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Req,
+  BadRequestException,
+  UseGuards,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Post('create')
-  createEvent(@Body() createEventDto: CreateEventDto) {
-    return this.eventService.create(createEventDto);
+  @UseGuards(AuthGuard)
+  createEvent(@Body() createEventDto: CreateEventDto, @Req() req: Request) {
+    return this.eventService.create(createEventDto, req.user);
   }
 
   @Get('list')
