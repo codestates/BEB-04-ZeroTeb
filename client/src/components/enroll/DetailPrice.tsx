@@ -12,25 +12,26 @@ import { AntDesign } from '@expo/vector-icons'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 const DetailList = (props: any) => {
+  // list={list} setList={setList} props.list
   const propertiesHandler = (e: any, index: any, name: string) => {
-    props.setprice({
-      ...props.price,
-      attributes: [
-        ...props.price.attributes.slice(0, index),
+    props.setList({
+      ...props.list,
+      price: [
+        ...props.list.price.slice(0, index),
         {
-          ...props.price.attributes[index],
+          ...props.list.price[index],
           [name]: e,
         },
-        ...props.price.attributes.slice(index + 1),
+        ...props.list.price.slice(index + 1),
       ],
     })
   }
 
   const addPropertiesHandler = () => {
-    props.setprice({
-      ...props.price,
-      attributes: [
-        ...props.price.attributes,
+    props.setList({
+      ...props.list,
+      price: [
+        ...props.list.price,
         {
           class: '',
           price: '',
@@ -41,24 +42,25 @@ const DetailList = (props: any) => {
   }
 
   const removePropertiesHandler = (e: any, index: any) => {
-    const removeProperties = props.price.attributes.filter(
+    const removeProperties = props.list.price.filter(
       (item: any, itemIndex: any) => index !== itemIndex,
     )
-    props.setprice({
-      ...props.price.attributes,
-      attributes: removeProperties,
+    props.setList({
+      ...props.list.price,
+      price: removeProperties,
     })
   }
 
   return (
     <View>
-      {props.price.attributes.map((attribute: any, index: any) => {
+      {props.list.price.map((attribute: any, index: any) => {
         return (
           <View key={index} style={style.InputPriceWrapper}>
             <View style={style.InputPrice}>
               <TextInput
+                style={style.InputContent}
                 testID="class"
-                placeholder={'class input..'}
+                placeholder={'...class'}
                 onChangeText={e => {
                   propertiesHandler(e, index, 'class')
                 }}
@@ -67,8 +69,10 @@ const DetailList = (props: any) => {
             </View>
             <View style={style.InputPrice}>
               <TextInput
+                style={style.InputContent}
                 testID="price"
-                placeholder={'price input..'}
+                placeholder={'...price'}
+                keyboardType="number-pad"
                 onChangeText={e => {
                   propertiesHandler(e, index, 'price')
                 }}
@@ -77,8 +81,10 @@ const DetailList = (props: any) => {
             </View>
             <View style={style.InputPrice}>
               <TextInput
+                style={style.InputContent}
                 testID="count"
-                placeholder={'count input..'}
+                placeholder={'...count'}
+                keyboardType="number-pad"
                 onChangeText={e => {
                   propertiesHandler(e, index, 'count')
                 }}
@@ -122,8 +128,9 @@ const style = StyleSheet.create({
     borderRadius: 10,
   },
   InputContent: {
-    flex: 1,
+    alignItems: 'center',
     textAlign: 'center',
+    fontSize: 20,
   },
 })
 

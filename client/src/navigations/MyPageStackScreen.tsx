@@ -19,7 +19,6 @@ export default function MyPageStackScreen() {
   )
 
   return (
-    
     <MyPageStack.Navigator>
       <MyPageStack.Screen
         name="MyList"
@@ -45,6 +44,7 @@ export default function MyPageStackScreen() {
         component={Enroll}
         options={{ headerTitle: '' }}
       />
+
       <MyPageStack.Screen
         name="QRLoad"
         component={QRLoad}
@@ -53,12 +53,12 @@ export default function MyPageStackScreen() {
       <MyPageStack.Screen
         name="QRread"
         component={QRread}
-        options={{ headerTitle: ''}}
+        options={{ headerTitle: '' }}
       />
       <MyPageStack.Screen
         name="TicketDetail"
         component={TicketDetail}
-        options={{ headerTitle: ''}}
+        options={{ headerTitle: '' }}
       />
     </MyPageStack.Navigator>
   )

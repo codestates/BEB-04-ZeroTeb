@@ -2,22 +2,57 @@ import * as React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
+import { getDate, getTime } from '../../utils/unixTime'
 
 const SetDateAndTime = (props: any) => {
-  const setStartDate = props.setStartDate
-  const setEndDate = props.setEndDate
+  const setRecruitStart = props.setRecruitStart
+  const setRecruitEnd = props.setRecruitEnd
+  const setEventStart = props.setEventStart
+  const setEventEnd = props.setEventEnd
+
+  let value
+  if (props.type === 'recruit_start_date') value = props.list.recruit_start_date
+  else if (props.type === 'recruit_end_date')
+    value = props.list.recruit_end_date
+  else if (props.type === 'event_start_date')
+    value = props.list.event_start_date
+  else value = props.list.event_end_date
+
   const [show, setShow] = useState(false)
 
   // 날짜 시간등 바뀜
   const onChangeDateTime = (event: any, selectedDate: any) => {
     if (selectedDate === undefined) {
-      if (setStartDate === undefined) setEndDate(new Date())
-      else setStartDate(new Date())
+      if (props.type === 'recruit_start_date')
+        setRecruitStart({
+          ...props.list,
+          recruit_start_date: Number(new Date()) / 1000,
+        })
+      else if (props.type === 'recruit_end_date')
+        setRecruitEnd({
+          ...props.list,
+          recruit_end_date: Number(new Date()) / 1000,
+        })
+      else if (props.type === 'event_start_date')
+        setEventStart({
+          ...props.list,
+          event_start_date: Number(new Date()) / 1000,
+        })
+      else
+        setEventEnd({
+          ...props.list,
+          event_end_date: Number(new Date()) / 1000,
+        })
       setShow(false)
     } else {
-      const currentDate = selectedDate
-      if (setStartDate === undefined) setEndDate(currentDate)
-      else setStartDate(currentDate)
+      const currentDate = Number(selectedDate) / 1000
+      if (props.type === 'recruit_start_date')
+        setRecruitStart({ ...props.list, recruit_start_date: currentDate })
+      else if (props.type === 'recruit_end_date')
+        setRecruitEnd({ ...props.list, recruit_end_date: currentDate })
+      else if (props.type === 'event_start_date')
+        setEventStart({ ...props.list, event_start_date: currentDate })
+      else setEventEnd({ ...props.list, event_end_date: currentDate })
       setShow(false)
     }
   }
@@ -30,20 +65,15 @@ const SetDateAndTime = (props: any) => {
     <View>
       <TouchableOpacity onPress={showpicker}>
         {props.mode === 'date' ? (
-          <Text style={style.dateTimeCSS}>
-            {props.value.getFullYear()}년 {props.value.getMonth() + 1}월{' '}
-            {props.value.getDate()}일
-          </Text>
+          <Text style={style.dateTimeCSS}>{getDate(value)}</Text>
         ) : (
-          <Text style={style.dateTimeCSS}>
-            {props.value.getHours()}시 {props.value.getMinutes()}분
-          </Text>
+          <Text style={style.dateTimeCSS}>{getTime(value)}</Text>
         )}
-        {/* 시작 날짜 */}
+        {/* 모달 부분 */}
         {show && (
           <DateTimePicker
             testID="test"
-            value={props.value}
+            value={new Date(value * 1000)}
             mode={props.mode}
             is24Hour={true}
             onChange={onChangeDateTime}
