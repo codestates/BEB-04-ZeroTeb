@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import Caver, { AbiItem, Contract, KeyringContainer, Result } from 'caver-js';
+import Caver, { AbiItem, Contract, KeyringContainer } from 'caver-js';
 import { ipfsMetadataUpload } from 'lib/pinata';
-import { setMyInterval, sleep } from 'lib/timer';
+import { setMyInterval } from 'lib/timer';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 
@@ -14,7 +14,7 @@ import {
   ContractBuyerType,
 } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x217e2CaAD66DE4954EA7e71cA8608bF904EcF21f';
+  process.env.CONTRACT_ADDRESS || '0xA34b373F97AdEc68A7090AE6949a45aE4961cF28';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
@@ -249,14 +249,19 @@ export class KlaytnService {
     }
   }
 
-  async getEventBuyers(eventId, eventClassId): Promise<ContractBuyerType[]> {
-    const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
-    console.log(receipt);
-    return receipt.owners.map((owner, index) => ({
-      id: index,
-      address: owner,
-      tokenId: Number(receipt.tokens[index]),
-    }));
+  async getTokenBuyers(eventId): Promise<ContractBuyerType[]> {
+    const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+    const results = [];
+    for (let eventClassId = 0; eventClassId < eventClassCount; eventClassId++) {
+      const receipt = await this.contract.methods.getTokenBuyers(eventId, eventClassId).call();
+      const buyers = receipt.owners.map((owner, index) => ({
+        id: index,
+        address: owner,
+        tokenId: Number(receipt.tokens[index]),
+      }));
+      results.push(buyers);
+    }
+    return results;
   }
 
   async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
@@ -278,6 +283,41 @@ export class KlaytnService {
     } catch (err) {
       console.error(err);
       return false;
+    }
+  }
+
+  async getEventParticipants(eventId: number) {
+    return await this.contract.methods.getEventParticipants(eventId).call();
+  }
+
+  async transferEventWinner(eventId: number) {
+    try {
+      if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
+        this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
+      }
+      const receipt = await this.contract.methods.transferEventWinner(eventId).send({
+        from: OWNER_ADDRESS,
+        gas: GAS,
+      });
+      console.log(receipt);
+      return receipt;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async endEvent(eventId, eventEndStatus) {
+    try {
+      if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
+        this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
+      }
+      const receipt = await this.contract.methods.endEvent(eventId, eventEndStatus).send({
+        from: OWNER_ADDRESS,
+        gas: GAS,
+      });
+      return receipt;
+    } catch (error) {
+      console.error(error);
     }
   }
 }
