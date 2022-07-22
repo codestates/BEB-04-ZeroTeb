@@ -81,16 +81,17 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   }
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
-    if (KilpAddress === '') {
-      navigation.navigate('SignIn', { gotoMyPage: false })
-    } else {
-      setModalVisible(true)
-    }
+    // if (KilpAddress === '') {
+    //   navigation.navigate('SignIn', { gotoMyPage: false })
+    // } else {
+    setModalVisible(true)
+    // }
   }
 
   const getPayment = () => {
     setModalVisible(false)
-    console.log('이제 클립으로 결제 진행')
+    navigation.navigate('SearchListup', { searchWord: '1' })
+    // console.log('이제 클립으로 결제 진행')
   }
 
   return (
