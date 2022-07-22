@@ -10,7 +10,7 @@ const SearchListup: React.FC<searchListProps> = () => {
 
   return (
     <View style={styles.searchListupContainer}>
-      <SearchList sendList={route.params?.searchEventList} />
+      <SearchList sendList={route.params?.searchEventList} type={''} address={''} />
     </View>
   )
 }
