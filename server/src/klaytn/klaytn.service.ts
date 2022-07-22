@@ -14,7 +14,7 @@ import {
   ContractBuyerType,
 } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0xA34b373F97AdEc68A7090AE6949a45aE4961cF28';
+  process.env.CONTRACT_ADDRESS || '0x38D59A269AFD180Fa48C9EB7743f40fb8d3358E3';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
@@ -94,7 +94,7 @@ export class KlaytnService {
       event.creator,
       event.eventName,
       event.eventType,
-      event.tokenImageUri,
+      event.eventUri,
       event.classNames,
       event.classPrices,
       event.classCounts,
@@ -132,6 +132,10 @@ export class KlaytnService {
     console.log(receipt);
   }
 
+  async getEventLength(): Promise<number> {
+    return await this.contract.methods.totalEvent().call();
+  }
+
   async getEvent(eventId: number): Promise<ContractEventDto> {
     const contractEventDto: ContractEventDto = new ContractEventDto();
     const event = await this.contract.methods.getEvent(eventId).call();
@@ -145,7 +149,7 @@ export class KlaytnService {
       });
     }
     contractEventDto.name = event._name;
-    contractEventDto.tokenImageUri = event._tokenImageUri;
+    contractEventDto.eventUri = event._eventUri;
     contractEventDto.creator = event._creator;
     contractEventDto.classCount = Number(event._classCount);
     contractEventDto.prices = prices;
