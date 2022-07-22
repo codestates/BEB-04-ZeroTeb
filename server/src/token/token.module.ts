@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { NonceSchema } from './schemas/token.schema';
 import { HoldingSchema } from './schemas/holding.schema';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: 'Holding', schema: HoldingSchema },
     ]),
     ScheduleModule.forRoot(),
+    AuthModule,
   ],
   controllers: [TokenController],
   providers: [TokenService],
