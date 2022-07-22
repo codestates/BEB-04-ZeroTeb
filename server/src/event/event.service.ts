@@ -144,7 +144,6 @@ export class EventService {
       rg = '';
     }
     console.log('ctg, rg', ctg, rg);
-
     try {
       // 현재 페이지에 나오는 event_id 계산
       // const content_count: number = page * count;
@@ -152,6 +151,7 @@ export class EventService {
       // 조건에 맞는 이벤트 찾기
       const eventList = await this.EventModel.find({
         category: { $regex: '.*' + ctg + '.*' },
+        location: { $regex: '.*' + rg + '.*' },
         event_id: {
           // $lte: content_count,
           $gte: data,
