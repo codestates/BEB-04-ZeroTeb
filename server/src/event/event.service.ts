@@ -36,6 +36,7 @@ export class EventService {
         promoter,
         address,
         location,
+        sub_location,
         category,
         type,
         thumnail,
@@ -49,8 +50,12 @@ export class EventService {
         event_end_date,
         created_date,
         modified_date,
-        remaining,
       } = createEventDto;
+      //남은 좌석
+      let totalSeat = 0;
+      for (const i of price) {
+        totalSeat += i.count;
+      }
       // location의 데이터를 분리해서 도, 시 까지만 사용
       const sliceLocation = location.split(' ');
       const sL = `${sliceLocation[0]} ${sliceLocation[1]}`;
@@ -70,6 +75,7 @@ export class EventService {
         promoter,
         address,
         location,
+        sub_location,
         category,
         type,
         thumnail,
@@ -85,12 +91,13 @@ export class EventService {
         modified_date,
         x: point.documents[0].x, //location 기반 좌표 lat
         y: point.documents[0].y, //location 기반 좌표 lon
-        status: '진행 중',
-        remaining,
+        status: '시작 전',
+        remaining: totalSeat,
+        totalSeat,
       };
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
-      console.log(createEventDto);
+      console.log(saveResult);
       return saveResult;
     } catch (e) {
       console.log(e);

@@ -1,16 +1,12 @@
 import * as mongoose from 'mongoose';
 
-const now = new Date();
-const start_date = now.toLocaleString();
-now.setDate(now.getDate() + 5);
-const end_date = now.toLocaleString();
-
 export const EventSchema = new mongoose.Schema({
   event_id: { type: Number, default: 0, unique: true },
   title: { type: String, required: true },
   promoter: { type: String, required: true },
   address: { type: String, required: true },
   location: { type: String, required: true },
+  sub_location: { type: String, required: true },
   category: { type: String, required: true },
   type: { type: String, required: true },
   thumnail: { type: String, required: true },
@@ -18,17 +14,18 @@ export const EventSchema = new mongoose.Schema({
   price: { type: [], required: true },
   contents: { type: String, required: true },
   option: { type: [] },
-  recruit_start_date: { type: Number, default: start_date },
-  recruit_end_date: { type: Number, default: end_date },
-  event_start_date: { type: Number, default: start_date },
-  event_end_date: { type: Number, default: end_date },
-  created_date: { type: Number, default: start_date },
-  modified_date: { type: Number, default: start_date },
+  recruit_start_date: { type: Number, required: true },
+  recruit_end_date: { type: Number, required: true },
+  event_start_date: { type: Number, required: true },
+  event_end_date: { type: Number, required: true },
+  created_date: { type: Number, required: true },
+  modified_date: { type: Number, required: true },
   x: { type: Number, required: true },
   y: { type: Number, required: true },
-  status: { type: String, required: true },
+  status: { type: String, default: '시작 전' },
   remaining: { type: Number, required: true },
   banner: { type: Boolean, default: false },
+  totalSeat: { type: Number, required: true },
 });
 
 export interface Event {
@@ -37,6 +34,7 @@ export interface Event {
   promoter: string;
   address: string;
   location: string;
+  sub_location: string;
   category: string;
   type: string;
   thumnail: string;
@@ -55,4 +53,5 @@ export interface Event {
   status: string;
   remaining: number;
   banner: boolean;
+  totalSeat: number;
 }
