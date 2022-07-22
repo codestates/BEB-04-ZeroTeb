@@ -2,7 +2,7 @@ export class ContracCreateEventkDto {
   creator: string;
   eventName: string;
   eventType: number;
-  tokenImageUri: string;
+  eventUri: string;
   classNames: string[];
   classPrices: number[];
   classCounts: number[];
@@ -14,7 +14,7 @@ export class ContracCreateEventkDto {
 
 export class ContractEventDto {
   name: string;
-  tokenImageUri: string;
+  eventUri: string;
   creator: string;
   classCount: number;
   prices: ContractEventClassType[];
