@@ -7,7 +7,7 @@ import 'dotenv/config';
 import { Holding } from './schemas/holding.schema';
 import { Cron } from '@nestjs/schedule';
 import { KlaytnService } from 'src/klaytn/klaytn.service';
-import { BuyTokenDto } from './dto/buy-token.dto copy';
+import { BuyTokenDto } from './dto/buy-token.dto';
 import { EntryTokenDto } from './dto/entry-token.dto';
 
 @Injectable()
