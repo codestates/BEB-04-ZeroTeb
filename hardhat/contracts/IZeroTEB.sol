@@ -43,7 +43,7 @@ interface IZeroTEB {
     /*
      * 이벤트 구매자 정보 목록 확인
      */
-    function getEventBuyers(uint256 _eventId, uint8 _classId)
+    function getTokenBuyers(uint256 _eventId, uint8 _classId)
         external
         view
         returns (address[] memory);

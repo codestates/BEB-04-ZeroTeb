@@ -399,30 +399,6 @@
       },
       {
         "internalType": "uint8",
-        "name": "_classId",
-        "type": "uint8"
-      }
-    ],
-    "name": "getEventBuyers",
-    "outputs": [
-      {
-        "internalType": "address[]",
-        "name": "",
-        "type": "address[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_eventId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
         "name": "_eventClassId",
         "type": "uint8"
       }
@@ -483,7 +459,50 @@
         "type": "uint256"
       }
     ],
+    "name": "getEventClassCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      }
+    ],
     "name": "getEventParticipants",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_classId",
+        "type": "uint8"
+      }
+    ],
+    "name": "getTokenBuyers",
     "outputs": [
       {
         "internalType": "address[]",

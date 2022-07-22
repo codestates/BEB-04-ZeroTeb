@@ -33,7 +33,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 startTime;
         uint256 closeTime;
         uint256 endTime;
-        uint8 status; // 0 - init, 1 - minted, 2 - end
+        uint8 status; // 0 - init, 1 - minted, 2 - sale or winners, 2 - end
         mapping(uint8 => EventClass) class;
     }
 
@@ -50,6 +50,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     mapping(uint256 => Event) private _events;
     mapping(uint256 => TokenExtention) private _tokenExtentions;
     mapping(uint256 => address[]) private _eventParticipants; // 이벤트 응모 참가자
+    mapping(uint256 => bool) private _isEventWinners;
     mapping(uint256 => uint256) private _deposits;
     mapping(uint256 => uint256) private _amounts;
 
@@ -95,6 +96,14 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
     function eventType(uint256 _eventId) public view returns (uint8) {
         return _events[_eventId].eventType;
+    }
+
+    function getEventClassCount(uint256 _eventId)
+        public
+        view
+        returns (uint256)
+    {
+        return _events[_eventId].classCount;
     }
 
     function createEvent(
@@ -271,7 +280,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     }
 
     // 토큰 구매자 조회
-    function getEventBuyers(uint256 _eventId, uint8 _classId)
+    function getTokenBuyers(uint256 _eventId, uint8 _classId)
         public
         view
         override
@@ -360,6 +369,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         onlyOwner
         returns (address[] memory)
     {
+        require(
+            _isEventWinners[_eventId] == false,
+            "Already selected the winners."
+        );
         address _owner = owner();
         _eventWinners(_eventId, _eventClassId);
 
@@ -376,6 +389,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
         // 이벤트를 응모에서 판매 상태로 변경
         _events[_eventId].eventType = 0;
+        _isEventWinners[_eventId] = true;
 
         return _events[_eventId].class[_eventClassId].owners;
     }
