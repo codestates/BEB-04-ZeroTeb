@@ -6,12 +6,16 @@ import axios from 'axios';
 import 'dotenv/config';
 import { Holding } from './schemas/holding.schema';
 import { Cron } from '@nestjs/schedule';
+import { KlaytnService } from 'src/klaytn/klaytn.service';
+import { BuyTokenDto } from './dto/buy-token.dto';
+import { EntryTokenDto } from './dto/entry-token.dto';
 
 @Injectable()
 export class TokenService {
   constructor(
     @InjectModel('Nonce') private readonly NonceModel: Model<Nonce>,
     @InjectModel('Holding') private readonly HoldingModel: Model<Holding>,
+    private readonly klaytnService: KlaytnService,
   ) {}
 
   // 주소에 따른 token 목록 반환 함수
@@ -155,9 +159,38 @@ export class TokenService {
     }
   }
 
+  async buyToken(buyTokenDto: BuyTokenDto, user): Promise<string> {
+    const eventId = buyTokenDto.event_id;
+    const eventClassId = buyTokenDto.class_id;
+    const number = buyTokenDto.number;
+
+    try {
+      const err = await this.klaytnService.buyToken(user.address, eventId, eventClassId, number);
+      if (err) throw new Error('구매를 실패했습니다.');
+      return '정상적으로 구매되었습니다.';
+    } catch (error) {
+      console.error(error);
+      return '구매를 실패했습니다.';
+    }
+  }
+
+  async entryToken(entryTokenDto: EntryTokenDto, user): Promise<string> {
+    const eventId = entryTokenDto.event_id;
+
+    try {
+      const err = await this.klaytnService.applyToken(user.address, eventId);
+      if (err) throw new Error('응모에 실패했습니다.');
+      return '정상적으로 응모되었습니다.';
+    } catch (error) {
+      console.error(error);
+      return '응모에 실패했습니다.';
+    }
+  }
+
   //사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  // @Cron('* * * * * *')
+  // @Cron('*/30 * * * * *')
   // getHoldingData() {
   //   console.log('address에 따른 토큰 정보 받기');
+  //   this.klaytnService.mintToken(1, 0);
   // }
 }

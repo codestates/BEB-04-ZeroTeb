@@ -106,7 +106,7 @@ export class EventService {
       };
       // Contract - 이벤트 등록
       const contracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
-      contracCreateEventkDto.creator = user.test_address;
+      contracCreateEventkDto.creator = user.test_address || user.address;
       contracCreateEventkDto.eventName = title;
       contracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
       contracCreateEventkDto.tokenImageUri = token_image_url;
@@ -115,6 +115,7 @@ export class EventService {
       contracCreateEventkDto.classCounts = price.map((v) => v.count);
       contracCreateEventkDto.openTime = recruit_start_date;
       contracCreateEventkDto.closeTime = recruit_end_date;
+      contracCreateEventkDto.startTime = event_start_date;
       contracCreateEventkDto.endTime = event_end_date;
 
       await this.klaytnService.createEvent(contracCreateEventkDto);
@@ -324,10 +325,10 @@ export class EventService {
     }
   }
 
-  //이벤트 리스트 받아서 holdings에 업데이트
+  // 이벤트 리스트 받아서 holdings에 업데이트
   // @Cron('* * * * * *')
   // async getEventList(): Promise<void> {
   //   console.log('이벤트 리스트 받기');
-  //   console.log('Event :', await this.klaytnService.getEvent(0));
+  //   console.log('Event :', await this.klaytnService.getEvent(1));
   // }
 }

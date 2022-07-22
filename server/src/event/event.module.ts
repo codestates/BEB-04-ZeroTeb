@@ -8,13 +8,11 @@ import { LikedEventSchema } from './schemas/likedEvent.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import { User, UserSchema } from 'src/auth/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: process.env.JWT_SECRET_KEY,
-      signOptions: { expiresIn: '30m' },
-    }),
+    AuthModule,
     MongooseModule.forFeature([
       { name: 'Event', schema: EventSchema },
       { name: 'EventResult', schema: EventResultSchema },

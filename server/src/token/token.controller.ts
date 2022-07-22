@@ -1,4 +1,8 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/common';
+import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
+import { BuyTokenDto } from './dto/buy-token.dto';
+import { EntryTokenDto } from './dto/entry-token.dto';
 import { TokenService } from './token.service';
 
 @Controller('token')
@@ -17,6 +21,19 @@ export class TokenController {
   @Post('qrcode/validation')
   checkValidation(@Body() nonce: string) {
     return this.tokenService.checkValidation(nonce);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/buy')
+  async buyToken(@Body() body: BuyTokenDto, @Req() req: Request) {
+    const message = await this.tokenService.buyToken(body, req.user);
+    return { message };
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('/entry')
+  entryToken(@Body() body: EntryTokenDto) {
+    return 'Entry Token';
   }
 
   // @Post()
