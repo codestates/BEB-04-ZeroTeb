@@ -111,16 +111,16 @@ export class EventService {
     console.log('data:', page, count, category, region);
     let ctg = category;
     let rg = region;
-    if (ctg === undefined) {
+    if (!ctg) {
       ctg = '';
     }
-    if (rg === undefined || rg === '전국') {
+    if (!rg || rg === '전국') {
       rg = '';
     }
-
+    console.log('ctg, rg', ctg, rg);
     try {
       // 현재 페이지에 나오는 event_id 계산
-      const content_count: number = page * count;
+      // const content_count: number = page * count;
       const data = (page - 1) * count;
       // 조건에 맞는 이벤트 찾기
       const eventList = await this.EventModel.find({
@@ -232,7 +232,7 @@ export class EventService {
     }
   }
 
-  async findAroundEvent(lat: number, lon: number) {
+  async findAroundEvent(lon: number, lat: number) {
     console.log('findAroundEvent');
     try {
       const threshold = 50; // 내 주변 탐색 범위 (단위 km)
@@ -246,6 +246,7 @@ export class EventService {
         .then((res) => {
           return res.data;
         });
+      console.log('res', apiResult);
       const region = apiResult.documents[0].address.region_1depth_name; // 행정구역
       console.log('현재 지역:', region);
       // const tetsregion = '경상남도'; //test data
@@ -256,7 +257,7 @@ export class EventService {
       console.log(`${region}지역 이벤트:`, regionEventList);
       // 호출된 이벤트와 사용자의 좌표의 거리가 threshold 이하인 데이터만 추출
       const aroundEvent = regionEventList.filter(
-        (ele) => this.getDistance(lat, lon, ele.x, ele.y) < threshold,
+        (ele) => this.getDistance(lon, lat, ele.x, ele.y) < threshold,
       );
       return aroundEvent;
     } catch (e) {
@@ -283,7 +284,7 @@ export class EventService {
     dist = dist * 60 * 1.1515 * 1.609344 * 1000;
     if (dist < 100) dist = Math.round(dist / 10) * 10;
     else dist = Math.round(dist / 100) * 100;
-
+    console.log('거리', dist / 1000, 'km');
     return dist / 1000;
   }
 
