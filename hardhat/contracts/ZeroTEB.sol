@@ -30,8 +30,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         address creator;
         uint256 classCount;
         uint256 openTime;
+        uint256 startTime;
         uint256 closeTime;
         uint256 endTime;
+        uint8 status; // 0 - init, 1 - minted, 2 - end
         mapping(uint8 => EventClass) class;
     }
 
@@ -104,8 +106,11 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256[] memory _classCounts,
         uint256 _openTime,
         uint256 _closeTime,
+        uint256 _startTime,
         uint256 _endTime
     ) public payable override returns (uint256 _eventId) {
+        _eventIds.increment();
+
         uint256 _total = 0;
         uint256 _deposit = 0;
         for (uint256 i = 0; i < _classPrices.length; i++) {
@@ -127,8 +132,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _events[_newEventId].creator = _creator;
         _events[_newEventId].openTime = _openTime;
         _events[_newEventId].closeTime = _closeTime;
+        _events[_newEventId].startTime = _startTime;
         _events[_newEventId].endTime = _endTime;
         _events[_newEventId].classCount = _classNames.length;
+        _events[_newEventId].status = 0; // init status
 
         for (uint8 i = 0; i < _classNames.length; i++) {
             _events[_newEventId].class[i].name = _classNames[i];
@@ -143,10 +150,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             _events[_newEventId].class[i].index = 0;
             _events[_newEventId].class[i].ownerTotal = 0;
         }
-
-        // 이벤트 아이디 증가
-        _eventIds.increment();
-
         // 반환
         _eventId = _newEventId;
     }
@@ -161,6 +164,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             address _creator,
             uint256 _classCount,
             uint256 _openTime,
+            uint256 _startTime,
             uint256 _closeTime,
             uint256 _endTime
         )
@@ -171,6 +175,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _classCount = _events[_eventId].classCount;
         _openTime = _events[_eventId].openTime;
         _closeTime = _events[_eventId].closeTime;
+        _startTime = _events[_eventId].startTime;
         _endTime = _events[_eventId].endTime;
     }
 
@@ -188,23 +193,22 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _eventId,
         uint8 _tokenType, // 0 : NFT, 1: SBT
         uint8 _classId,
+        uint256 _number,
         string memory _tokenUri
     ) public override onlyOwner returns (uint256) {
-        for (uint8 i = 0; i < _events[_eventId].class[_classId].count; i++) {
-            _tokenIds.increment();
+        _tokenIds.increment();
 
-            uint256 _newTokenId = _tokenIds.current();
-            _safeMint(msg.sender, _newTokenId);
-            _setTokenURI(_newTokenId, _tokenUri);
+        uint256 _newTokenId = _tokenIds.current();
+        _safeMint(msg.sender, _newTokenId);
+        _setTokenURI(_newTokenId, _tokenUri);
 
-            _events[_eventId].class[_classId].tokens[i] = _newTokenId;
+        _events[_eventId].class[_classId].tokens[_number] = _newTokenId;
 
-            _tokenExtentions[_newTokenId] = TokenExtention({
-                eventId: _eventId,
-                tokenType: _tokenType,
-                isTrade: true
-            });
-        }
+        _tokenExtentions[_newTokenId] = TokenExtention({
+            eventId: _eventId,
+            tokenType: _tokenType,
+            isTrade: true
+        });
 
         return _eventId;
     }
