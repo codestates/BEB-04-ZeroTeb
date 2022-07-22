@@ -8,6 +8,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import 'dotenv/config';
+import { decodeJwt } from 'lib/jwt';
+import { User, UserDocument } from 'src/auth/schemas/user.schema';
+import { KlaytnService } from 'src/klaytn/klaytn.service';
+import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
 
 @Injectable()
 export class EventService {
@@ -15,13 +19,18 @@ export class EventService {
     @InjectModel('Event') private readonly EventModel: Model<Event>,
     @InjectModel('EventResult') private readonly EventResultModel: Model<EventResult>,
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
+    @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    private readonly klaytnService: KlaytnService,
   ) {}
 
   // 이벤트 등록 함수
-  async create(createEventDto: CreateEventDto) {
+  async create(createEventDto: CreateEventDto, jwtUser: any) {
     console.log('create');
-    // 유효성 검사 필요
     try {
+      // 유효성 검사
+      const user = await this.UserModel.findOne({ address: jwtUser.address });
+      if (!user) throw new Error('user가 존재하지 않습니다.');
+
       // 최신 event_id 가져와서 다음 evnet_id 생성
       // 기존 데이터 없으면 오류 발생해서 next_evnet_id는 0으로 사용
       let next_event_id = 0;
@@ -57,8 +66,8 @@ export class EventService {
         totalSeat += i.count;
       }
       // location의 데이터를 분리해서 도, 시 까지만 사용
-      const sliceLocation = location.split(' ');
-      const sL = `${sliceLocation[0]} ${sliceLocation[1]}`;
+      const sliceLocation = sub_location.split(' ');
+      const sL = `${location} ${sliceLocation[0]}`;
       // 한글로 입력된 이벤트 장소를 좌표로 바꿈
       const header = { Authorization: process.env.KAKAO_API };
       const point = await axios
@@ -95,9 +104,25 @@ export class EventService {
         remaining: totalSeat,
         totalSeat,
       };
+      // Contract - 이벤트 등록
+      const contracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
+      contracCreateEventkDto.creator = user.test_address;
+      contracCreateEventkDto.eventName = title;
+      contracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
+      contracCreateEventkDto.tokenImageUri = token_image_url;
+      contracCreateEventkDto.classNames = price.map((v) => v.class);
+      contracCreateEventkDto.classPrices = price.map((v) => v.price);
+      contracCreateEventkDto.classCounts = price.map((v) => v.count);
+      contracCreateEventkDto.openTime = recruit_start_date;
+      contracCreateEventkDto.closeTime = recruit_end_date;
+      contracCreateEventkDto.endTime = event_end_date;
+
+      await this.klaytnService.createEvent(contracCreateEventkDto);
+
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
       console.log(saveResult);
+
       return saveResult;
     } catch (e) {
       console.log(e);
@@ -108,7 +133,7 @@ export class EventService {
   // 이벤트 목록을 반환하는 함수 - 아마도 페이지와 띄울 컨텐츠 갯수라고 생각하고 작성
   async findList(page: number, count: number, category: string, region: string) {
     console.log('findList');
-    console.log('data:', page, count, category, region);
+    console.log(page, count, category);
     let ctg = category;
     let rg = region;
     if (!ctg) {
@@ -118,6 +143,7 @@ export class EventService {
       rg = '';
     }
     console.log('ctg, rg', ctg, rg);
+
     try {
       // 현재 페이지에 나오는 event_id 계산
       // const content_count: number = page * count;
@@ -125,7 +151,6 @@ export class EventService {
       // 조건에 맞는 이벤트 찾기
       const eventList = await this.EventModel.find({
         category: { $regex: '.*' + ctg + '.*' },
-        location: { $regex: '.*' + rg + '.*' },
         event_id: {
           // $lte: content_count,
           $gte: data,
@@ -136,7 +161,7 @@ export class EventService {
       }
       return eventList;
     } catch (e) {
-      console.log(e);
+      console.log('err :', e);
       return { message: 'Failed to find eventList' };
     }
   }
@@ -300,8 +325,9 @@ export class EventService {
   }
 
   //이벤트 리스트 받아서 holdings에 업데이트
-  @Cron('* * * * * *')
-  getEventList() {
-    console.log('이벤트 리스트 받기');
-  }
+  // @Cron('* * * * * *')
+  // async getEventList(): Promise<void> {
+  //   console.log('이벤트 리스트 받기');
+  //   console.log('Event :', await this.klaytnService.getEvent(0));
+  // }
 }

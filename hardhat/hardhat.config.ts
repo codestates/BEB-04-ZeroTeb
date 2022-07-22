@@ -5,7 +5,15 @@ import "@nomiclabs/hardhat-waffle";
 import "hardhat-abi-exporter";
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.9",
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 1000,
+      },
+    },
+  },
   networks: {
     baobab: {
       url: "https://kaikas.baobab.klaytn.net:8651",
