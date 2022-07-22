@@ -49,10 +49,11 @@ const SearchListup: React.FC<searchListProps> = ({ route }) => {
 
   return (
     <View style={styles.searchListupContainer}>
+
       {noResult ? (
         <Text style={styles.msg}>검색 결과가 없습니다.</Text>
       ) : (
-        <SearchList sendList={sendList} />
+        <SearchList sendList={sendList} type={''} address={''} />
       )}
     </View>
   )
