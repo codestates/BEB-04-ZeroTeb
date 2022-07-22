@@ -1,4 +1,8 @@
 import * as React from 'react'
+import axios from 'axios'
+import { RootState } from '../../store/Index'
+import { Linking } from 'react-native'
+import { useSelector } from 'react-redux'
 import {
   View,
   StyleSheet,
@@ -10,9 +14,10 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  Modal,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
-import { EventType, EventEnroll } from '../../models/Event'
+import { EnrollType } from '../../models/Event'
 import { useState } from 'react'
 import SetSellTypeModal from '../../components/enroll/SetSellTypeModal'
 import SetDateAndTime from '../../components/enroll/SetDateAndTime'
@@ -21,42 +26,52 @@ import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
 
 interface Props {
   props: any
 }
 
 const Enroll: React.FC<Props> = props => {
-  const [list, setList] = useState<EventType>() // 최종적인 저장
-  // Enroll에서 작성한 것들 저장
-  const [content, setContent] = useState<EventEnroll>({
-    title: '',
-    type: 'entry',
-    start_date: '',
-    end_date: '',
-    start_time: '',
-    end_time: '',
-    place: '',
-    content: '',
-    token_url: '',
-    concert_type: '',
-  })
-  const [image, setImage] = useState<string>(' ') // 이미지 받기
-  const [startDate, setStartDate] = useState(new Date()) // 시작 날짜, 시간
-  const [endDate, setEndDate] = useState(new Date()) // 끝나는 날짜, 시간
-  const [entryPrice, setEntryPrice] = useState({
-    class: 'A',
-    price: '',
-    count: '',
-  })
-  const [price, setprice] = useState({
-    attributes: [],
-  })
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
+  const AccessToken = useSelector(
+    (state: RootState) => state.signin.AccessToken,
+  )
+  const userName = useSelector((state: RootState) => state.signin.userName)
 
-  const pickImage = async () => {
+  const mode = ['date', 'time']
+  // 최종적인 저장
+  const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
+  const [list, setList] = useState<EnrollType>({
+    title: '',
+    promoter: userName,
+    address: KilpAddress,
+    location: '',
+
+    category: '',
+    type: 'entry',
+    thumnail: ' ',
+    token_image_url: ' ',
+    price: [{ class: 'S', price: 0, count: 0 }],
+    contents: '',
+    option: [],
+    recruit_start_date: Number(new Date()) / 1000,
+    recruit_end_date: Number(new Date()) / 1000,
+    event_start_date: Number(new Date()) / 1000,
+    event_end_date: Number(new Date()) / 1000,
+    created_date: Number(new Date()) / 1000,
+    modified_date: Number(new Date()) / 1000,
+    remaining: 10,
+    sub_location: '',
+  })
+  const [deposit, setDeposit] = useState<Number>(0)
+
+  const pickImage = async (e: string) => {
     // No permissions request is necessary for launching the image library
+    const name = e
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -64,13 +79,35 @@ const Enroll: React.FC<Props> = props => {
       quality: 1,
     })
     if (!result.cancelled) {
-      setImage(result.uri)
+      if (name === 'token_image_url')
+        setList({ ...list, token_image_url: result.uri })
+      else setList({ ...list, thumnail: result.uri })
     }
+  }
+  const onStart = () => {
+    let money = 0
+    {
+      list.price.map((value, index) => {
+        money += Number(value.count)
+      })
+    }
+    setDeposit(money * 5)
+    setModalVisible(true)
   }
 
   const onCheckEnroll = () => {
-    alert('onCheckEnroll 에서 보내는 작업 + 빈칸 확인')
-    console.log(price)
+    // 조건문 달아서 axios POST
+    // axios
+    //   .post(ENROLL_URL, list, {
+    //     headers: {
+    //       Cookie: AccessToken,
+    //     },
+    //   })
+    //   .then(response => {
+    //     console.log(response.data)
+    //   })
+    console.log(list)
+    setModalVisible(false)
   }
 
   return (
@@ -79,145 +116,166 @@ const Enroll: React.FC<Props> = props => {
         <View style={style.enrollTitle}>
           <Text style={style.enrollTitleText}>이벤트 등록</Text>
         </View>
-        <View style={style.contentsWrapper}>
+        <View style={{ flex: 1 }}>
           {/* 제목 */}
-          <View style={style.enrollContents}>
+          <View>
             <Text style={style.enrollContentText}>제목</Text>
-            <TextInput
-              style={style.enrollInput}
-              value={content.title}
-              onChangeText={text => setContent({ ...content, title: text })}
-            ></TextInput>
+            <View style={style.enrollInput}>
+              <TextInput
+                style={{ left: 20, fontSize: 20 }}
+                value={list.title}
+                onChangeText={text => setList({ ...list, title: text })}
+              ></TextInput>
+            </View>
           </View>
+          {/* 이벤트 종류 */}
+          <ConcertTypes list={list} setList={setList} />
 
           {/* 기간 (TextInput 2개 필요)*/}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>기간</Text>
-            <View style={style.doubleContent}>
-              <View style={style.DateTimeContent}>
-                <SetDateAndTime
-                  setStartDate={setStartDate}
-                  setEndDate={undefined}
-                  value={startDate}
-                  mode="date"
-                />
+          {mode.map((value, index) => {
+            return (
+              <View key={index}>
+                <Text style={style.enrollContentText}>
+                  이벤트 등록 및 마감 {value == 'date' ? '기간' : '시간'}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setRecruitStart={setList}
+                      type={'recruit_start_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                  <Text>~</Text>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setRecruitEnd={setList}
+                      type={'recruit_end_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                </View>
               </View>
-              <Text>~</Text>
-              <View style={style.DateTimeContent}>
-                <SetDateAndTime
-                  setStartDate={undefined}
-                  setEndDate={setEndDate}
-                  value={endDate}
-                  mode="date"
-                />
-              </View>
-            </View>
-          </View>
+            )
+          })}
 
-          {/* 시간 (TextInput 2개 필요)*/}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>시간</Text>
-            <View style={style.doubleContent}>
-              <View style={style.DateTimeContent}>
-                <SetDateAndTime
-                  setStartDate={setStartDate}
-                  setEndDate={undefined}
-                  value={startDate}
-                  mode="time"
-                />
+          {/* 기간 (TextInput 2개 필요)*/}
+          {mode.map((value, index) => {
+            return (
+              <View key={index}>
+                <Text style={style.enrollContentText}>
+                  이벤트 시작 및 종료 {value == 'date' ? '기간' : '시간'}
+                </Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setEventStart={setList}
+                      type={'event_start_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                  <Text>~</Text>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setEventEnd={setList}
+                      type={'event_end_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                </View>
               </View>
-              <Text>~</Text>
-              <View style={style.DateTimeContent}>
-                <SetDateAndTime
-                  setStartDate={undefined}
-                  setEndDate={setEndDate}
-                  value={endDate}
-                  mode="time"
-                />
-              </View>
-            </View>
-          </View>
+            )
+          })}
 
           {/* 장소 (체크박스) */}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>장소</Text>
-            {/* 장소 고르기 */}
-            <PlaceModalSelect content={content} setContent={setContent} />
-          </View>
+          <PlaceModalSelect list={list} setList={setList} />
 
           {/* 판매 타입 */}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>판매 타입(응모, 구매)</Text>
-            {/* 판매 타입 고르기 */}
-            <SetSellTypeModal content={content} setContent={setContent} />
-          </View>
-
-          {/* 가격 (3개의 칸) */}
-          {content.type === 'sale' ? (
-            <View style={style.enrollContents}>
-              <Text style={style.enrollContentText}>가격</Text>
-
-              <View style={style.priceWrapper}>
-                <DetailPrice price={price} setprice={setprice} />
-              </View>
-            </View>
-          ) : (
-            <View style={style.enrollContents}>
-              <Text style={style.enrollContentText}>가격</Text>
-
-              <View style={style.priceWrapper}>
-                <View style={style.InputPriceWrapper}>
+          <SetSellTypeModal list={list} setList={setList} />
+          <View>
+            <Text style={style.enrollContentText}>가격</Text>
+            <View style={style.priceWrapper}>
+              {/* 가격 (3개의 칸) */}
+              {list.type === 'sale' ? (
+                <DetailPrice list={list} setList={setList} />
+              ) : (
+                <View style={{ flexDirection: 'row' }}>
                   <View style={style.InputPrice}>
                     <Text style={{ fontSize: 20, textAlign: 'center' }}>
-                      {entryPrice.class}
+                      {list.price[0].class}
                     </Text>
                   </View>
                   <View style={style.InputPrice}>
                     <TextInput
-                      style={{ textAlign: 'center' }}
+                      style={{ fontSize: 20, textAlign: 'center' }}
                       testID="price"
-                      placeholder={'price input..'}
+                      placeholder={'...price'}
+                      keyboardType="number-pad"
                       onChangeText={(e: any) => {
-                        setEntryPrice({ ...entryPrice, price: e })
+                        setList({
+                          ...list,
+                          price: [{ ...list.price[0], ['price']: e }],
+                        })
                       }}
-                      value={entryPrice.price}
+                      value={list.price[0].price}
                     ></TextInput>
                   </View>
                   <View style={style.InputPrice}>
                     <TextInput
-                      style={{ textAlign: 'center' }}
+                      style={{ fontSize: 20, textAlign: 'center' }}
                       testID="count"
-                      placeholder={'count input..'}
+                      placeholder={'...count'}
+                      keyboardType="number-pad"
                       onChangeText={(e: any) => {
-                        setEntryPrice({ ...entryPrice, count: e })
+                        setList({
+                          ...list,
+                          price: [{ ...list.price[0], ['count']: e }],
+                        })
                       }}
-                      value={entryPrice.count}
+                      value={list.price[0].count}
                     ></TextInput>
                   </View>
                 </View>
-              </View>
-            </View>
-          )}
-
-          {/* 내용 (!TextInput 칸 넓이 증가) */}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>내용</Text>
-            <View style={style.InputContentWrapper}>
-              <TextInput
-                style={style.InputContent}
-                value={content.content}
-                onChangeText={text => setContent({ ...content, content: text })}
-              ></TextInput>
+              )}
             </View>
           </View>
 
-          {/* 토큰 이미지 () */}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>토큰 이미지</Text>
-            <TouchableOpacity onPress={pickImage}>
-              <View style={style.InputContentWrapper}>
+          {/* 보증금 */}
+          {/* <View style={{ flex: 1 }}>
+            <Text style={style.enrollContentText}>보증금(Klay)</Text>
+            <View style={style.enrollInput}>
+              <Text style={{ left: 20, fontSize: 20 }}>{list.deposit * 5}</Text>
+            </View>
+          </View> */}
+
+          {/* 내용 (!TextInput 칸 넓이 증가) */}
+          <View>
+            <Text style={style.enrollContentText}>내용</Text>
+            <View style={style.enrollInputLarge}>
+              <TextInput
+                style={{
+                  flex: 1,
+                  fontSize: 16,
+                  textAlign: 'left',
+                }}
+                multiline={true}
+                numberOfLines={4}
+                value={list.contents}
+                onChangeText={text => setList({ ...list, contents: text })}
+              ></TextInput>
+            </View>
+          </View>
+          {/* 썸네일 이미지 */}
+          <View>
+            <Text style={style.enrollContentText}>썸네일 이미지</Text>
+            <TouchableOpacity onPress={() => pickImage('thumnail')}>
+              <View style={style.enrollInputLarge}>
                 <Image
-                  source={{ uri: image }}
+                  source={{ uri: list.thumnail }}
                   style={{
                     margin: 10,
                     width: SCREEN_WIDTH - 60,
@@ -228,23 +286,57 @@ const Enroll: React.FC<Props> = props => {
             </TouchableOpacity>
           </View>
 
-          {/* 이벤트 종류 */}
-          <View style={style.enrollContents}>
-            <Text style={style.enrollContentText}>이벤트 종류</Text>
-            {/* 이벤트 종류 고르기 */}
-            <ConcertTypes content={content} setContent={setContent} />
+          {/* 토큰 이미지  */}
+          <View>
+            <Text style={style.enrollContentText}>토큰 이미지</Text>
+            <TouchableOpacity onPress={() => pickImage('token_image_url')}>
+              <View style={style.enrollInputLarge}>
+                <Image
+                  source={{ uri: list.token_image_url }}
+                  style={{
+                    margin: 10,
+                    width: SCREEN_WIDTH - 60,
+                    height: 180,
+                  }}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
 
       {/* 등록 버튼 */}
-      <TouchableOpacity
-        onPress={() => {
-          onCheckEnroll()
-        }}
-      >
+      <TouchableOpacity onPress={onStart}>
         <Text style={style.enrollSubmmit}>등록</Text>
       </TouchableOpacity>
+      <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
+        <View style={style.modalContainer}>
+          <View
+            style={style.blankSpace}
+            onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
+          />
+          <View style={style.modalSelectBody}>
+            <Text
+              style={{
+                width: SCREEN_WIDTH / 2,
+                fontSize: 24,
+                marginBottom: 20,
+              }}
+            >
+              현재 보증금은 {deposit} Klay 입니다. {'\n'} 보증금을 확인하시고
+              진행해주세요.
+            </Text>
+            <View style={{}}>
+              <TouchableOpacity onPress={onCheckEnroll}>
+                <Text style={style.modalSubmmit}>확인</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Text style={style.modalSubmmit}>취소</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -263,18 +355,14 @@ const style = StyleSheet.create({
   },
   enrollTitleText: {
     textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 30,
   },
-  doubleContent: {
-    flexDirection: 'row',
-  },
-  contentsWrapper: {
-    flex: 1,
-  },
-  enrollContents: {},
+
   enrollContentText: {
     left: 20,
     fontSize: 20,
+    fontWeight: 'bold',
   },
   DateTimeContent: {
     marginLeft: 12,
@@ -286,22 +374,17 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
-  InputPriceWrapper: {
-    flexDirection: 'row',
-  },
   InputPrice: {
-    marginLeft: 15,
-    marginTop: 5,
+    marginLeft: 20,
+    marginRight: 10,
+    marginTop: 10,
     marginBottom: 10,
     width: SCREEN_WIDTH / 4,
     height: 30,
     borderWidth: 1,
     borderRadius: 10,
   },
-  InputContent: {
-    flex: 1,
-    textAlign: 'center',
-  },
+
   enrollInput: {
     marginLeft: 15,
     marginRight: 15,
@@ -311,11 +394,12 @@ const style = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
   },
-  InputContentWrapper: {
+  enrollInputLarge: {
     marginLeft: 15,
     marginRight: 15,
     marginTop: 5,
     marginBottom: 10,
+    maxWidth: SCREEN_WIDTH - 30,
     height: 200,
     borderWidth: 1,
     borderRadius: 10,
@@ -332,6 +416,39 @@ const style = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    backgroundColor: '#3AACFF',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  blankSpace: {
+    position: 'absolute',
+    width: SCREEN_WIDTH,
+    height: SCREEN_HEIGHT,
+    backgroundColor: '#000000',
+    opacity: 0.5,
+  },
+  modalSelectBody: {
+    overflow: 'scroll',
+    width: SCREEN_WIDTH * (2 / 3),
+    height: SCREEN_HEIGHT / 2,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  modalSubmmit: {
+    width: SCREEN_WIDTH / 2,
+    height: STATUSBAR_HEIGHT,
+    marginTop: 15,
+    marginBottom: 15,
+    textAlign: 'center',
     borderRadius: 10,
     fontSize: 20,
     fontWeight: 'bold',

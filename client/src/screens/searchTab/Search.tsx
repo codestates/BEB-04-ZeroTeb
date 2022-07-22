@@ -32,8 +32,8 @@ export default function Search() {
     }
   }
 
-  function pressHandler(e) {
-    console.log(e.target)
+  function pressHandler(e: string) {
+    navigation.navigate('SearchListup', { searchWord: e })
   }
 
   return (
@@ -44,7 +44,7 @@ export default function Search() {
         onSubmitEditing={searchEnterHandler}
       />
       <Hashtag
-        hashtags={['김영현', '이지민', '최정환', '채희수']}
+        hashtags={['아이유', '폴킴', '코드 스테이츠', '그라운드X']}
         onPress={pressHandler}
       />
     </View>

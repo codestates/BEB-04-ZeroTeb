@@ -11,8 +11,7 @@ import {
 import InnerText from '../../components/common/InnerText'
 import { EventType } from '../../models/Event'
 import { getDate, getDateAndTime } from '../../utils/unixTime'
-import { ScaledSheet } from 'react-native-size-matters'
-import DummyDate from '../../data/DummyData.json'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
 import Title from '../../components/common/Title'
@@ -26,8 +25,6 @@ import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import CheckModal from '../../components/event/CheckModal'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
-
-const eventDetail = DummyDate.event[0]
 
 const radioButtonsData: RadioButtonProps[] = [
   {
@@ -43,8 +40,11 @@ interface eventDetailProps {
 }
 
 const EventDetail: React.FC<eventDetailProps> = ({}) => {
-  const [modalVisible, setModalVisible] = React.useState<boolean>(false)
   const route = useRoute()
+  const eventDetail = route.params?.event
+
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false)
+
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
@@ -60,6 +60,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         selected: false,
       })
     })
+    newArr[0].selected = true
     setRadioButtons(newArr)
   }
   React.useEffect(() => {
@@ -81,11 +82,11 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   }
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
-    if (KilpAddress === '') {
-      navigation.navigate('SignIn', { gotoMyPage: false })
-    } else {
-      setModalVisible(true)
-    }
+    // if (KilpAddress === '') {
+    //   navigation.navigate('SignIn', { gotoMyPage: false })
+    // } else {
+    setModalVisible(true)
+    // }
   }
 
   const getPayment = () => {
@@ -148,7 +149,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       </View>
       <Unserbar />
       <View style={style.promoterContainer}>
-        <AvatarIcon size={50} color={'lavender'} title={'tt'} />
+        <AvatarIcon size={50} color={'lavender'} title={'TT'} />
         <InnerText innerText={eventDetail.promoter} size={20} />
       </View>
       <Unserbar />
@@ -163,10 +164,16 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
           <Text></Text>
           <Title title={'위치 및 장소'} size={20} />
           <View style={style.eventContentContainer}>
-            <InnerText
-              innerText={eventDetail.location + ' ' + eventDetail?.sub_location}
-              size={15}
-            />
+            <Text
+              style={{
+                marginHorizontal: moderateScale(10),
+                fontSize: moderateScale(15),
+                color: '#333333',
+              }}
+            >
+              {eventDetail.location}
+              {eventDetail?.sub_location}
+            </Text>
             <MapLocation x={eventDetail.x} y={eventDetail.y} />
           </View>
           <Unserbar />

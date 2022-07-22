@@ -28,3 +28,10 @@ export const getDateAndTime = (uTime: number) => {
     second.substr(-2)
   )
 }
+
+export const getTime = (uTime: number) => {
+  const date: Date = new Date(uTime * 1000)
+  const hour = '' + date.getHours()
+  const minute = '0' + date.getMinutes()
+  return hour + ' : ' + '00'
+}

@@ -1,8 +1,10 @@
 import { useNavigation } from '@react-navigation/native'
 import * as React from 'react'
 import { View, StyleSheet, StatusBar, Platform } from 'react-native'
+import { useSelector } from 'react-redux'
 import CategoryButton from '../../components/category/CategoryButton'
 import LocationButton from '../../components/location/LocationButton'
+import { RootState } from '../../store/Index'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
@@ -17,7 +19,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const tempDataList = [
   {
     url: 'https://images.unsplash.com/photo-1520074189855-c26f27cc7ac8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1158&q=80',
-    title: 'Consert',
+    title: 'Concert',
   },
   {
     url: 'https://images.unsplash.com/photo-1576724196706-3f23f51ea351?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
@@ -42,6 +44,7 @@ const tempDataList = [
 ]
 
 function Category() {
+  const region = useSelector((state: RootState) => state.region.region)
   const navigation = useNavigation()
 
   const createButton = ele => {
@@ -61,7 +64,7 @@ function Category() {
 
   return (
     <View style={styles.categoryContainer}>
-      <LocationButton />
+      <LocationButton region={region} />
       {tempDataList.map(ele => {
         return createButton(ele)
       })}

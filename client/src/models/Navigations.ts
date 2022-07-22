@@ -10,19 +10,19 @@ export type RootTabParamList = {
 export type HomeStackParamList = {
   Home: undefined
   SignIn: { gotoMyPage: boolean }
-  EventDetail: undefined
+  EventDetail: { event: EventType }
 }
 
 export type CategoryStackParamList = {
   Category: undefined
   CategoryListup: { catagoryName: string }
-  EventDetail: undefined
+  EventDetail: { event: EventType }
 }
 
 export type SearchStackParamList = {
   Search: undefined
   SearchListup: { searchWord: string }
-  EventDetail: undefined
+  EventDetail: { event: EventType }
 }
 
 export type MyPageStackParamList = {
