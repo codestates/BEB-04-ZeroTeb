@@ -5,9 +5,11 @@ import {
   Dimensions,
   ScrollView,
   ImageBackground,
+  Pressable,
 } from 'react-native'
 import { EventType } from '../../models/Event'
 import { ScaledSheet } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/native'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -16,6 +18,7 @@ interface BannerContent {
 }
 
 const Banner: React.FC<BannerContent> = ({ eventList }) => {
+  const navigation = useNavigation()
   return (
     <View style={style.bannerOuterContainer}>
       <ScrollView
@@ -24,23 +27,24 @@ const Banner: React.FC<BannerContent> = ({ eventList }) => {
         pagingEnabled
         indicatorStyle={'black'}
       >
-        {eventList
-          .slice(0, 4)
-          .map(
-            (event: { thumnail: string; title: string }, index: React.Key) => {
-              return (
-                <View key={index}>
-                  <ImageBackground
-                    source={{ uri: event.thumnail }}
-                    resizeMode="cover"
-                    style={style.bannerInnerContainer}
-                  >
-                    <Text style={style.bannerText}>{event.title}</Text>
-                  </ImageBackground>
-                </View>
-              )
-            },
-          )}
+        {eventList.map((event: EventType, index: React.Key) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() =>
+                navigation.navigate('EventDetail', { event: event })
+              }
+            >
+              <ImageBackground
+                source={{ uri: event.thumnail }}
+                resizeMode="cover"
+                style={style.bannerInnerContainer}
+              >
+                <Text style={style.bannerText}>{event.title}</Text>
+              </ImageBackground>
+            </Pressable>
+          )
+        })}
       </ScrollView>
     </View>
   )

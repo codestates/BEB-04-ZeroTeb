@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "tt",
+    "name": "TT",
     "slug": "ZEROTEB",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -17,7 +17,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ZEROTEB.tt",
+      "bundleIdentifier": "com.ZEROTEB.TT",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.ZEROTEB.tt",
+      "package": "com.ZEROTEB.TT",
       "versionCode": 1,
       "config": {
         "googleMaps": { "apiKey": "AIzaSyAI4gv_qqc9x-RRVTG8mVjn6fXY3Gq01PY" }

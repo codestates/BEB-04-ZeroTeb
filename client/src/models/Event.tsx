@@ -24,6 +24,7 @@ export interface EventType {
   status: string
   remaining: number
   banner: boolean
+  totalSeat: number
   __v: number
 }
 
