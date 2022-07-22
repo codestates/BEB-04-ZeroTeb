@@ -14,7 +14,7 @@ import {
   ContractBuyerType,
 } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x38D59A269AFD180Fa48C9EB7743f40fb8d3358E3';
+  process.env.CONTRACT_ADDRESS || '0x163b219C96Ab17ad400F232e78C29e1690F60256';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
