@@ -211,7 +211,7 @@
       },
       {
         "internalType": "string",
-        "name": "_tokenImageUri",
+        "name": "_eventUri",
         "type": "string"
       },
       {
@@ -353,7 +353,7 @@
       },
       {
         "internalType": "string",
-        "name": "_tokenImageUri",
+        "name": "_eventUri",
         "type": "string"
       },
       {
