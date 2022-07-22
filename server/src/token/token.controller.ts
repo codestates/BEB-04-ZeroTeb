@@ -32,8 +32,9 @@ export class TokenController {
 
   @UseGuards(AuthGuard)
   @Post('/entry')
-  entryToken(@Body() body: EntryTokenDto) {
-    return 'Entry Token';
+  async entryToken(@Body() body: EntryTokenDto, @Req() req: Request) {
+    const message = await this.tokenService.entryToken(body, req.user);
+    return { message };
   }
 
   // @Post()
