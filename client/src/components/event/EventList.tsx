@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { Image, View, Text, Dimensions } from 'react-native'
+import { Image, View, Text, Dimensions, Pressable } from 'react-native'
 import InnerText from '../common/InnerText'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet } from 'react-native-size-matters'
+import { useNavigation } from '@react-navigation/native'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 interface eventListProps {
@@ -11,37 +12,49 @@ interface eventListProps {
 }
 
 const EventList: React.FC<eventListProps> = ({ eventList }) => {
+  const navigation = useNavigation()
+
   return (
     <View style={style.eventOuterContainer}>
       <View style={style.eventMiddleContainer}>
         {eventList.map((event, index) => {
           return (
-            <View style={style.eventInnerContainer} key={index}>
-              <View style={style.eventImgContainer}>
-                <Image
-                  style={style.eventImg}
-                  source={{ uri: event.thumnail }}
-                ></Image>
+            <Pressable
+              key={index}
+              onPress={() =>
+                navigation.navigate('EventDetail', { event: event })
+              }
+            >
+              <View style={style.eventInnerContainer}>
+                <View style={style.eventImgContainer}>
+                  <Image
+                    style={style.eventImg}
+                    source={{ uri: event.thumnail }}
+                  ></Image>
+                </View>
+                <View style={style.eventTitleContainer}>
+                  <Text></Text>
+                  <InnerText innerText={event.title} size={15} />
+                </View>
+                <View style={style.eventContentContainer}>
+                  <Text></Text>
+                  <InnerText
+                    innerText={`기획자 : ${event.promoter}`}
+                    size={10}
+                  />
+                  <InnerText
+                    innerText={`남은 좌석 : ${event.remaining}`}
+                    size={10}
+                  />
+                  <InnerText
+                    innerText={`공연 기간 : ${getDate(
+                      event.event_start_date,
+                    )} - ${getDate(event.event_end_date)}`}
+                    size={10}
+                  />
+                </View>
               </View>
-              <View style={style.eventTitleContainer}>
-                <Text></Text>
-                <InnerText innerText={event.title} size={15} />
-              </View>
-              <View style={style.eventContentContainer}>
-                <Text></Text>
-                <InnerText innerText={`기획자 : ${event.promoter}`} size={10} />
-                <InnerText
-                  innerText={`남은 좌석 : ${event.remaining}`}
-                  size={10}
-                />
-                <InnerText
-                  innerText={`공연 기간 : ${getDate(
-                    event.event_start_date,
-                  )} - ${getDate(event.event_end_date)}`}
-                  size={10}
-                />
-              </View>
-            </View>
+            </Pressable>
           )
         })}
       </View>

@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { View, StyleSheet, Text } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
 import SearchList from '../../components/search/SearchList'
 import { EventType } from '../../models/Event'
 import axios, { AxiosRequestConfig } from 'axios'
+import LoadingImg from '../../components/common/LoadingImg'
 
 interface searchListProps {
   route: {
@@ -16,10 +16,10 @@ interface searchListProps {
 }
 
 const SearchListup: React.FC<searchListProps> = ({ route }) => {
-  const navigation = useNavigation()
   const params = route.params.searchWord
   const [sendList, setSendList] = React.useState<EventType[]>([])
   const [noResult, setNoResult] = React.useState<boolean>(false)
+  const [loading, setLoading] = React.useState<boolean>(true)
 
   const searchHandler = async () => {
     try {
@@ -44,16 +44,21 @@ const SearchListup: React.FC<searchListProps> = ({ route }) => {
   }
 
   React.useEffect(() => {
-    searchHandler()
+    searchHandler().then(() => setLoading(false))
   }, [])
 
   return (
     <View style={styles.searchListupContainer}>
-
-      {noResult ? (
-        <Text style={styles.msg}>검색 결과가 없습니다.</Text>
+      {loading ? (
+        <LoadingImg />
       ) : (
-        <SearchList sendList={sendList} type={''} address={''} />
+        <>
+          {noResult ? (
+            <Text style={styles.msg}>검색 결과가 없습니다.</Text>
+          ) : (
+            <SearchList sendList={sendList} type={''} address={''} />
+          )}
+        </>
       )}
     </View>
   )

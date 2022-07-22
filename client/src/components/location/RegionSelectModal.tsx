@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Modal, StyleSheet, View, Dimensions, Text, ScrollView } from 'react-native'
+import React, { useState } from 'react'
+import { Modal, StyleSheet, View, Dimensions, Text } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { regionActions } from '../../store/regionReducer'
-import RegionButton from './RegionBtton'
+import { regionActions } from '../../store/regionSlice'
+import RegionButton from './RegionButton'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -12,12 +12,29 @@ interface Props {
   body: any
 }
 const RegionSelectModal = (props: Props) => {
-  const [regionList, setRegionList] = useState(['전국', '서울', '부산', '경남', '경북', '충북', '충남', '강원', '전북', '전남', '대구', '인천', '경기', '대전', '울산', '세종'])
+  const [regionList, setRegionList] = useState([
+    '전국',
+    '서울',
+    '부산',
+    '인천',
+    '대구',
+    '대전',
+    '울산',
+    '세종',
+    '경기',
+    '강원',
+    '충북',
+    '충남',
+    '전북',
+    '전남',
+    '경북',
+    '경남',
+  ])
   const [region, setRegion] = useState('전국')
   const dispatch = useDispatch()
 
-  const selectRegion = (target: string)=>{
-    console.log(target);
+  const selectRegion = (target: string) => {
+    console.log(target)
     dispatch(regionActions.setRegion(target))
     setRegion(target)
     props.setModalVisible(false)
@@ -38,12 +55,16 @@ const RegionSelectModal = (props: Props) => {
       <View style={styles.selectSpace}>
         <Text style={styles.regionTitle}>지역 선택</Text>
         <View style={styles.line}></View>
-        <View  style={styles.regionSpace}>
-        {regionList.map((ele, index) => {
-          return(            
-            <RegionButton region={ele} key={index} selectRegion={selectRegion}></RegionButton>
-          )
-        })}
+        <View style={styles.regionSpace}>
+          {regionList.map((ele, index) => {
+            return (
+              <RegionButton
+                region={ele}
+                key={index}
+                selectRegion={selectRegion}
+              ></RegionButton>
+            )
+          })}
         </View>
       </View>
     </Modal>
@@ -61,7 +82,7 @@ const styles = StyleSheet.create({
     height: SCREEN_HEIGHT,
     backgroundColor: '#000000',
     opacity: 0.3,
-  },  
+  },
   selectSpace: {
     flexDirection: 'column',
     position: 'absolute',
@@ -73,18 +94,18 @@ const styles = StyleSheet.create({
     bottom: SCREEN_HEIGHT * 0.125,
     padding: 10,
   },
-  regionTitle:{
+  regionTitle: {
     marginTop: 15,
     marginBottom: 5,
     fontSize: 25,
     alignSelf: 'center',
   },
-  line:{
+  line: {
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'gray',
   },
-  regionSpace:{
+  regionSpace: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
@@ -97,7 +118,7 @@ const styles = StyleSheet.create({
     // borderColor: 'lightgray',
     // borderRadius: 10,
     height: SCREEN_HEIGHT * 0.5,
-    width: 300
-  }
+    width: 300,
+  },
 })
 export default RegionSelectModal
