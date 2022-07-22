@@ -159,6 +159,7 @@ export class TokenService {
     }
   }
 
+  // 토큰 구매
   async buyToken(buyTokenDto: BuyTokenDto, user): Promise<string> {
     const eventId = buyTokenDto.event_id;
     const eventClassId = buyTokenDto.class_id;
@@ -174,6 +175,16 @@ export class TokenService {
     }
   }
 
+  // 토큰 구매자 조회
+  async getTokenBuyers(eventId: number) {
+    try {
+      return await this.klaytnService.getTokenBuyers(eventId);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // 토큰 응모
   async entryToken(entryTokenDto: EntryTokenDto, user): Promise<string> {
     const eventId = entryTokenDto.event_id;
 
@@ -187,10 +198,11 @@ export class TokenService {
     }
   }
 
-  //사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  // @Cron('*/30 * * * * *')
-  // getHoldingData() {
-  //   console.log('address에 따른 토큰 정보 받기');
-  //   this.klaytnService.mintToken(1, 0);
-  // }
+  // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
+  @Cron('*/10 * * * * *')
+  async getHoldingData() {
+    console.log('address에 따른 토큰 정보 받기');
+    // await this.klaytnService.mintToken(2, 0);
+    // console.log(await this.klaytnService.getEvent(1));
+  }
 }
