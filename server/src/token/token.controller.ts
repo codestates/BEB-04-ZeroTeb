@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { BuyTokenDto } from './dto/buy-token.dto copy';
+import { BuyTokenDto } from './dto/buy-token.dto';
 import { EntryTokenDto } from './dto/entry-token.dto';
 import { TokenService } from './token.service';
 
