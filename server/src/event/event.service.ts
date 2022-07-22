@@ -8,10 +8,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Cron } from '@nestjs/schedule';
 import axios from 'axios';
 import 'dotenv/config';
-import { decodeJwt } from 'lib/jwt';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 import { KlaytnService } from 'src/klaytn/klaytn.service';
 import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
+import { ipfsMetadataUpload } from 'lib/pinata';
 
 @Injectable()
 export class EventService {
@@ -78,8 +78,10 @@ export class EventService {
           return res.data;
         });
 
+      // 컨트랙트 eventId
+      const eventId = await this.klaytnService.getEventLength();
       const eventData = {
-        event_id: next_event_id,
+        event_id: eventId,
         title,
         promoter,
         address,
@@ -105,11 +107,13 @@ export class EventService {
         totalSeat,
       };
       // Contract - 이벤트 등록
+      const eventUri = await ipfsMetadataUpload(`${eventId}-${title}`, JSON.stringify(eventData));
+
       const contracCreateEventkDto: ContracCreateEventkDto = new ContracCreateEventkDto();
       contracCreateEventkDto.creator = user.test_address || user.address;
       contracCreateEventkDto.eventName = title;
       contracCreateEventkDto.eventType = type === 'sale' ? 0 : 1;
-      contracCreateEventkDto.tokenImageUri = token_image_url;
+      contracCreateEventkDto.eventUri = eventUri;
       contracCreateEventkDto.classNames = price.map((v) => v.class);
       contracCreateEventkDto.classPrices = price.map((v) => v.price);
       contracCreateEventkDto.classCounts = price.map((v) => v.count);
@@ -326,9 +330,13 @@ export class EventService {
   }
 
   // 이벤트 리스트 받아서 holdings에 업데이트
-  // @Cron('* * * * * *')
-  // async getEventList(): Promise<void> {
-  //   console.log('이벤트 리스트 받기');
-  //   console.log('Event :', await this.klaytnService.getEvent(1));
-  // }
+  @Cron('*/10 * * * * *')
+  async getEventList(): Promise<void> {
+    console.log('이벤트 리스트 받기');
+    const eventLength = await this.klaytnService.getEventLength();
+    console.log(eventLength);
+    for (let i = 0; i < eventLength; i++) {
+      console.log(`Event(${i}) :`, await this.klaytnService.getEvent(i));
+    }
+  }
 }
