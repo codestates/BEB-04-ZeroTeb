@@ -4,10 +4,10 @@ import mongoose, { Document } from 'mongoose';
 export type UsernameDocument = Username & Document;
 
 export class Username {
-  @Prop({ type: mongoose.Schema.Types.Number })
-  _id: number;
-  @Prop()
+  @Prop({ required: true })
   username: string;
+  @Prop({ required: true })
+  index: number;
 }
 
 export const UsernameSchema = SchemaFactory.createForClass(Username);
