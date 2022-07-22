@@ -24,8 +24,18 @@ import EntryPrecaution from '../../components/event/EntryPrecaution'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import CheckModal from '../../components/event/CheckModal'
+import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 
-const eventDetail = DummyDate.event[1]
+const eventDetail = DummyDate.event[0]
+
+const radioButtonsData: RadioButtonProps[] = [
+  {
+    id: '',
+    label: '',
+    value: '',
+  },
+]
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 interface eventDetailProps {
@@ -33,20 +43,64 @@ interface eventDetailProps {
 }
 
 const EventDetail: React.FC<eventDetailProps> = ({}) => {
+  const [modalVisible, setModalVisible] = React.useState<boolean>(false)
   const route = useRoute()
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
+  // 라디오 버튼에 가격항목 추가
+  function mapRadio(prices: { class: string; price: number; count: number }[]) {
+    const newArr: RadioButtonProps[] = []
+    prices.map((el, index) => {
+      return newArr.push({
+        id: index,
+        label: el.class + ' Class / ' + el.price + ' Klay',
+        value: el.price,
+        selected: false,
+      })
+    })
+    setRadioButtons(newArr)
+  }
+  React.useEffect(() => {
+    mapRadio(eventDetail.price)
+  }, [])
+  const [radioButtons, setRadioButtons] =
+    React.useState<RadioButtonProps[]>(radioButtonsData)
+
+  // 라디오 버튼으로 선택한 가격
+  const [selectPrice, setSelectPrice] = React.useState<number>(
+    eventDetail.price[0].price,
+  )
+  function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
+    const selectValue = radioButtonsArray.filter(
+      button => button.selected === true,
+    )
+    setSelectPrice(selectValue[0].value)
+    setRadioButtons(radioButtonsArray)
+  }
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
     if (KilpAddress === '') {
       navigation.navigate('SignIn', { gotoMyPage: false })
+    } else {
+      setModalVisible(true)
     }
+  }
+
+  const getPayment = () => {
+    setModalVisible(false)
+    console.log('이제 클립으로 결제 진행')
   }
 
   return (
     <ScrollView style={style.eventOuterContainer}>
+      <CheckModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        body={selectPrice}
+        getPayment={getPayment}
+      />
       <View style={style.eventImgContainer}>
         <Image
           style={style.eventImg}
@@ -57,40 +111,36 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       <View style={style.eventTitleContainer}>
         <Text></Text>
         <InnerText innerText={eventDetail.title} size={30} />
-
         {eventDetail.type === 'sale' ? (
-          <Text style={style.eventPrice}>
-            {eventDetail.price[0].price} Klay
-          </Text>
-        ) : null}
-        <View style={style.eventDateandButtonContainer}>
-          {eventDetail.type === 'sale' ? (
+          <InnerText
+            innerText={`관람일 :  ${getDate(eventDetail.event_start_date)} `}
+            size={15}
+          />
+        ) : (
+          <View>
+            <InnerText innerText={'응모기간 : '} size={15} />
             <InnerText
-              innerText={`${getDate(eventDetail.event_start_date)} - ${getDate(
-                eventDetail.event_end_date,
-              )}`}
+              innerText={`${getDateAndTime(
+                eventDetail.event_start_date,
+              )} ~ ${getDateAndTime(eventDetail.event_end_date)}`}
               size={15}
             />
-          ) : (
-            <View>
-              <InnerText
-                innerText={`${getDateAndTime(eventDetail.event_start_date)}`}
-                size={15}
-              />
-              <InnerText
-                innerText={` ~ ${getDateAndTime(eventDetail.event_end_date)}`}
-                size={15}
-              />
-            </View>
-          )}
+          </View>
+        )}
+        <Text></Text>
 
+        <View style={style.eventDateandButtonContainer}>
+          <RadioGroup
+            radioButtons={radioButtons}
+            onPress={onPressRadioButton}
+          />
           <Pressable
             style={style.eventButtonContainer}
             onPress={pressButtonHendler}
           >
             <View style={style.eventButton}>
               <Text style={style.eventText}>
-                {eventDetail.type === 'sale' ? '구매' : '응모'}
+                {eventDetail.type === 'sale' ? '구매하기' : '응모하기'}
               </Text>
             </View>
           </Pressable>
@@ -113,7 +163,10 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
           <Text></Text>
           <Title title={'위치 및 장소'} size={20} />
           <View style={style.eventContentContainer}>
-            <InnerText innerText={eventDetail.location} size={15} />
+            <InnerText
+              innerText={eventDetail.location + ' ' + eventDetail?.sub_location}
+              size={15}
+            />
             <MapLocation x={eventDetail.x} y={eventDetail.y} />
           </View>
           <Unserbar />

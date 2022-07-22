@@ -63,7 +63,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                 <View style={style.textWrapper}>
                   <Text style={style.SearchListTitle}>{event.title}</Text>
                   <Text style={style.SearchListSeat}>
-                    남은 좌석 : {event.remaining} / {countSeat(event.price)}
+                    {/* 남은 좌석 : {event.remaining} / {countSeat(event.price)} */}
                   </Text>
                   <Text style={style.SearchListDate}>
                     공연 기간 : {getDate(event.event_start_date)} ~{' '}

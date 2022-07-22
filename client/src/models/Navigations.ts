@@ -21,7 +21,7 @@ export type CategoryStackParamList = {
 
 export type SearchStackParamList = {
   Search: undefined
-  SearchListup: { searchEventList: EventType[] }
+  SearchListup: { searchWord: string }
   EventDetail: undefined
 }
 
