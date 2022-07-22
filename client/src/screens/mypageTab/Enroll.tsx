@@ -40,20 +40,22 @@ const Enroll: React.FC<Props> = props => {
   const AccessToken = useSelector(
     (state: RootState) => state.signin.AccessToken,
   )
+  const userName = useSelector((state: RootState) => state.signin.userName)
+
   const mode = ['date', 'time']
   // 최종적인 저장
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
   const [list, setList] = useState<EnrollType>({
     title: '',
-    promoter: '',
+    promoter: userName,
     address: KilpAddress,
     location: '',
-    sub_location: '',
+
     category: '',
     type: 'entry',
     thumnail: ' ',
     token_image_url: ' ',
-    price: [{ class: 'S', price: '', count: '' }],
+    price: [{ class: 'S', price: 0, count: 0 }],
     contents: '',
     option: [],
     recruit_start_date: Number(new Date()) / 1000,
@@ -63,12 +65,13 @@ const Enroll: React.FC<Props> = props => {
     created_date: Number(new Date()) / 1000,
     modified_date: Number(new Date()) / 1000,
     remaining: 10,
+    sub_location: '',
   })
+  const [deposit, setDeposit] = useState<Number>(0)
 
   const pickImage = async (e: string) => {
     // No permissions request is necessary for launching the image library
     const name = e
-    console.log(name)
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -82,6 +85,13 @@ const Enroll: React.FC<Props> = props => {
     }
   }
   const onStart = () => {
+    let money = 0
+    {
+      list.price.map((value, index) => {
+        money += Number(value.count)
+      })
+    }
+    setDeposit(money * 5)
     setModalVisible(true)
   }
 
@@ -235,17 +245,12 @@ const Enroll: React.FC<Props> = props => {
           </View>
 
           {/* 보증금 */}
-          <View style={{ flex: 1 }}>
+          {/* <View style={{ flex: 1 }}>
             <Text style={style.enrollContentText}>보증금(Klay)</Text>
             <View style={style.enrollInput}>
-              <TextInput
-                style={{ left: 20, fontSize: 20 }}
-                onChangeText={text =>
-                  setList({ ...list, remaining: Number(text) })
-                }
-              ></TextInput>
+              <Text style={{ left: 20, fontSize: 20 }}>{list.deposit * 5}</Text>
             </View>
-          </View>
+          </View> */}
 
           {/* 내용 (!TextInput 칸 넓이 증가) */}
           <View>
@@ -318,8 +323,8 @@ const Enroll: React.FC<Props> = props => {
                 marginBottom: 20,
               }}
             >
-              현재 보증금은 ' 'Klay 입니다. {'\n'} 보증금을 확인하시고
-              진행해주세요
+              현재 보증금은 {deposit} Klay 입니다. {'\n'} 보증금을 확인하시고
+              진행해주세요.
             </Text>
             <View style={{}}>
               <TouchableOpacity onPress={onCheckEnroll}>
