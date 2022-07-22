@@ -51,6 +51,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     mapping(uint256 => TokenExtention) private _tokenExtentions;
     mapping(uint256 => address[]) private _eventParticipants; // 이벤트 응모 참가자
     mapping(uint256 => uint256) private _deposits;
+    mapping(uint256 => uint256) private _amounts;
 
     /*
      * Modifier
@@ -150,6 +151,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             _events[_newEventId].class[i].index = 0;
             _events[_newEventId].class[i].ownerTotal = 0;
         }
+        _amounts[_newEventId] = 0;
         // 반환
         _eventId = _newEventId;
     }
@@ -265,6 +267,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _events[_eventId].class[_classId].owners[_number] = msg.sender;
         _tokenExtentions[_tokenId].isTrade = false;
         _events[_eventId].class[_classId].ownerTotal += 1;
+        _amounts[_eventId] += msg.value;
     }
 
     // 토큰 구매자 조회
@@ -304,6 +307,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             );
         }
         _eventParticipants[_eventId].push(msg.sender);
+        _amounts[_eventId] += msg.value;
     }
 
     // 이벤트 응모자 조회
@@ -388,7 +392,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
         // 이벤트가 성공적으로 이루어진 경우
         if (_eventEndStatus == 1) {
-            payable(_events[_eventId].creator).transfer(_deposit);
+            payable(_events[_eventId].creator).transfer(
+                _amounts[_eventId] + _deposit
+            );
 
             // 이벤트가 실패한 경우
         } else if (_eventEndStatus == 0) {
@@ -411,7 +417,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
                             _events[_eventId].class[i].owners[j] != address(0)
                         ) {
                             payable(_events[_eventId].class[i].owners[j])
-                                .transfer(_compensation);
+                                .transfer(
+                                    _events[_eventId].class[i].price +
+                                        _compensation
+                                );
                         }
                     }
                 }
