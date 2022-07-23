@@ -232,12 +232,12 @@ export class EventService {
         // 응모성 이벤트
         case 'entry':
           console.log('entry');
-          resultList = await this.EventModel.find({ type: 'entry' });
+          resultList = await this.EventModel.find({ type: 'entry', address: address });
           break;
         // 판매성 이벤트
         case 'sale':
           console.log('sale');
-          resultList = await this.EventModel.find({ type: 'sale' });
+          resultList = await this.EventModel.find({ type: 'sale', address: address });
           break;
         // 내가 좋아요 누른 이벤트
         case 'liked':
