@@ -36,7 +36,7 @@ export class TokenService {
   }
 
   // 주소와 token_id로 QR code 생성 및 nonce 발행하는 함수
-  async createTokenQR(address: string, token_id: string) {
+  async createTokenQR(address: string, token_id: number) {
     console.log('createTokenQR');
     //유효한 계정(로그인)일 경우, 받은 주소에 해당 토큰 확인 (이 부분은 나중에 다른 데이터 확인해야함 Nonce X)
     // 계정(로그인) 확인 코드 필요
