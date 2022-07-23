@@ -70,6 +70,8 @@ const RegionSelectModal = (props: Props) => {
     </Modal>
   )
 }
+const modalnum = 0.1
+const btnNum = 510
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -87,11 +89,11 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     position: 'absolute',
     width: SCREEN_WIDTH * 0.8,
-    height: SCREEN_HEIGHT * 0.75,
+    height: (SCREEN_HEIGHT * modalnum)+btnNum,
     backgroundColor: 'white',
     borderRadius: 10,
     right: SCREEN_WIDTH * 0.1,
-    bottom: SCREEN_HEIGHT * 0.125,
+    bottom: SCREEN_HEIGHT * (1-modalnum)/2-btnNum/2,
     padding: 10,
   },
   regionTitle: {
