@@ -4,6 +4,7 @@ import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
 import { useNavigation } from '@react-navigation/native'
+import { firstLetter } from '../../utils/utils'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -13,10 +14,6 @@ interface profileProps {
 
 const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
   const navigation = useNavigation()
-
-  function firstLetter(name: string) {
-    return name?.slice(0, 1)
-  }
 
   useEffect(() => {}, [userInfo])
 
