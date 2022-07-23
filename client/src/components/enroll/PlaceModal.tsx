@@ -45,7 +45,7 @@ const PlaceModal = (props: any) => {
   return (
     <View>
       <Text style={style.enrollContentText}>장소</Text>
-      <View style={style.modalWrapper}>
+      <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
             <Text style={{ left: 20, fontSize: 20 }}>
@@ -75,7 +75,7 @@ const PlaceModal = (props: any) => {
           </View>
         </Modal>
       </View>
-      <Text style={style.enrollContentText}>장소 (세부사항)</Text>
+      <Text style={style.enrollContentText}>나머지 주소</Text>
       <View style={style.enrollInput}>
         <TextInput
           style={{ left: 20, fontSize: 20 }}
@@ -88,19 +88,20 @@ const PlaceModal = (props: any) => {
 }
 
 const style = ScaledSheet.create({
-  modalWrapper: {},
   enrollContentText: {
-    left: '20@mvs',
     fontSize: '20@mvs',
     fontWeight: 'bold',
+    color: '#333333',
+    paddingVertical: '5@msr',
   },
   enrollInput: {
-    marginLeft: '15@mvs',
-    marginRight: '15@mvs',
-    marginTop: '5@mvs',
-    marginBottom: '10@mvs',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
+    marginBottom: '10@msr',
   },
   modalContainer: {
     flex: 1,
@@ -108,8 +109,8 @@ const style = ScaledSheet.create({
     alignItems: 'center',
   },
   modalSelectBody: {
-    overflow: 'scroll',
-    width: SCREEN_WIDTH / 2,
+    width: SCREEN_WIDTH * 0.7,
+    height: SCREEN_HEIGHT / 2,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
@@ -119,8 +120,7 @@ const style = ScaledSheet.create({
     width: SCREEN_WIDTH / 4,
     backgroundColor: '#3AACFF',
     borderRadius: 10,
-    borderWidth: 0.5,
-    margin: 3,
+    margin: '5@msr',
   },
   modalText: {
     fontSize: '14@mvs',

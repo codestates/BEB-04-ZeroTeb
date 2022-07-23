@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { useState } from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
+import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { getDate, getTime } from '../../utils/unixTime'
 
@@ -95,19 +95,18 @@ const SetDateAndTime = (props: any) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   doubleInput: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 5,
-    marginBottom: 10,
-    maxHeight: 30,
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
   },
   dateTimeCSS: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: '20@msr',
   },
 })
 
