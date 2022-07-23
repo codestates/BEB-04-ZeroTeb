@@ -10,7 +10,7 @@ interface Props {
 export default function RegionButton(prop: Props) {
   return (
     <Pressable onPress={()=>{prop.selectRegion(prop.region)}}>
-        <View style={styles.buttonContainer}><Text>{prop.region}</Text></View>
+        <View style={styles.buttonContainer}><Text style={styles.textContainer}>{prop.region}</Text></View>
     </Pressable>
   )
 }
@@ -28,4 +28,7 @@ const styles = ScaledSheet.create({
     borderStyle: 'solid',
     borderColor: 'skyblue',    
   },
+  textContainer:{
+    fontSize: '15@msr'
+  }
 })

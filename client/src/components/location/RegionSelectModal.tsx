@@ -3,7 +3,7 @@ import { Modal, View, Dimensions, Text } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { regionActions } from '../../store/regionSlice'
 import RegionButton from './RegionButton'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -88,8 +88,8 @@ const styles = ScaledSheet.create({
   },
   selectSpace: {
     flexDirection: 'column',
-    width: '300@msr',
-    height: '590@msr',
+    width: moderateScale(320),
+    height: moderateScale(590),
     backgroundColor: 'white',
     borderRadius: 10,
     padding: '6@msr',
