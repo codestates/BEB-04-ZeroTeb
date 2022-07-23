@@ -16,8 +16,8 @@ import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 //props: UserType
-const TicketDetail: React.FC<UserType> = props =>{
 
+const TicketDetail = ({route}) =>{
     const navigation = useNavigation()
     const [qrSVG, setQrSVG] = useState('qr 생성 중~');
 
@@ -34,7 +34,7 @@ const TicketDetail: React.FC<UserType> = props =>{
         try {
             const config: AxiosRequestConfig = {
                 method: 'get',
-                url: `http://server.beeimp.com:18080/token/qrcode?address=0xf0a29e430d12065bfa9a5e0bc694f26accb151f4&token_id=10`,
+                url: `http://server.beeimp.com:18080/token/qrcode?address=${route.params.address}&token_id=${route.params.token_id}`,
                 withCredentials: true,
             }
 

@@ -1,3 +1,5 @@
+import { useNavigation } from '@react-navigation/native'
+import axios, { AxiosRequestConfig } from 'axios'
 import React, { useCallback, useState } from 'react'
 import {
   View,
@@ -6,9 +8,12 @@ import {
   Animated,
   Dimensions,
   Image,
+  Pressable,
 } from 'react-native'
 import { moderateScale } from 'react-native-size-matters'
+import { useSelector } from 'react-redux'
 import { UserType } from '../../models/User'
+import { RootState } from '../../store/Index'
 import Title from '../common/Title'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
@@ -24,6 +29,12 @@ interface ttListProps {
 
 const MyPagettList: React.FC<ttListProps> = props => {
   const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo } = props
+  const navigation = useNavigation()
+  // test address 주소
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
+  //트러스트 토큰 리스트
   const [token, setTokens] = useState<
     [
       {
@@ -31,7 +42,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
         token_image_url?: string
       },
     ]
-  >()
+  >([{token_id: '1', token_image_url: 'https://images.velog.io/images/maliethy/post/1ed54c18-a0e6-4b2c-95d7-4d828955956d/react-native.png'}])
 
   const renderItem = useCallback(({ item, index }) => {
     console.log(item, index)
@@ -42,12 +53,12 @@ const MyPagettList: React.FC<ttListProps> = props => {
             <Text style={styles.tokenMsg}>보유하신 토큰이 없습니다.</Text>
           </>
         ) : (
-          <View>
+          <Pressable onPress={()=>{navigation.navigate("TicketDetail",  { address: KilpAddress , token_id: item.token_id})}}>
             <Image
               source={{ uri: item.token_image_url }}
               style={{ width: SCREEN_WIDTH / 3, height: SCREEN_WIDTH / 3 }}
             />
-          </View>
+          </Pressable>
         )}
       </>
     )
