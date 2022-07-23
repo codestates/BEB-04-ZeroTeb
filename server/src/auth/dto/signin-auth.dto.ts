@@ -6,6 +6,7 @@ export class SignInResDto {
   status: string;
   message: string;
   address?: string;
+  test_address?: string;
   username?: string;
 
   setStatus(status: string) {
@@ -19,5 +20,8 @@ export class SignInResDto {
   }
   setUsername(username: string) {
     this.username = username;
+  }
+  setTestAddress(address: string) {
+    this.test_address = address;
   }
 }

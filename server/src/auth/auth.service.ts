@@ -74,8 +74,9 @@ export class AuthService {
           await this.userModel.create(newUser);
         }
 
-        signInResDto.setAddress(userInfo.get('address'));
         signInResDto.setUsername(userInfo.get('username'));
+        signInResDto.setAddress(userInfo.get('address'));
+        signInResDto.setTestAddress(userInfo.get('test_address'));
         signInResDto.setMessage('로그인에 성공했습니다.');
       } else if (resultData.status === 'prepared') {
         signInResDto.setMessage('로그인을 진행 중입니다.');
@@ -90,7 +91,7 @@ export class AuthService {
 
   signInJWT(signInResDto: SignInResDto) {
     const payload = {
-      address: signInResDto.address,
+      address: signInResDto.test_address,
       username: signInResDto.username,
     };
     return this.jwtService.sign(payload);
@@ -128,8 +129,8 @@ export class AuthService {
   // @Cron('*/5 * * * * *')
   // async getEventList(): Promise<void> {
   //   const index = await this.userModel.count().exec();
-  //   const userData = await this.userModel.find({ username: '느린 미디움씨그린 리틀 제이지' });
-  //   const usernameData = await this.usernameModel.find({ '"username"': userData[0].username });
+  //   const usernameData = await this.usernameModel.find({ index }).exec();
+  //   const userData = await this.userModel.find({ username: usernameData[0].username }).exec();
   //   console.log(usernameData, userData);
   // }
 }
