@@ -5,6 +5,7 @@ import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
 import { useNavigation } from '@react-navigation/native'
 import { firstLetter } from '../../utils/utils'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -21,7 +22,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
     <View style={styles.rootContainer}>
       <View style={styles.profileContainer}>
         <AvatarIcon
-          size={65}
+          size={moderateScale(65)}
           color={userInfo.profile_url}
           title={firstLetter(userInfo.username)}
         />
@@ -32,11 +33,15 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
           <View style={styles.infoIconInnerContainer}>
             <Text style={styles.infoText}>등록</Text>
             <Pressable onPress={() => navigation.navigate('Enroll')}>
-              <Entypo name="squared-plus" size={19} color="black" />
+              <Entypo
+                name="squared-plus"
+                size={moderateScale(19)}
+                color="black"
+              />
             </Pressable>
           </View>
           <AvatarIcon
-            size={40}
+            size={moderateScale(40)}
             color={'lightgrey'}
             title={userInfo.history.created}
           />
@@ -44,7 +49,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>응모</Text>
           <AvatarIcon
-            size={40}
+            size={moderateScale(40)}
             color={'lightgrey'}
             title={userInfo.history.entry}
           />
@@ -52,7 +57,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>구매</Text>
           <AvatarIcon
-            size={40}
+            size={moderateScale(40)}
             color={'lightgrey'}
             title={userInfo.history.sale}
           />
@@ -60,7 +65,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>관심</Text>
           <AvatarIcon
-            size={40}
+            size={moderateScale(40)}
             color={'lightgrey'}
             title={userInfo.history.liked}
           />
@@ -70,22 +75,22 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   rootContainer: {
     flex: 1,
     justifyContent: 'flex-start',
     backgroundColor: 'white',
-    padding: 20,
+    padding: '20@msr',
   },
   profileContainer: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    margin: 10,
+    margin: '10@msr',
   },
-  profileText: { fontSize: 20, paddingLeft: 10 },
+  profileText: { fontSize: '20@msr', paddingLeft: '10@msr' },
   headerText: {
-    fontSize: 25,
+    fontSize: '25@msr',
     color: '#FFD800',
   },
   infoContainer: {
@@ -93,7 +98,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
+    padding: '10@msr',
   },
   infoIconInnerContainer: {
     flexDirection: 'row',
@@ -105,11 +110,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    padding: 10,
+    padding: '10@msr',
 
     width: SCREEN_WIDTH * 0.23,
   },
-  infoText: { justifyContent: 'flex-start', padding: 5 },
+  infoText: { justifyContent: 'flex-start', padding: '5@msr' },
 })
 
 export default MyPageHeader

@@ -8,7 +8,7 @@ import {
   Pressable,
   GestureResponderEvent,
 } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import InnerText from '../../components/common/InnerText'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
@@ -49,6 +49,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         label: el.class + ' Class / ' + el.price + ' Klay',
         value: el.price,
         selected: false,
+        size: moderateScale(20),
+        labelStyle: style.eventText,
       })
     })
     newArr[0].selected = true
@@ -168,14 +170,14 @@ const style = ScaledSheet.create({
     backgroundColor: 'white',
   },
   eventImgContainer: {
-    marginTop: 20,
+    marginTop: '20@msr',
     alignItems: 'center',
   },
   eventImg: {
     width: SCREEN_WIDTH * 0.7,
     height: SCREEN_WIDTH * 0.7,
     resizeMode: 'cover',
-    borderRadius: 4,
+    borderRadius: '4@msr',
   },
   eventTitleContainer: {
     marginTop: '10@msr',
@@ -201,7 +203,7 @@ const style = ScaledSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFCC00',
-    borderRadius: 15,
+    borderRadius: '15@msr',
     borderColor: '#FEE396',
     borderWidth: 1,
   },

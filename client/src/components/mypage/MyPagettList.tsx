@@ -7,6 +7,7 @@ import {
   Dimensions,
   Image,
 } from 'react-native'
+import { moderateScale } from 'react-native-size-matters'
 import { UserType } from '../../models/User'
 import Title from '../common/Title'
 
@@ -101,7 +102,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
 }
 
 const styles = StyleSheet.create({
-  tokenMsg: { fontSize: 25, padding: 20 },
+  tokenMsg: { fontSize: moderateScale(25), padding: moderateScale(20) },
 })
 
 export default MyPagettList

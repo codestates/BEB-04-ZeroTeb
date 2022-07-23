@@ -4,9 +4,10 @@ import EventList from '../../components/event/EventList'
 import * as Location from 'expo-location'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { moderateScale } from 'react-native-size-matters'
 function MyLocationListup() {
   const [listData, setListData] = useState([]) // 주변 이벤트 목록
-  const [load, setLoad] = useState(false);
+  const [load, setLoad] = useState(false)
 
   //위도,경도 데이터 받기
   const loadMyLosition = async () => {
@@ -46,10 +47,10 @@ function MyLocationListup() {
         alert(result.message)
       } else {
         console.log('-Around Event-')
-        for(let i of result){            
-            console.log('[event_id, location]:',i.event_id, i.location);
+        for (let i of result) {
+          console.log('[event_id, location]:', i.event_id, i.location)
         }
-        setListData(result);
+        setListData(result)
       }
     } catch (err) {
       alert(err)
@@ -57,19 +58,28 @@ function MyLocationListup() {
   }
 
   useEffect(() => {
-    setLoad(true);
-    loadMyLosition()
-    .then(()=>{
-        setLoad(false);
+    setLoad(true)
+    loadMyLosition().then(() => {
+      setLoad(false)
     })
   }, [])
 
   return (
     <ScrollView style={styles.categoryListupContainer}>
-      { load ? <Image
-          source={{uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif'}}
-          style={{ width: 100, height: 100, alignSelf: 'center'}}/> 
-          : <EventList eventList={listData} /> }
+      {load ? (
+        <Image
+          source={{
+            uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif',
+          }}
+          style={{
+            width: moderateScale(100),
+            height: moderateScale(100),
+            alignSelf: 'center',
+          }}
+        />
+      ) : (
+        <EventList eventList={listData} />
+      )}
     </ScrollView>
   )
 }

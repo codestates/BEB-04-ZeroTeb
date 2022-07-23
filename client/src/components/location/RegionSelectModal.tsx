@@ -52,23 +52,22 @@ const RegionSelectModal = (props: Props) => {
           onTouchEnd={() => props.setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
         />
         <View style={styles.selectSpace}>
-        <Text style={styles.regionTitle}>지역 선택</Text>
-        <View style={styles.line}></View>
-        <View style={styles.regionSpace}>
-          {regionList.map((ele, index) => {
-            return (
-              <RegionButton
-                region={ele}
-                key={index}
-                selectRegion={selectRegion}
-              ></RegionButton>
-            )
-          })}
+          <Text style={styles.regionTitle}>지역 선택</Text>
+          <View style={styles.line}></View>
+          <View style={styles.regionSpace}>
+            {regionList.map((ele, index) => {
+              return (
+                <RegionButton
+                  region={ele}
+                  key={index}
+                  selectRegion={selectRegion}
+                ></RegionButton>
+              )
+            })}
+          </View>
         </View>
-      </View>
         {/* {props.body} */}
       </View>
-      
     </Modal>
   )
 }
@@ -89,7 +88,8 @@ const styles = ScaledSheet.create({
   selectSpace: {
     flexDirection: 'column',
     width: moderateScale(320),
-    height: moderateScale(590),
+    height: moderateScale(610),
+
     backgroundColor: 'white',
     borderRadius: 10,
     padding: '6@msr',
@@ -108,12 +108,11 @@ const styles = ScaledSheet.create({
   regionSpace: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignSelf: 'center',
-    paddingHorizontal: '18@msr',
-    paddingTop: '10@msr',
-    width: '280@msr',
-  }
+    paddingVertical: '15@msr',
+    width: '290@msr',
+  },
 })
 
 export default RegionSelectModal

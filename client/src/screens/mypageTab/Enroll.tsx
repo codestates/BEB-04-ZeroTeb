@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios from 'axios'
 import { RootState } from '../../store/Index'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import {
   View,
@@ -18,6 +18,7 @@ import {
 import * as ImagePicker from 'expo-image-picker'
 import { EnrollType } from '../../models/Event'
 import { useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 import SetSellTypeModal from '../../components/enroll/SetSellTypeModal'
 import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
@@ -31,6 +32,7 @@ const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
 interface Props {}
 
 const Enroll: React.FC<Props> = () => {
+  const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
@@ -80,12 +82,20 @@ const Enroll: React.FC<Props> = () => {
   }
   const onStart = () => {
     let money = 0
-    {
-      list.price.map(value => {
-        money += Number(value.count)
-      })
+    // 응모일때
+    if (list.type === 'entry') {
+      money += Number(list.price[0].count)
+      setDeposit(money * 5)
     }
-    setDeposit(money * 5)
+    // 판매일때
+    else {
+      {
+        list.price.map((value, index) => {
+          money += Number(value.price * value.count)
+        })
+        setDeposit(money * 0.05)
+      }
+    }
     setModalVisible(true)
   }
 
@@ -100,6 +110,7 @@ const Enroll: React.FC<Props> = () => {
       })
       .then(res => {
         console.log(res.data)
+        navigation.goBack()
       })
     setModalVisible(false)
   }
@@ -116,7 +127,7 @@ const Enroll: React.FC<Props> = () => {
             <Text style={style.enrollContentText}>제목</Text>
             <View style={style.enrollInput}>
               <TextInput
-                style={{ left: 20, fontSize: 20 }}
+                style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
                 value={list.title}
                 onChangeText={text => setList({ ...list, title: text })}
               ></TextInput>
@@ -199,13 +210,21 @@ const Enroll: React.FC<Props> = () => {
               ) : (
                 <View style={style.rowContentWrapper}>
                   <View style={style.InputPrice}>
-                    <Text style={{ fontSize: 20, textAlign: 'center' }}>
+                    <Text
+                      style={{
+                        fontSize: moderateScale(20),
+                        textAlign: 'center',
+                      }}
+                    >
                       {list.price[0].class}
                     </Text>
                   </View>
                   <View style={style.InputPrice}>
                     <TextInput
-                      style={{ fontSize: 20, textAlign: 'center' }}
+                      style={{
+                        fontSize: moderateScale(20),
+                        textAlign: 'center',
+                      }}
                       testID="price"
                       placeholder={'price'}
                       keyboardType="number-pad"
@@ -220,7 +239,10 @@ const Enroll: React.FC<Props> = () => {
                   </View>
                   <View style={style.InputPrice}>
                     <TextInput
-                      style={{ fontSize: 20, textAlign: 'center' }}
+                      style={{
+                        fontSize: moderateScale(20),
+                        textAlign: 'center',
+                      }}
                       testID="count"
                       placeholder={'count'}
                       keyboardType="number-pad"
@@ -253,7 +275,7 @@ const Enroll: React.FC<Props> = () => {
               <TextInput
                 style={{
                   flex: 1,
-                  fontSize: 16,
+                  fontSize: moderateScale(16),
                   textAlign: 'left',
                 }}
                 multiline={true}
@@ -288,9 +310,9 @@ const Enroll: React.FC<Props> = () => {
                 <Image
                   source={{ uri: list.token_image_url }}
                   style={{
-                    margin: 10,
-                    width: SCREEN_WIDTH - 60,
-                    height: 180,
+                    margin: moderateScale(10),
+                    width: SCREEN_WIDTH - moderateScale(60),
+                    height: moderateScale(180),
                   }}
                 />
               </View>
@@ -315,8 +337,8 @@ const Enroll: React.FC<Props> = () => {
             <Text
               style={{
                 width: SCREEN_WIDTH / 2,
-                fontSize: 24,
-                marginBottom: 20,
+                fontSize: moderateScale(24),
+                marginBottom: moderateScale(20),
               }}
             >
               현재 보증금은 {deposit} Klay 입니다. {'\n'} 보증금을 확인하시고
@@ -352,46 +374,46 @@ const style = ScaledSheet.create({
     fontSize: '30@msr',
   },
   enrollContentText: {
-    fontSize: '20@mvs',
+    fontSize: '20@msr',
     fontWeight: 'bold',
     color: '#333333',
     paddingVertical: '5@msr',
   },
   DateTimeContent: {
-    width: SCREEN_WIDTH / 2 - 30,
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
+    width: SCREEN_WIDTH / 2 - moderateScale(30),
+    minHeight: '25@msr',
+    maxHeight: '25@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
   },
   InputPrice: {
     width: SCREEN_WIDTH / 3.5,
     marginRight: '5@msr',
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
+    minHeight: '25@msr',
+    maxHeight: '25@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
   },
 
   enrollInput: {
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
+    minHeight: '25@msr',
+    maxHeight: '25@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
     marginBottom: '10@msr',
   },
   enrollInputLarge: {
-    maxWidth: SCREEN_WIDTH - 30,
+    maxWidth: SCREEN_WIDTH - moderateScale(30),
     padding: '10@msr',
-    height: '200@vs',
+    height: '200@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     marginBottom: '10@msr',
   },
@@ -402,15 +424,15 @@ const style = ScaledSheet.create({
     justifyContent: 'space-between',
   },
   enrollSubmmitButtonContainer: {
-    marginTop: 20,
+    marginTop: '20@msr',
     justifyContent: 'center',
     alignItems: 'center',
     height: STATUSBAR_HEIGHT,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     backgroundColor: '#3AACFF',
   },
   enrollSubmmitButton: {
-    fontSize: '20@mvs',
+    fontSize: '20@msr',
     fontWeight: 'bold',
     color: 'white',
   },
@@ -433,16 +455,16 @@ const style = ScaledSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: '10@msr',
   },
   modalSubmmit: {
     width: SCREEN_WIDTH / 2,
     height: STATUSBAR_HEIGHT,
-    marginTop: '15@mvs',
-    marginBottom: '15@mvs',
+    marginTop: '15@msr',
+    marginBottom: '15@msr',
     textAlign: 'center',
-    borderRadius: 10,
-    fontSize: '20@mvs',
+    borderRadius: '10@msr',
+    fontSize: '20@msr',
     fontWeight: 'bold',
     color: 'white',
     backgroundColor: '#3AACFF',

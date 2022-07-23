@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { moderateScale } from 'react-native-size-matters'
 import { View, Text } from 'react-native'
 interface avatarProps {
   size: number
@@ -16,7 +16,7 @@ const AvatarIcon: React.FC<avatarProps> = ({ size, color, title }) => {
           justifyContent: 'center',
           width: moderateScale(size),
           height: moderateScale(size),
-          borderRadius: 35,
+          borderRadius: moderateScale(50),
           backgroundColor: color || 'skyblue',
         }}
       >

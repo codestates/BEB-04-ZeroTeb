@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, Text } from 'react-native'
 import SearchList from '../../components/search/SearchList'
 import { EventType } from '../../models/Event'
 import axios, { AxiosRequestConfig } from 'axios'
 import LoadingImg from '../../components/common/LoadingImg'
+import { ScaledSheet } from 'react-native-size-matters'
 
 interface searchListProps {
   route: {
@@ -64,13 +65,13 @@ const SearchListup: React.FC<searchListProps> = ({ route }) => {
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   searchListupContainer: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: 20,
+    paddingTop: '20@msr',
   },
-  msg: { fontSize: 20, paddingHorizontal: 20 },
+  msg: { fontSize: '20@msr', paddingHorizontal: '20@msr' },
 })
 
 export default SearchListup

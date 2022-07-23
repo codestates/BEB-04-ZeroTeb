@@ -19,6 +19,7 @@ import { EventType } from '../../models/Event'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
+import { moderateScale } from 'react-native-size-matters'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
@@ -29,7 +30,7 @@ export default function Home() {
   const [list, setList] = useState<EventType[]>([])
   const [load, setLoad] = useState<boolean>(false)
   const [page, setPage] = useState(1)
-  
+
   // 배너 데이터 호출
   const getBannerList = async () => {
     try {
@@ -82,7 +83,7 @@ export default function Home() {
 
   // 지역 변경 시 발생
   useEffect(() => {
-    console.log('지역 변경');
+    console.log('지역 변경')
     setLoad(true)
     setList([])
     setPage(1)
@@ -91,18 +92,16 @@ export default function Home() {
     })
   }, [region])
 
-  
   //무한 스크롤 이벤트
   const endReached = async () => {
-    console.log('length:',list.length);
-    if(list.length<=0 || list.length >= 6){
-      console.log('무한 스크롤');
+    console.log('length:', list.length)
+    if (list.length <= 0 || list.length >= 6) {
+      console.log('무한 스크롤')
       setLoad(true)
       getEventList().then(() => {
         setLoad(false)
       })
     }
-    
   }
 
   //
@@ -111,8 +110,7 @@ export default function Home() {
   }
   return (
     <View style={style.homeContainer}>
-      
-      <LocationButton region={region}/>
+      <LocationButton region={region} />
       <FlatList
         data={['0']}
         onEndReached={endReached}
@@ -140,7 +138,11 @@ export default function Home() {
                 source={{
                   uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif',
                 }}
-                style={{ width: 100, height: 100, alignSelf: 'center' }}
+                style={{
+                  width: moderateScale(100),
+                  height: moderateScale(100),
+                  alignSelf: 'center',
+                }}
               />
             ) : null}
           </>
