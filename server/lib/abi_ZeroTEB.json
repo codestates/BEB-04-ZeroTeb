@@ -506,8 +506,13 @@
     "outputs": [
       {
         "internalType": "address[]",
-        "name": "",
+        "name": "_onwerArray",
         "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_tokenIdArray",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -527,6 +532,35 @@
       }
     ],
     "name": "isApprovedForAll",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_eventId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_classId",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_number",
+        "type": "uint256"
+      }
+    ],
+    "name": "isMint",
     "outputs": [
       {
         "internalType": "bool",
