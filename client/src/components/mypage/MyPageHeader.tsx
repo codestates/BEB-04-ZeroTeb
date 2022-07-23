@@ -75,12 +75,16 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
           </Pressable>
         </View>
         <View style={styles.infoIconContainer}>
-          <Text style={styles.infoText}>관심</Text>
+          <Text style={styles.infoText}>리더기</Text>
+          <Pressable
+            onPress={() => navigation.navigate('QRread')}
+          >
           <AvatarIcon
             size={moderateScale(40)}
             color={'lightgrey'}
-            title={userInfo.history.liked}
+            title={'QR'}
           />
+          </Pressable>
         </View>
       </View>
     </View>
