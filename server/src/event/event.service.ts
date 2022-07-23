@@ -11,7 +11,9 @@ import 'dotenv/config';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
 import { KlaytnService } from 'src/klaytn/klaytn.service';
 import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
-import { ipfsMetadataUpload } from 'lib/pinata';
+import { ipfsGetData, ipfsMetadataUpload } from 'lib/pinata';
+import { EventStatus, EventStatusDocument } from './schemas/event-status.schema';
+import { EventStatusDto } from './dto/event-status.dto';
 
 @Injectable()
 export class EventService {
@@ -20,6 +22,7 @@ export class EventService {
     @InjectModel('EventResult') private readonly EventResultModel: Model<EventResult>,
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
+    @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -28,7 +31,8 @@ export class EventService {
     console.log('create');
     try {
       // 유효성 검사
-      const user = await this.UserModel.findOne({ address: jwtUser.address });
+      // const user = await this.UserModel.findOne({ address: jwtUser.address });
+      const user = await this.UserModel.findOne({ test_address: jwtUser.address });
       if (!user) throw new Error('user가 존재하지 않습니다.');
 
       // 최신 event_id 가져와서 다음 evnet_id 생성
@@ -127,6 +131,12 @@ export class EventService {
       const saveEvent = new this.EventModel(eventData);
       const saveResult = await saveEvent.save();
       console.log(saveResult);
+
+      // 이벤트 상태 등록
+      const eventStatusDto: EventStatusDto = new EventStatusDto();
+      eventStatusDto.setEventId(eventId);
+      const eventStatus = new this.EventStatusModel(eventStatusDto);
+      await eventStatus.save();
 
       return saveResult;
     } catch (e) {
@@ -330,13 +340,35 @@ export class EventService {
   }
 
   // 이벤트 리스트 받아서 holdings에 업데이트
-  // @Cron('*/10 * * * * *')
-  // async getEventList(): Promise<void> {
-  //   console.log('이벤트 리스트 받기');
-  //   const eventLength = await this.klaytnService.getEventLength();
-  //   console.log(eventLength);
-  //   for (let i = 1; i <= eventLength; i++) {
-  //     console.log(`Event(${i}) :`, await this.klaytnService.getEvent(i));
-  //   }
+  @Cron('* */1 * * * *') // 15분 마다 진행
+  async mintTokens(): Promise<void> {
+    try {
+      // 이벤트 토큰 민팅
+      const createdEvent = await this.EventStatusModel.find({ status: 'created' }).exec();
+      if (!createdEvent) throw new Error('CreateEvent가 없습니다.');
+      for (let i = 0; i < createdEvent.length; i++) {
+        const eventId = createdEvent[i].get('event_id');
+        console.log('eventId :', eventId);
+        const event = await this.klaytnService.getEvent(eventId);
+        console.log('eventUri :', event.eventUri);
+        const eventData = await ipfsGetData(event.eventUri);
+        console.log('eventData :', eventData);
+        if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
+        await createdEvent[i].updateOne({ $set: { status: 'minting' } });
+        await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
+        await createdEvent[i].updateOne({ $set: { status: 'minted' } });
+      }
+      // 이벤트 구매자 디비 저장
+      // 이벤트 응모자 디비 저장
+      // 이벤트 종료
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // @Cron('* * * * * *')
+  // async test(): Promise<void> {
+  //   const eventStatus = await this.klaytnService.getEventLength();
+  //   console.log(eventStatus);
   // }
 }

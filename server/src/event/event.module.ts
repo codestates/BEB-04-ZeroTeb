@@ -9,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { User, UserSchema } from 'src/auth/schemas/user.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
+import { EventStatus, EventStatusSchema } from './schemas/event-status.schema';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from 'src/auth/auth.module';
       { name: 'EventResult', schema: EventResultSchema },
       { name: 'LikedEvent', schema: LikedEventSchema },
       { name: User.name, schema: UserSchema },
+      { name: EventStatus.name, schema: EventStatusSchema },
     ]),
     ScheduleModule.forRoot(),
   ],
