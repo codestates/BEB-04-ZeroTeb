@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import FormData from 'form-data';
 import pinataSDK, { PinataPinOptions } from '@pinata/sdk';
+import axios from 'axios';
 
 const pinata = pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_API_SECRET_KEY);
 
@@ -74,7 +75,26 @@ const ipfsMetadataUpload = async (name, metadata) => {
   }
 };
 
+const ipfsGetData = async (url: string, type: 'json' | 'file' = 'json') => {
+  const baseUrl = 'https://gateway.pinata.cloud/ipfs/';
+  const ipfsHash = url.replace('ipfs://', '');
+  const contentType = {
+    json: 'application/json',
+    file: 'multipart/form-data',
+  };
+  try {
+    const res = await axios.get(ipfsHash, {
+      baseURL: baseUrl,
+      headers: {
+        'Content-Type': contentType[type],
+      },
+    });
+    return res.data;
+  } catch (error) {}
+};
+
 export {
   // ipfsImageUpload,
   ipfsMetadataUpload,
+  ipfsGetData,
 };
