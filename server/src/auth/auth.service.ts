@@ -107,14 +107,20 @@ export class AuthService {
     const userInfoDto: UserInfoDto = new UserInfoDto();
 
     try {
-      const userData = await this.userModel.findOne({ address: address }).exec();
+      const userData = await this.userModel.findOne({ test_address: address }).exec();
       if (userData === null) throw new Error();
       userInfoDto.username = userData.get('username');
       userInfoDto.profile_url = `#${address.slice(2, 8)}`;
-      userInfoDto.history.created = await this.EventModel.count({ address: address });
-      userInfoDto.history.entry = await this.EventModel.count({ type: 'entry', address: address });
-      userInfoDto.history.liked = await this.EventModel.count({ type: 'sale', address: address });
-      const likedList = await this.LikedEventModel.find({ address: address });
+      userInfoDto.history.created = await this.EventModel.count({ test_address: address });
+      userInfoDto.history.entry = await this.EventModel.count({
+        type: 'entry',
+        test_address: address,
+      });
+      userInfoDto.history.liked = await this.EventModel.count({
+        type: 'sale',
+        test_address: address,
+      });
+      const likedList = await this.LikedEventModel.find({ test_address: address });
       const likedId = likedList.map((ele) => ele.event_id);
       userInfoDto.history.sale = await this.EventModel.count({ event_id: likedId });
       return userInfoDto;
