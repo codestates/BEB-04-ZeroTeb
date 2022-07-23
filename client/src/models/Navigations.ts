@@ -11,6 +11,7 @@ export type HomeStackParamList = {
   Home: undefined
   SignIn: { gotoMyPage: boolean }
   EventDetail: { event: EventType }
+  MyLocationListup: undefined
 }
 
 export type CategoryStackParamList = {

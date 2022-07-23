@@ -4,6 +4,7 @@ import { HomeStackParamList } from '../models/Navigations'
 import Home from '../screens/homeTab/Home'
 import SignIn from '../screens/auth/SignIn'
 import EventDetail from '../screens/common/EventDetail'
+import MyLocationListup from '../screens/homeTab/MyLocationListup'
 
 export default function HomeStackScreen() {
   const HomeStack = createNativeStackNavigator<HomeStackParamList>()
@@ -23,6 +24,11 @@ export default function HomeStackScreen() {
       <HomeStack.Screen
         name="EventDetail"
         component={EventDetail}
+        options={{ headerTitle: '' }}
+      />
+      <HomeStack.Screen
+        name="MyLocationListup"
+        component={MyLocationListup}
         options={{ headerTitle: '' }}
       />
     </HomeStack.Navigator>
