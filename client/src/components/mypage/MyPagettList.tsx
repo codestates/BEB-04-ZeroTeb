@@ -42,7 +42,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
         token_image_url?: string
       },
     ]
-  >([{token_id: '1', token_image_url: 'https://images.velog.io/images/maliethy/post/1ed54c18-a0e6-4b2c-95d7-4d828955956d/react-native.png'}])
+  >([{token_id: '1', token_image_url: 'https://images.unsplash.com/photo-1600114180229-67ab44fd85e9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'}])
 
   const renderItem = useCallback(({ item, index }) => {
     console.log(item, index)
@@ -53,7 +53,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
             <Text style={styles.tokenMsg}>보유하신 토큰이 없습니다.</Text>
           </>
         ) : (
-          <Pressable onPress={()=>{navigation.navigate("TicketDetail",  { address: KilpAddress , token_id: item.token_id})}}>
+          <Pressable onPress={()=>{navigation.navigate("TicketDetail",  { address: KilpAddress , token_id: item.token_id, token_image_url: item.token_image_url})}}>
             <Image
               source={{ uri: item.token_image_url }}
               style={{ width: SCREEN_WIDTH / 3, height: SCREEN_WIDTH / 3 }}

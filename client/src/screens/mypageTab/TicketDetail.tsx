@@ -30,7 +30,7 @@ const TicketDetail = ({route}) =>{
     //`http://server.beeimp.com:18080/token/qrcode?address=${props.address}&token_id=${props.token_id}`
     //useEffect는 async를 사용 못함
     const getQRcode = async () =>{
-        console.log('qr 생성하기 ===============')
+        console.log('qr 생성하기 요청')
         try {
             const config: AxiosRequestConfig = {
                 method: 'get',
@@ -42,7 +42,7 @@ const TicketDetail = ({route}) =>{
             if(res.data.message){
                 console.log(res.data.message)
             }else{
-                console.log(res.data)
+                // console.log(res.data)
                 setQrSVG(res.data)
             }
         }catch (e) {
@@ -60,7 +60,7 @@ const TicketDetail = ({route}) =>{
             <InnerText innerText={'티켓은 TT에서!'} size={12}/>
             <View style={styles.imgContainer}>
             <ImageBackground
-                source={{uri: 'https://images.unsplash.com/photo-1532976854-1aeb3bdd52de?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80'}}
+                source={{uri: route.params.token_image_url}}
                 resizeMode='cover'
                 style={styles.imgContent}
             />
