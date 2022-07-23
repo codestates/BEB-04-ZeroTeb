@@ -1,7 +1,7 @@
 import * as React from 'react'
 import axios from 'axios'
 import { RootState } from '../../store/Index'
-import { Linking } from 'react-native'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import {
   View,
@@ -41,7 +41,7 @@ const Enroll: React.FC<Props> = props => {
     (state: RootState) => state.signin.AccessToken,
   )
   const userName = useSelector((state: RootState) => state.signin.userName)
-
+  // console.log(AccessToken)
   const mode = ['date', 'time']
   // 최종적인 저장
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
@@ -50,22 +50,20 @@ const Enroll: React.FC<Props> = props => {
     promoter: userName,
     address: KilpAddress,
     location: '',
-
+    sub_location: '',
     category: '',
     type: 'entry',
     thumnail: ' ',
     token_image_url: ' ',
     price: [{ class: 'S', price: 0, count: 0 }],
     contents: '',
-    option: [],
-    recruit_start_date: Number(new Date()) / 1000,
-    recruit_end_date: Number(new Date()) / 1000,
-    event_start_date: Number(new Date()) / 1000,
-    event_end_date: Number(new Date()) / 1000,
-    created_date: Number(new Date()) / 1000,
-    modified_date: Number(new Date()) / 1000,
-    remaining: 10,
-    sub_location: '',
+    option: {},
+    recruit_start_date: Math.floor(Number(new Date()) / 1000),
+    recruit_end_date: Math.floor(Number(new Date()) / 1000),
+    event_start_date: Math.floor(Number(new Date()) / 1000),
+    event_end_date: Math.floor(Number(new Date()) / 1000),
+    created_date: Math.floor(Number(new Date()) / 1000),
+    modified_date: Math.floor(Number(new Date()) / 1000),
   })
   const [deposit, setDeposit] = useState<Number>(0)
 
@@ -95,18 +93,45 @@ const Enroll: React.FC<Props> = props => {
     setModalVisible(true)
   }
 
-  const onCheckEnroll = () => {
+  const onCheckEnroll = async () => {
     // 조건문 달아서 axios POST
-    // axios
-    //   .post(ENROLL_URL, list, {
-    //     headers: {
-    //       Cookie: AccessToken,
-    //     },
-    //   })
-    //   .then(response => {
-    //     console.log(response.data)
-    //   })
     console.log(list)
+    await axios
+      .post(
+        ENROLL_URL,
+        {
+          title: '코드 스테이츠 디너 이벤트',
+          promoter: '이인수',
+          address: '0xf0a29e430d12065bfa9a5e0bc694f26accb151f4',
+          location: '경기',
+          sub_location: '아파트 6층 603호',
+          category: 'concert',
+          type: 'entry',
+          thumnail:
+            'https://images.unsplash.com/photo-1573055418049-c8e0b7e3403b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
+          token_image_url: 'https://i.ibb.co/3vbbn8F/react-logo.png',
+          price: [
+            { class: 'A', price: 500, count: 100 },
+            { class: 'B', price: 300, count: 500 },
+          ],
+          contents: '든든한 국밥 한 그릇',
+          option: {},
+          recruit_start_date: 1657706400,
+          recruit_end_date: 1657706400,
+          event_start_date: 1657706400,
+          event_end_date: 1657706400,
+          created_date: 1657706400,
+          modified_date: 1657706400,
+        },
+        {
+          headers: {
+            Cookie: AccessToken,
+          },
+        },
+      )
+      .then(res => {
+        console.log(res.data)
+      })
     setModalVisible(false)
   }
 
@@ -341,7 +366,7 @@ const Enroll: React.FC<Props> = props => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   enrollContainer: {
     flex: 1,
     backgroundColor: 'white',
@@ -358,49 +383,48 @@ const style = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 30,
   },
-
   enrollContentText: {
-    left: 20,
-    fontSize: 20,
+    left: '20@mvs',
+    fontSize: '20@mvs',
     fontWeight: 'bold',
   },
   DateTimeContent: {
-    marginLeft: 12,
-    marginRight: 12,
-    marginTop: 5,
-    marginBottom: 10,
+    marginLeft: '12@mvs',
+    marginRight: '12@mvs',
+    marginTop: '5@vs',
+    marginBottom: '10@vs',
     width: SCREEN_WIDTH / 2 - 30,
-    maxHeight: 30,
+    maxHeight: '30@vs',
     borderWidth: 1,
     borderRadius: 10,
   },
   InputPrice: {
-    marginLeft: 20,
-    marginRight: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    marginLeft: '20@mvs',
+    marginRight: '10@mvs',
+    marginTop: '10@mvs',
+    marginBottom: '10@mvs',
     width: SCREEN_WIDTH / 4,
-    height: 30,
+    height: '30@vs',
     borderWidth: 1,
     borderRadius: 10,
   },
 
   enrollInput: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 5,
-    marginBottom: 10,
-    maxHeight: 30,
+    marginLeft: '15@mvs',
+    marginRight: '15@mvs',
+    marginTop: '5@mvs',
+    marginBottom: '10@mvs',
+    maxHeight: '30@vs',
     borderWidth: 1,
     borderRadius: 10,
   },
   enrollInputLarge: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 5,
-    marginBottom: 10,
+    marginLeft: '15@mvs',
+    marginRight: '15@mvs',
+    marginTop: '5@mvs',
+    marginBottom: '10@mvs',
     maxWidth: SCREEN_WIDTH - 30,
-    height: 200,
+    height: '200@vs',
     borderWidth: 1,
     borderRadius: 10,
   },
@@ -411,13 +435,13 @@ const style = StyleSheet.create({
   enrollSubmmit: {
     width: SCREEN_WIDTH - 30,
     height: STATUSBAR_HEIGHT,
-    marginLeft: 15,
-    marginTop: 10,
-    marginBottom: 10,
+    marginLeft: '15@mvs',
+    marginTop: '10@mvs',
+    marginBottom: '10@mvs',
     textAlign: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    fontSize: 20,
+    fontSize: '20@mvs',
     fontWeight: 'bold',
     color: 'white',
     backgroundColor: '#3AACFF',
@@ -446,11 +470,11 @@ const style = StyleSheet.create({
   modalSubmmit: {
     width: SCREEN_WIDTH / 2,
     height: STATUSBAR_HEIGHT,
-    marginTop: 15,
-    marginBottom: 15,
+    marginTop: '15@mvs',
+    marginBottom: '15@mvs',
     textAlign: 'center',
     borderRadius: 10,
-    fontSize: 20,
+    fontSize: '20@mvs',
     fontWeight: 'bold',
     color: 'white',
     backgroundColor: '#3AACFF',
