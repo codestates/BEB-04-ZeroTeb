@@ -40,12 +40,11 @@ export interface EnrollType {
   token_image_url: string
   price: object[]
   contents: string
-  option: []
+  option: object
   recruit_start_date: number
   recruit_end_date: number
   event_start_date: number
   event_end_date: number
   created_date: number
   modified_date: number
-  remaining: number
 }

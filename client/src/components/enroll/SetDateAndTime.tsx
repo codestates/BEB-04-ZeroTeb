@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import { useState } from 'react'
+import { ScaledSheet } from 'react-native-size-matters'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { getDate, getTime } from '../../utils/unixTime'
 
@@ -26,33 +27,43 @@ const SetDateAndTime = (props: any) => {
       if (props.type === 'recruit_start_date')
         setRecruitStart({
           ...props.list,
-          recruit_start_date: Number(new Date()) / 1000,
+          recruit_start_date: Math.floor(Number(selectedDate) / 1000),
         })
       else if (props.type === 'recruit_end_date')
         setRecruitEnd({
           ...props.list,
-          recruit_end_date: Number(new Date()) / 1000,
+          recruit_end_date: Math.floor(Number(selectedDate) / 1000),
         })
       else if (props.type === 'event_start_date')
         setEventStart({
           ...props.list,
-          event_start_date: Number(new Date()) / 1000,
+          event_start_date: Math.floor(Number(selectedDate) / 1000),
         })
       else
         setEventEnd({
           ...props.list,
-          event_end_date: Number(new Date()) / 1000,
+          event_end_date: Math.floor(Number(selectedDate) / 1000),
         })
       setShow(false)
     } else {
-      const currentDate = Number(selectedDate) / 1000
-      if (props.type === 'recruit_start_date')
-        setRecruitStart({ ...props.list, recruit_start_date: currentDate })
-      else if (props.type === 'recruit_end_date')
-        setRecruitEnd({ ...props.list, recruit_end_date: currentDate })
-      else if (props.type === 'event_start_date')
-        setEventStart({ ...props.list, event_start_date: currentDate })
-      else setEventEnd({ ...props.list, event_end_date: currentDate })
+      const currentDate = Math.floor(Number(selectedDate) / 1000)
+      if (props.type === 'recruit_start_date') {
+        if (currentDate <= Math.floor(Number(new Date()) / 1000 - 1000))
+          alert('이미 지나간 날입니다.')
+        else setRecruitStart({ ...props.list, recruit_start_date: currentDate })
+      } else if (props.type === 'recruit_end_date') {
+        if (currentDate < props.list.recruit_start_date)
+          alert('등록보다 후에 해야합니다.')
+        else setRecruitEnd({ ...props.list, recruit_end_date: currentDate })
+      } else if (props.type === 'event_start_date') {
+        if (currentDate <= props.list.recruit_start_date)
+          alert('마감보다 후에 해야합니다.')
+        else setEventStart({ ...props.list, event_start_date: currentDate })
+      } else {
+        if (currentDate < props.list.event_start_date)
+          alert('시작보다 후에 해야합니다.')
+        else setEventEnd({ ...props.list, event_end_date: currentDate })
+      }
       setShow(false)
     }
   }
