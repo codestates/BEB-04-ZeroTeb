@@ -40,27 +40,39 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
               />
             </Pressable>
           </View>
-          <AvatarIcon
-            size={moderateScale(40)}
-            color={'lightgrey'}
-            title={userInfo.history.created}
-          />
+          <Pressable
+            onPress={() => navigation.navigate('MyList', { type: 'created' })}
+          >
+            <AvatarIcon
+              size={moderateScale(40)}
+              color={'lightgrey'}
+              title={userInfo.history.created}
+            />
+          </Pressable>
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>응모</Text>
-          <AvatarIcon
-            size={moderateScale(40)}
-            color={'lightgrey'}
-            title={userInfo.history.entry}
-          />
+          <Pressable
+            onPress={() => navigation.navigate('MyList', { type: 'entry' })}
+          >
+            <AvatarIcon
+              size={moderateScale(40)}
+              color={'lightgrey'}
+              title={userInfo.history.entry}
+            />
+          </Pressable>
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>구매</Text>
-          <AvatarIcon
-            size={moderateScale(40)}
-            color={'lightgrey'}
-            title={userInfo.history.sale}
-          />
+          <Pressable
+            onPress={() => navigation.navigate('MyList', { type: 'sale' })}
+          >
+            <AvatarIcon
+              size={moderateScale(40)}
+              color={'lightgrey'}
+              title={userInfo.history.sale}
+            />
+          </Pressable>
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>관심</Text>
