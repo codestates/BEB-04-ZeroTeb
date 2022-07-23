@@ -8,6 +8,7 @@ import {
   Pressable,
   GestureResponderEvent,
 } from 'react-native'
+import axios, { AxiosRequestConfig } from 'axios'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import InnerText from '../../components/common/InnerText'
 import Unserbar from '../../components/common/Underbar'
@@ -75,16 +76,48 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   }
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
-    // if (KilpAddress === '') {
-    //   navigation.navigate('SignIn', { gotoMyPage: false })
-    // } else {
-    setModalVisible(true)
-    // }
+    if (KilpAddress === '') {
+      navigation.navigate('SignIn', { gotoMyPage: false })
+    } else {
+      setModalVisible(true)
+    }
   }
 
-  const getPayment = () => {
+  const getPayment = async () => {
     setModalVisible(false)
-    console.log('이제 클립으로 결제 진행')
+    // 구매 , 응모에 따라 다른 데이터를 보내줘야 한다.
+    let url = ''
+    let data = {}
+    if (eventDetail.type === 'sale') {
+      console.log('sale')
+      url = 'http://server.beeimp.com:18080/token/buy'
+      data = {
+        event_id: 0,
+        class_id: 0,
+        number: 0,
+      }
+    } else {
+      console.log('entry')
+      url = 'http://server.beeimp.com:18080/token/entry'
+      data = {
+        event_id: eventDetail.event_id,
+      }
+    }
+
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'post',
+        url: url,
+        data: data,
+        withCredentials: true,
+      }
+
+      const res = await axios(config)
+
+      console.log(res.data)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
