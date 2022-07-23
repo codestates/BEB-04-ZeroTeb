@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Req, Res, BadRequestException, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Req, Res, Query, UseGuards } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 import { SignInReqDto } from './dto/signin-auth.dto';
 
@@ -30,10 +31,10 @@ export class AuthController {
     res.status(200).json(service);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/verify')
   verify(@Req() req: Request) {
     const { access_token } = req.cookies;
-    if (access_token === undefined) new BadRequestException();
     return this.authService.verifyJWT(access_token);
   }
 }
