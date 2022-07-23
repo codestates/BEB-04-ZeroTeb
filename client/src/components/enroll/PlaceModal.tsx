@@ -16,21 +16,22 @@ const PlaceModal = (props: any) => {
   const setList = props.setList
 
   const location = [
+    '전국',
     '서울',
     '부산',
-    '경남',
-    '경북',
-    '충북',
-    '충남',
-    '강원',
-    '전북',
-    '전남',
-    '대구',
     '인천',
-    '경기',
+    '대구',
     '대전',
     '울산',
     '세종',
+    '경기',
+    '강원',
+    '충북',
+    '충남',
+    '전북',
+    '전남',
+    '경북',
+    '경남',
   ]
 
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
@@ -113,14 +114,16 @@ const style = ScaledSheet.create({
     height: SCREEN_HEIGHT / 2,
     backgroundColor: 'white',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignContent: 'center',
     borderRadius: 10,
+    flexWrap: 'wrap',
   },
   modalSelect: {
     width: SCREEN_WIDTH / 4,
     backgroundColor: '#3AACFF',
     borderRadius: 10,
     margin: '5@msr',
+    padding: '10@msr',
   },
   modalText: {
     fontSize: '14@mvs',
