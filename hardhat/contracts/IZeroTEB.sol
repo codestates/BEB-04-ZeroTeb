@@ -46,7 +46,7 @@ interface IZeroTEB {
     function getTokenBuyers(uint256 _eventId, uint8 _classId)
         external
         view
-        returns (address[] memory);
+        returns (address[] memory _onwerArray, uint256[] memory _tokenIdArray);
 
     /*
      * 이벤트 티켓 응모

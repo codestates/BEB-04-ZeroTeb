@@ -98,6 +98,22 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _events[_eventId].eventType;
     }
 
+    function isMint(
+        uint256 _eventId,
+        uint8 _classId,
+        uint256 _number
+    ) public view returns (bool) {
+        require(
+            _number < _events[_eventId].class[_classId].count,
+            "_number is overflow or underflow."
+        );
+        uint256 _tokenId = _events[_eventId].class[_classId].tokens[_number];
+        if (_tokenId == 0) {
+            return false;
+        }
+        return true;
+    }
+
     function getEventClassCount(uint256 _eventId)
         public
         view
@@ -149,8 +165,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
         for (uint8 i = 0; i < _classNames.length; i++) {
             _events[_newEventId].class[i].name = _classNames[i];
-            _events[_newEventId].class[i].count = _classPrices[i];
-            _events[_newEventId].class[i].price = _classCounts[i];
+            _events[_newEventId].class[i].count = _classCounts[i];
+            _events[_newEventId].class[i].price = _classPrices[i];
             _events[_newEventId].class[i].tokens = new uint256[](
                 _classCounts[i]
             );
@@ -284,9 +300,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         public
         view
         override
-        returns (address[] memory)
+        returns (address[] memory _onwerArray, uint256[] memory _tokenIdArray)
     {
-        return _events[_eventId].class[_classId].owners;
+        _onwerArray = _events[_eventId].class[_classId].owners;
+        _tokenIdArray = _events[_eventId].class[_classId].tokens;
     }
 
     // 이벤트 토큰 응모
