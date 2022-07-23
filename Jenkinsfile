@@ -48,7 +48,26 @@ pipeline {
     }
     stage("RUN") {
       steps {
-        sh "docker run -d --name zteb-server -p 18080:8080 -e MONGODB_USERNAME=${MONGODB_USERNAME} -e MONGODB_PASSWORD=${MONGODB_PASSWORD} -e ALLTHATNODE_API_KEY=${ALLTHATNODE_API_KEY} -e ALLTHATNODE_BAOBAB_ENDPOINT=${ALLTHATNODE_BAOBAB_ENDPOINT} -e JWT_SECRET_KEY=${JWT_SECRET_KEY} -e QR_API_KEY=${QR_API_KEY} -e KAKAO_API='${KAKAO_API}' -e PINATA_JWT='${PINATA_JWT}' -e KAS_ACCESS_KEY_ID='${KAS_ACCESS_KEY_ID}' -e KAS_SECRET_ACCESS_KEY='${KAS_SECRET_ACCESS_KEY}' -e KAS_AUTHORIZATION='${KAS_AUTHORIZATION}' -e NODE_OPTIONS='--openssl-legacy-provider' zteb-server:latest"
+        sh """docker run -d \
+                --name zteb-server \
+                -p 18080:8080 \
+                -e MONGODB_USERNAME='${MONGODB_USERNAME}' \
+                -e MONGODB_PASSWORD='${MONGODB_PASSWORD}' \
+                -e ALLTHATNODE_API_KEY='${ALLTHATNODE_API_KEY}' \
+                -e ALLTHATNODE_BAOBAB_ENDPOINT='${ALLTHATNODE_BAOBAB_ENDPOINT}' \
+                -e JWT_SECRET_KEY=${JWT_SECRET_KEY} \
+                -e QR_API_KEY='${QR_API_KEY}' \
+                -e KAKAO_API='${KAKAO_API}' \
+                -e PINATA_JWT='${PINATA_JWT}' \
+                -e PINATA_API_KEY='${PINATA_API_KEY}' \
+                -e PINATA_API_SECRET_KEY='${PINATA_API_SECRET_KEY}' \
+                -e KAS_ACCESS_KEY_ID='${KAS_ACCESS_KEY_ID}' \
+                -e KAS_SECRET_ACCESS_KEY='${KAS_SECRET_ACCESS_KEY}' \
+                -e KAS_AUTHORIZATION='${KAS_AUTHORIZATION}' \
+                -e NODE_OPTIONS='--openssl-legacy-provider' \
+                -e OWNER_PRIVATE_KEY='${OWNER_PRIVATE_KEY}' \
+                -e OWNER_ADDRESS='${OWNER_ADDRESS}' \
+                zteb-server:latest"""
       }
     }
   }
