@@ -215,7 +215,7 @@ const Enroll: React.FC<Props> = () => {
                           price: [{ ...list.price[0], ['price']: e }],
                         })
                       }}
-                      value={list.price[0].price}
+                      value={String(list.price[0].price)}
                     ></TextInput>
                   </View>
                   <View style={style.InputPrice}>
@@ -230,7 +230,7 @@ const Enroll: React.FC<Props> = () => {
                           price: [{ ...list.price[0], ['count']: e }],
                         })
                       }}
-                      value={list.price[0].count}
+                      value={String(list.price[0].count)}
                     ></TextInput>
                   </View>
                 </View>
