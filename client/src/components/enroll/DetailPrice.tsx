@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import { AntDesign } from '@expo/vector-icons'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -114,16 +115,16 @@ const DetailList = (props: any) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   InputPriceWrapper: {
     flexDirection: 'row',
   },
   InputPrice: {
-    marginLeft: 15,
-    marginTop: 5,
-    marginBottom: 10,
+    marginLeft: '15@mvs',
+    marginTop: '5@mvs',
+    marginBottom: '10@mvs',
     width: SCREEN_WIDTH / 4,
-    height: 30,
+    height: '30@vs',
     borderWidth: 1,
     borderRadius: 10,
   },

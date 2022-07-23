@@ -8,6 +8,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -86,18 +87,18 @@ const PlaceModal = (props: any) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   modalWrapper: {},
   enrollContentText: {
-    left: 20,
-    fontSize: 20,
+    left: '20@mvs',
+    fontSize: '20@mvs',
     fontWeight: 'bold',
   },
   enrollInput: {
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 5,
-    marginBottom: 10,
+    marginLeft: '15@mvs',
+    marginRight: '15@mvs',
+    marginTop: '5@mvs',
+    marginBottom: '10@mvs',
     borderWidth: 1,
     borderRadius: 10,
   },
@@ -122,7 +123,7 @@ const style = StyleSheet.create({
     margin: 3,
   },
   modalText: {
-    fontSize: 14,
+    fontSize: '14@mvs',
     color: 'white',
     textAlign: 'center',
   },
