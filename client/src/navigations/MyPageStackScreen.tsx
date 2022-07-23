@@ -35,15 +35,16 @@ export default function MyPageStackScreen() {
         />
       )}
       <MyPageStack.Screen
-        name="MyList"
-        component={MyList}
-        options={{ headerTitle: '' }}
-      />
-      <MyPageStack.Screen
         name="Enroll"
         component={Enroll}
         options={{ headerTitle: '' }}
       />
+      <MyPageStack.Screen
+        name="MyList"
+        component={MyList}
+        options={{ headerTitle: '' }}
+      />
+
       <MyPageStack.Screen
         name="QRLoad"
         component={QRLoad}

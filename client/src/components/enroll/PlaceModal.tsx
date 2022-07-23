@@ -8,7 +8,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -49,7 +49,9 @@ const PlaceModal = (props: any) => {
       <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
-            <Text style={{ left: 20, fontSize: 20 }}>
+            <Text
+              style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+            >
               {props.list.location}
             </Text>
           </View>
@@ -79,7 +81,7 @@ const PlaceModal = (props: any) => {
       <Text style={style.enrollContentText}>나머지 주소</Text>
       <View style={style.enrollInput}>
         <TextInput
-          style={{ left: 20, fontSize: 20 }}
+          style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
           value={props.list.sub_location}
           onChangeText={text => setList({ ...props.list, sub_location: text })}
         ></TextInput>
@@ -90,16 +92,16 @@ const PlaceModal = (props: any) => {
 
 const style = ScaledSheet.create({
   enrollContentText: {
-    fontSize: '20@mvs',
+    fontSize: '20@msr',
     fontWeight: 'bold',
     color: '#333333',
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
+    minHeight: '25@msr',
+    maxHeight: '25@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
     marginBottom: '10@msr',
@@ -115,18 +117,18 @@ const style = ScaledSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignContent: 'center',
-    borderRadius: 10,
+    borderRadius: '10@msr',
     flexWrap: 'wrap',
   },
   modalSelect: {
     width: SCREEN_WIDTH / 4,
     backgroundColor: '#3AACFF',
-    borderRadius: 10,
+    borderRadius: '10@msr',
     margin: '5@msr',
     padding: '10@msr',
   },
   modalText: {
-    fontSize: '14@mvs',
+    fontSize: '14@msr',
     color: 'white',
     textAlign: 'center',
   },

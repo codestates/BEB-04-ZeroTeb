@@ -50,7 +50,7 @@ const style = ScaledSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderWidth: 1,
     borderStyle: 'solid',
     borderColor: 'gray',

@@ -96,14 +96,6 @@ const SetDateAndTime = (props: any) => {
 }
 
 const style = ScaledSheet.create({
-  doubleInput: {
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: 'gray',
-    justifyContent: 'center',
-  },
   dateTimeCSS: {
     textAlign: 'center',
     fontSize: '20@msr',

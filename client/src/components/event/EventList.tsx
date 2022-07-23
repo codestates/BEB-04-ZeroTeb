@@ -75,12 +75,12 @@ const style = ScaledSheet.create({
   },
   eventInnerContainer: {
     marginHorizontal: SCREEN_WIDTH * 0.025,
-    marginTop: 10,
-    paddingVertical: 10,
+    marginTop: '10@msr',
+    paddingVertical: '10@msr',
     borderColor: 'lightgray',
     borderWidth: 1,
     width: SCREEN_WIDTH * 0.42,
-    borderRadius: 10,
+    borderRadius: '10@msr',
   },
   eventImgContainer: {
     alignItems: 'center',
@@ -92,17 +92,17 @@ const style = ScaledSheet.create({
     width: SCREEN_WIDTH * 0.38,
     height: '100@vs',
     resizeMode: 'cover',
-    borderRadius: 4,
+    borderRadius: '4@msr',
   },
   eventTitleContainer: {
-    marginTop: 10,
+    marginTop: '10@msr',
     flex: 1,
   },
   eventContentContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     flex: 2,
-    marginTop: 5,
+    marginTop: '5@msr',
   },
 })
 

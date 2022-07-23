@@ -7,7 +7,7 @@ import {
   Modal,
   Dimensions,
 } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -28,7 +28,11 @@ const SetSellTypeModal = (props: any) => {
       <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
-            <Text style={{ left: 20, fontSize: 20 }}>{props.list.type}</Text>
+            <Text
+              style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+            >
+              {props.list.type}
+            </Text>
           </View>
         </TouchableOpacity>
         <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
@@ -59,16 +63,16 @@ const SetSellTypeModal = (props: any) => {
 
 const style = ScaledSheet.create({
   enrollContentText: {
-    fontSize: '20@mvs',
+    fontSize: '20@msr',
     fontWeight: 'bold',
     color: '#333333',
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
+    minHeight: '25@msr',
+    maxHeight: '25@msr',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
     marginBottom: '10@msr',
@@ -84,16 +88,16 @@ const style = ScaledSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
+    borderRadius: '10@msr',
   },
   modalSelect: {
     width: SCREEN_WIDTH / 3,
     backgroundColor: '#3AACFF',
-    borderRadius: 10,
+    borderRadius: '10@msr',
     margin: '10@msr',
   },
   modalText: {
-    fontSize: '20@vs',
+    fontSize: '20@msr',
     color: 'white',
     textAlign: 'center',
     padding: '10@msr',

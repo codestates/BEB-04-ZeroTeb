@@ -1,6 +1,6 @@
 import React from 'react'
 import { Modal, View, Dimensions, Text } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { AntDesign } from '@expo/vector-icons'
 import InnerText from './InnerText'
 
@@ -31,7 +31,7 @@ const InfoModal = (props: Props) => {
             <View
               onTouchEnd={() => props.setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
             >
-              <AntDesign name="close" size={24} color="black" />
+              <AntDesign name="close" size={moderateScale(24)} color="black" />
             </View>
           </View>
           <Text></Text>

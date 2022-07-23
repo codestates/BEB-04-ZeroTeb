@@ -12,6 +12,7 @@ import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import axios, { AxiosRequestConfig } from 'axios'
 import { useNavigation } from '@react-navigation/native'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -100,37 +101,38 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
   )
 }
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   listTitle: {
-    marginTop: 5,
-    marginBottom: 10,
+    marginTop: '5@msr',
+    marginBottom: '10@msr',
+    fontSize: '17@msr',
     fontWeight: 'bold',
   },
   SearchListOuterContainer: {
-    marginTop: 5,
+    marginTop: '5@msr',
     alignSelf: 'center',
     maxWidth: SCREEN_WIDTH * 0.95,
   },
   SearchListInnerContainer: {
     borderTopWidth: StyleSheet.hairlineWidth,
-    padding: 2,
+    padding: '2@msr',
   },
   Wrapper: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 10,
-    height: SCREEN_HEIGHT * 0.18,
+    padding: '10@msr',
+    height: SCREEN_WIDTH * 0.3,
   },
   ImageWrapper: {
     width: SCREEN_WIDTH * 0.25,
     height: SCREEN_WIDTH * 0.25,
-    borderRadius: 50,
+    borderRadius: '500@msr',
     overflow: 'hidden',
     justifyContent: 'center',
     borderColor: 'lightgray',
     borderWidth: 1,
-    marginRight: 10,
+    marginRight: '10@msr',
   },
   consertImage: {
     width: SCREEN_WIDTH * 0.4,
@@ -147,19 +149,19 @@ const style = StyleSheet.create({
     alignItems: 'flex-end',
   },
   SearchListTitle: {
-    fontSize: 17,
+    fontSize: '17@msr',
     fontWeight: '800',
     textAlign: 'right',
     color: 'black',
   },
   SearchListSeat: {
-    fontSize: 13,
+    fontSize: '13@msr',
     alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
   },
   SearchListDate: {
-    fontSize: 11,
+    fontSize: '11@msr',
     alignItems: 'flex-end',
     textAlign: 'right',
     color: 'black',
@@ -167,12 +169,12 @@ const style = StyleSheet.create({
   checkBtn: {
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
-    height: 30,
+    width: '100@msr',
+    height: '30@msr',
     borderColor: 'gray',
     borderWidth: 1,
-    borderRadius: 12,
-    marginTop: 7,
+    borderRadius: '12@msr',
+    marginTop: '7@msr',
   },
 })
 

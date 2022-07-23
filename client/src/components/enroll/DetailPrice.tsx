@@ -124,7 +124,7 @@ const style = ScaledSheet.create({
     minHeight: '25@vs',
     maxHeight: '25@vs',
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
     marginBottom: '10@msr',

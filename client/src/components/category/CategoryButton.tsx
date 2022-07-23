@@ -6,7 +6,7 @@ import {
   Dimensions,
   Pressable,
 } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -24,7 +24,7 @@ export default function CategoryButton(prop: any) {
           source={{ uri: prop.contentURL }}
           resizeMode="cover"
           style={style.categoryImg}
-          imageStyle={{ borderRadius: 10 }}
+          imageStyle={{ borderRadius: moderateScale(10) }}
         >
           <Text style={style.categoryText}>{prop.contentTitle}</Text>
         </ImageBackground>
@@ -41,7 +41,7 @@ const style = ScaledSheet.create({
     elevation: 4, //갤럭시 boxshodow
     shadowColor: 'black', // ios boxshodow
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
+    shadowRadius: '6@msr',
     shadowOpacity: 0.25,
   },
   categoryButtonInnerContainer: {

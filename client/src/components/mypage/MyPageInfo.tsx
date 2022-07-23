@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import { UserType } from '../../models/User'
 
 const Data = ['지갑정보', '구매내역', '응모내역', '공지사항', '문의하기']
@@ -75,18 +76,18 @@ const MyPageInfo: React.FC<infoProps> = props => {
   )
 }
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   rootContainer: {
     flex: 1,
   },
   itemContainer: {
     width: '100%',
-    height: 60,
+    height: '60@msr',
     justifyContent: 'center',
     alignItems: 'center',
   },
   itemText: {
-    fontSize: 25,
+    fontSize: '25@msr',
   },
 })
 
