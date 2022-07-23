@@ -10,8 +10,7 @@ const LoadingImg = () => {
         style={{
           width: SCREEN_WIDTH,
           height: SCREEN_HEIGHT,
-          alignItems: 'center',
-          justifyContent: 'center',
+          paddingTop: SCREEN_WIDTH * 0.5,
           backgroundColor: 'white',
         }}
       >
