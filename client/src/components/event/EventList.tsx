@@ -95,12 +95,14 @@ const style = ScaledSheet.create({
     borderRadius: '4@msr',
   },
   eventTitleContainer: {
+    height: '50@msr',
     marginTop: '10@msr',
     flex: 1,
   },
   eventContentContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
+
     flex: 2,
     marginTop: '5@msr',
   },
