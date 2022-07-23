@@ -32,11 +32,13 @@ interface Props {
 }
 
 const MyPage: React.FC<Props> = ({ route }) => {
+  // test address 주소
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
   const dispatch = useDispatch()
-
+  
+  //사용자 정보
   const [myState, setMyState] = useState<UserType>({
     username: 'tt',
     profile_url: 'CCCCFF',
@@ -48,8 +50,10 @@ const MyPage: React.FC<Props> = ({ route }) => {
     },
     tokens: [{}],
   })
-
+  
+  // 사용자 정보 받아오기
   const getUserInfo = async () => {
+    console.log('kaddress:',KilpAddress);
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
@@ -57,14 +61,18 @@ const MyPage: React.FC<Props> = ({ route }) => {
         withCredentials: true,
       }
       const res = await axios(config)
-
-      setMyState(res.data)
-      dispatch(signinActions.setUsername(res.data.username))
+      if(res.data.message){
+        alert(res.data.message);
+      }else{
+        setMyState(res.data)
+        dispatch(signinActions.setUsername(res.data.username))
+      }      
     } catch (err) {
       alert(err)
     }
   }
 
+  // 페이지 로딩 시 사용자 정보 받아오기 호출
   useEffect(() => {
     getUserInfo()
   }, [])
@@ -106,17 +114,20 @@ const MyPage: React.FC<Props> = ({ route }) => {
     setHeaderHeight(height)
   }, [])
 
+  //탭 설정
   const onTabIndexChange = useCallback(id => {
     setTabIndex(id)
     tabIndexRef.current = id
   }, [])
 
+  //탭 누르면 바뀜 설정
   const onTabPress = useCallback(idx => {
     if (!isListGlidingRef.current) {
       setTabIndex(idx)
       tabIndexRef.current = idx
     }
   }, [])
+
 
   const syncScrollOffset = () => {
     const focusedTabKey = tabRoutes[tabIndexRef.current].key
@@ -164,6 +175,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
     syncScrollOffset()
   }, [headerHeight])
 
+  // 테이블 텝 렌더링
   const renderTabBar = useCallback(
     props => {
       return (
@@ -197,7 +209,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
     },
     [headerHeight],
   )
-
+  //텝 렌더링
   const renderScene = useCallback(
     ({ route }) => {
       const isFocused = route.key === tabRoutes[tabIndex].key
@@ -229,7 +241,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
     },
     [headerHeight, tabIndex],
   )
-
+  // 사용자 정보 렌더링
   return (
     <>
       {myState.username === 'tt' ? (
