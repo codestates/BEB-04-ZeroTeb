@@ -12,6 +12,7 @@ import InnerText from '../../components/common/InnerText'
 import axios, { AxiosRequestConfig } from 'axios'
 import {SvgXml} from 'react-native-svg';
 import { useNavigation } from '@react-navigation/native'
+import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 //props: UserType
@@ -82,10 +83,9 @@ const TicketDetail: React.FC<UserType> = props =>{
     )
 }
 
-
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     detailContainer:{
-        padding: 20,   
+        padding: '20@msr',   
         backgroundColor: 'white',
         flexDirection:'column',
         justifyContent: 'center',
@@ -94,10 +94,10 @@ const styles = StyleSheet.create({
         width: '100%',        
     },
     imgContainer:{
-        marginTop: 2,
-        borderWidth: 3,
+        marginTop: '2@msr',
+        borderWidth: '3@msr',
         borderColor: 'black',
-        borderRadius: 10,
+        borderRadius: '10@msr',
         overflow: 'hidden'
     },
     imgContent:{
@@ -107,20 +107,20 @@ const styles = StyleSheet.create({
         overflow: 'hidden'
     },
     titleContainer:{
-        margin: 10
+        margin: '10@msr'
     },
     qrContainer:{
-        marginTop: 8,
+        marginTop: '8@msr',
         flexDirection: 'row',
         borderColor: 'black',
-        borderRadius: 8,
-        borderWidth: 1,
+        borderRadius: '8@msr',
+        borderWidth: '1@msr',
         width: '70%',
         height: SCREEN_HEIGHT * 0.1        
     },
     qrSide:{
         width: '50%',
-        borderRightWidth: 1,
+        borderRightWidth: '1@msr',
         alignItems: 'center',
         justifyContent: 'center',        
     },
@@ -130,5 +130,54 @@ const styles = StyleSheet.create({
         justifyContent: 'center',  
     }
 })
+
+
+// const styles = StyleSheet.create({
+//     detailContainer:{
+//         padding: 20,   
+//         backgroundColor: 'white',
+//         flexDirection:'column',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         height: '100%',
+//         width: '100%',        
+//     },
+//     imgContainer:{
+//         marginTop: 2,
+//         borderWidth: 3,
+//         borderColor: 'black',
+//         borderRadius: 10,
+//         overflow: 'hidden'
+//     },
+//     imgContent:{
+//         justifyContent: 'center',
+//         width: SCREEN_WIDTH * 0.75,
+//         height: SCREEN_HEIGHT * 0.52,
+//         overflow: 'hidden'
+//     },
+//     titleContainer:{
+//         margin: 10
+//     },
+//     qrContainer:{
+//         marginTop: 8,
+//         flexDirection: 'row',
+//         borderColor: 'black',
+//         borderRadius: 8,
+//         borderWidth: 1,
+//         width: '70%',
+//         height: SCREEN_HEIGHT * 0.1        
+//     },
+//     qrSide:{
+//         width: '50%',
+//         borderRightWidth: 1,
+//         alignItems: 'center',
+//         justifyContent: 'center',        
+//     },
+//     textSide:{
+//         width: '50%',
+//         alignItems: 'center',
+//         justifyContent: 'center',  
+//     }
+// })
 
 export default TicketDetail;

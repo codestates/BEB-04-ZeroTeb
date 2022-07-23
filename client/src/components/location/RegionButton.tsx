@@ -1,5 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, Text, Pressable } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 
 interface Props {
   region: string
@@ -13,14 +14,14 @@ export default function RegionButton(prop: Props) {
     </Pressable>
   )
 }
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
   buttonContainer: {
-    marginHorizontal: 20,
-    marginVertical: 10,
+    marginHorizontal: '16@msr',
+    marginVertical: '10@msr',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 90,
-    height: 40,
+    width: '90@msr',
+    height: '40@vs',
     borderWidth: 1,
     borderRadius: 10,
     color: 'skyblue',

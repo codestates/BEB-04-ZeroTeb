@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Modal, StyleSheet, View, Dimensions, Text } from 'react-native'
+import { Modal, View, Dimensions, Text } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { regionActions } from '../../store/regionSlice'
 import RegionButton from './RegionButton'
+import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -50,9 +51,7 @@ const RegionSelectModal = (props: Props) => {
           style={styles.blankSpace}
           onTouchEnd={() => props.setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
         />
-        {props.body}
-      </View>
-      <View style={styles.selectSpace}>
+        <View style={styles.selectSpace}>
         <Text style={styles.regionTitle}>지역 선택</Text>
         <View style={styles.line}></View>
         <View style={styles.regionSpace}>
@@ -67,10 +66,14 @@ const RegionSelectModal = (props: Props) => {
           })}
         </View>
       </View>
+        {/* {props.body} */}
+      </View>
+      
     </Modal>
   )
 }
-const styles = StyleSheet.create({
+
+const styles = ScaledSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -85,19 +88,16 @@ const styles = StyleSheet.create({
   },
   selectSpace: {
     flexDirection: 'column',
-    position: 'absolute',
-    width: SCREEN_WIDTH * 0.8,
-    height: SCREEN_HEIGHT * 0.75,
+    width: '300@msr',
+    height: '590@msr',
     backgroundColor: 'white',
     borderRadius: 10,
-    right: SCREEN_WIDTH * 0.1,
-    bottom: SCREEN_HEIGHT * 0.125,
-    padding: 10,
+    padding: '6@msr',
   },
   regionTitle: {
-    marginTop: 15,
-    marginBottom: 5,
-    fontSize: 25,
+    marginTop: '15@msr',
+    marginBottom: '5@msr',
+    fontSize: '25@msr',
     alignSelf: 'center',
   },
   line: {
@@ -110,15 +110,10 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
     alignSelf: 'center',
-    marginTop: 5,
-    padding: 18,
-
-    // borderWidth: 1,
-    // borderStyle: 'solid',
-    // borderColor: 'lightgray',
-    // borderRadius: 10,
-    height: SCREEN_HEIGHT * 0.5,
-    width: 300,
-  },
+    paddingHorizontal: '18@msr',
+    paddingTop: '10@msr',
+    width: '280@msr',
+  }
 })
+
 export default RegionSelectModal

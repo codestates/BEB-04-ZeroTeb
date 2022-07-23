@@ -12,7 +12,7 @@ function CategoryListup({ route }) {
   const getListData = async () => {
     try {
       const result = await axios.get(
-        `http://server.beeimp.com:18080/event/list?page=1&count=5&category=${params}`,
+        `http://server.beeimp.com:18080/event/list?page=1&count=9999&category=${params}`,
       )
       if (result.data.message) {
         console.log(result.data.message)
