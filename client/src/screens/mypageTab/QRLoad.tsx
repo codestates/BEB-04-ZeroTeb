@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import InnerText from '../../components/common/InnerText'
 import {SvgXml} from 'react-native-svg';
+import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window')
 
@@ -29,32 +30,58 @@ const QRLoad: React.FC<Props> = ({route}) =>{
     )
 }
 
-
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     loadContainer:{
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
         height: SCREEN_HEIGHT,
-        paddingBottom: 100
+        paddingBottom: '100@msr'
         
     },
     qrContainer:{
-        padding: 15,
+        padding: '15@msr',
         borderColor: 'black',
-        borderWidth: 3,
+        borderWidth: '3@msr',
     },
     titleContainer:{
-        marginVertical: 20,
+        marginVertical: '20@msr',
         // backgroundColor: 'green',
         // borderColor:'red',
-        borderWidth: 2,
-        borderRadius: 10
+        borderWidth: '2@msr',
+        borderRadius: '10@msr'
     },
     textContainer:{
 
     },
 })
+
+// const styles2 = StyleSheet.create({
+//     loadContainer:{
+//         flexDirection: 'column',
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         backgroundColor: 'white',
+//         height: SCREEN_HEIGHT,
+//         paddingBottom: 100
+        
+//     },
+//     qrContainer:{
+//         padding: 15,
+//         borderColor: 'black',
+//         borderWidth: 3,
+//     },
+//     titleContainer:{
+//         marginVertical: 20,
+//         // backgroundColor: 'green',
+//         // borderColor:'red',
+//         borderWidth: 2,
+//         borderRadius: 10
+//     },
+//     textContainer:{
+
+//     },
+// })
 
 export default QRLoad;
