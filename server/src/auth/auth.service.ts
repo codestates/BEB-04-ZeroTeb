@@ -111,7 +111,7 @@ export class AuthService {
       if (userData === null) throw new Error();
       userInfoDto.username = userData.get('username');
       userInfoDto.profile_url = `#${address.slice(2, 8)}`;
-      userInfoDto.history.created = await this.EventModel.count({ test_address: address });
+      userInfoDto.history.created = await this.EventModel.count({ address: address });
       userInfoDto.history.entry = await this.EventModel.count({
         type: 'entry',
         test_address: address,
@@ -120,7 +120,7 @@ export class AuthService {
         type: 'sale',
         test_address: address,
       });
-      const likedList = await this.LikedEventModel.find({ test_address: address });
+      const likedList = await this.LikedEventModel.find({ address: address });
       const likedId = likedList.map((ele) => ele.event_id);
       userInfoDto.history.sale = await this.EventModel.count({ event_id: likedId });
       return userInfoDto;
