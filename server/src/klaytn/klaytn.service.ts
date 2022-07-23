@@ -109,6 +109,7 @@ export class KlaytnService {
     }
     price *= 0.05;
     price *= 10 ** 18;
+    // const user = await this.UserModel.findOne({ address: event.creator });
     const user = await this.UserModel.findOne({ test_address: event.creator });
     if (!this.caver.wallet.isExisted(user.test_address)) {
       this.singleKeyring(user.test_address, user.test_private_key);
@@ -225,7 +226,8 @@ export class KlaytnService {
       const isSelect = number !== undefined;
       number = isSelect ? number : 0;
 
-      const user = await this.UserModel.findOne({ address: buyerAddress });
+      // const user = await this.UserModel.findOne({ address: buyerAddress });
+      const user = await this.UserModel.findOne({ test_address: buyerAddress });
       if (!user) throw new Error('user is undefined.');
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
@@ -283,7 +285,8 @@ export class KlaytnService {
 
   async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
     try {
-      const user = await this.UserModel.findOne({ address: applicantAddress });
+      // const user = await this.UserModel.findOne({ address: applicantAddress });
+      const user = await this.UserModel.findOne({ test_address: applicantAddress });
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
         this.singleKeyring(user.test_address, user.test_private_key);
