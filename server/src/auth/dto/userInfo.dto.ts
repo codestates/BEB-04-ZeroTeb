@@ -10,7 +10,7 @@ export class UserInfoDto {
     created: number;
     entry: number;
     sale: number;
-    liked: number;
+    // liked: number;
   };
   tokens: TokenType[];
 
@@ -21,7 +21,7 @@ export class UserInfoDto {
       created: 0,
       entry: 0,
       sale: 0,
-      liked: 0,
+      // liked: 0,
     };
   }
 }
