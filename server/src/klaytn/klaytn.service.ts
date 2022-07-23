@@ -14,7 +14,7 @@ import {
   ContractBuyerType,
 } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x163b219C96Ab17ad400F232e78C29e1690F60256';
+  process.env.CONTRACT_ADDRESS || '0x33c76e6003c97270098D4fe54a634EBb057E1Fd5';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
@@ -171,7 +171,11 @@ export class KlaytnService {
     };
   }
 
-  async mintToken(eventId: number, tokenType: number): Promise<void> {
+  async getEventClassCount(eventId: number): Promise<number> {
+    return await this.contract.methods.getEventClassCount(eventId).call();
+  }
+
+  async mintToken(eventId: number, tokenType: number, token_image_uri): Promise<void> {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
         this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
@@ -180,25 +184,29 @@ export class KlaytnService {
 
       for (let classId = 0; classId < event.prices.length; classId++) {
         const price = event.prices[classId];
-        await setMyInterval(
-          async (i) => {
-            const metaData = {
-              title: event.name,
-              class: price.class,
-              number: i,
-            };
-            const name = `${metaData.title} class ${metaData.class} #${metaData.number}`;
-            console.log(name);
-            const tokenUri = await ipfsMetadataUpload(name, metaData);
+        for (let number = 0; number < price.count; number++) {
+          // 민팅되었는지 확인
+          const isMint = await this.contract.methods.isMint(eventId, classId, number).call();
+          if (isMint) continue;
 
-            await this.contract.methods.mintToken(eventId, tokenType, classId, i, tokenUri).send({
+          const metaData = {
+            title: event.name,
+            class: price.class,
+            number: number,
+            token_image_uri: token_image_uri,
+          };
+          const name = `${metaData.title} class ${metaData.class} #${metaData.number}`;
+          console.log(name);
+          const tokenUri = await ipfsMetadataUpload(name, metaData);
+
+          await this.contract.methods
+            .mintToken(eventId, tokenType, classId, number, tokenUri)
+            .send({
               from: OWNER_ADDRESS,
               gas: GAS,
             });
-          },
-          500,
-          price.count,
-        );
+        }
+        // await setMyInterval(async (i) => {}, 500, price.count);
       }
 
       console.log('민팅 완료!');
@@ -255,15 +263,20 @@ export class KlaytnService {
 
   async getTokenBuyers(eventId): Promise<ContractBuyerType[]> {
     const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+    // console.log(eventClassCount);
     const results = [];
     for (let eventClassId = 0; eventClassId < eventClassCount; eventClassId++) {
-      const receipt = await this.contract.methods.getTokenBuyers(eventId, eventClassId).call();
-      const buyers = receipt.owners.map((owner, index) => ({
-        id: index,
-        address: owner,
-        tokenId: Number(receipt.tokens[index]),
-      }));
-      results.push(buyers);
+      const { _onwerArray, _tokenIdArray } = await this.contract.methods
+        .getTokenBuyers(eventId, eventClassId)
+        .call();
+      for (let i = 0; i < _tokenIdArray.length; i++) {
+        const buyers = {
+          id: i,
+          address: _onwerArray[i],
+          tokenId: Number(_tokenIdArray[i]),
+        };
+        results.push(buyers);
+      }
     }
     return results;
   }
