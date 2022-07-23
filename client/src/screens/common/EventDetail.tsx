@@ -79,12 +79,18 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     if (KilpAddress === '') {
       navigation.navigate('SignIn', { gotoMyPage: false })
     } else {
-      setModalVisible(true)
+
+    setModalVisible(true)
+
     }
   }
 
   const getPayment = async () => {
     setModalVisible(false)
+
+    
+    console.log('이제 클립으로 결제 진행')
+
     // 구매 , 응모에 따라 다른 데이터를 보내줘야 한다.
     let url = ''
     let data = {}
@@ -118,6 +124,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     } catch (e) {
       console.log(e)
     }
+
   }
 
   return (
