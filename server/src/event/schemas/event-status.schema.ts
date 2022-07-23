@@ -5,7 +5,7 @@ export type EventStatusDocument = EventStatus & Document;
 
 @Schema()
 export class EventStatus {
-  @Prop({ type: mongoose.SchemaTypes.Number, required: true })
+  @Prop({ type: mongoose.SchemaTypes.Number, required: true, unique: true })
   event_id: number;
 
   @Prop({ type: mongoose.SchemaTypes.String, required: true })
