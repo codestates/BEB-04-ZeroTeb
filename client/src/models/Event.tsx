@@ -10,7 +10,7 @@ export interface EventType {
   type: string
   thumnail: string
   token_image_url: string
-  price: object[]
+  price: { class: string; price: number; count: number }[]
   contents: string
   option: []
   recruit_start_date: number
@@ -38,7 +38,7 @@ export interface EnrollType {
   type: string
   thumnail: string
   token_image_url: string
-  price: object[]
+  price: { class: string; price: number; count: number }[]
   contents: string
   option: object
   recruit_start_date: number

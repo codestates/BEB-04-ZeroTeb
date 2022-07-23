@@ -8,33 +8,24 @@ import {
   Pressable,
   GestureResponderEvent,
 } from 'react-native'
+import { ScaledSheet } from 'react-native-size-matters'
 import InnerText from '../../components/common/InnerText'
-import { EventType } from '../../models/Event'
-import { getDate, getDateAndTime } from '../../utils/unixTime'
-import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
 import Title from '../../components/common/Title'
-import MapLocation from '../../components/common/MapLocation'
-import SaleRefundPolicy from '../../components/event/SaleRefundPolicy'
-import EntryRefundPolicy from '../../components/event/EntryRefundPolicy'
-import EntryLotPolicy from '../../components/event/EntryLotPolicy'
-import EntryPrecaution from '../../components/event/EntryPrecaution'
+import CheckModal from '../../components/event/CheckModal'
+import EntryBottomContent from '../../components/event/EntryBottomContent'
+import SaleBottomContent from '../../components/event/SaleBottomContent'
+import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
+import { EventType } from '../../models/Event'
+import { getDate, getDateAndTime } from '../../utils/unixTime'
+import { profile_url } from '../../utils/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import CheckModal from '../../components/event/CheckModal'
-import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
-
-const radioButtonsData: RadioButtonProps[] = [
-  {
-    id: '',
-    label: '',
-    value: '',
-  },
-]
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const radioButtonsData: RadioButtonProps[] = [{}]
 interface eventDetailProps {
   eventDetail: EventType
 }
@@ -149,7 +140,11 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       </View>
       <Unserbar />
       <View style={style.promoterContainer}>
-        <AvatarIcon size={50} color={'lavender'} title={'TT'} />
+        <AvatarIcon
+          size={50}
+          color={profile_url(eventDetail.address)}
+          title={'TT'}
+        />
         <InnerText innerText={eventDetail.promoter} size={20} />
       </View>
       <Unserbar />
@@ -159,35 +154,9 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         <InnerText innerText={eventDetail.contents} size={15} />
       </View>
       {eventDetail.type === 'sale' ? (
-        <>
-          <Unserbar />
-          <Text></Text>
-          <Title title={'위치 및 장소'} size={20} />
-          <View style={style.eventContentContainer}>
-            <Text
-              style={{
-                marginHorizontal: moderateScale(10),
-                fontSize: moderateScale(15),
-                color: '#333333',
-              }}
-            >
-              {eventDetail.location}
-              {eventDetail?.sub_location}
-            </Text>
-            <MapLocation x={eventDetail.x} y={eventDetail.y} />
-          </View>
-          <Unserbar />
-          <SaleRefundPolicy />
-        </>
+        <SaleBottomContent eventDetail={eventDetail} />
       ) : (
-        <>
-          <Unserbar />
-          <EntryLotPolicy />
-          <Unserbar />
-          <EntryPrecaution />
-          <Unserbar />
-          <EntryRefundPolicy />
-        </>
+        <EntryBottomContent eventDetail={eventDetail} />
       )}
     </ScrollView>
   )

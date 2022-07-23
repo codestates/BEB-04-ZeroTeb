@@ -1,20 +1,13 @@
 import * as React from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-  TextInput,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { View, TextInput, Dimensions, TouchableOpacity } from 'react-native'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { AntDesign } from '@expo/vector-icons'
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 const DetailList = (props: any) => {
   // list={list} setList={setList} props.list
-  const propertiesHandler = (e: any, index: any, name: string) => {
+  const propertiesHandler = (e: any, index: number, name: string) => {
     props.setList({
       ...props.list,
       price: [
@@ -42,9 +35,9 @@ const DetailList = (props: any) => {
     })
   }
 
-  const removePropertiesHandler = (e: any, index: any) => {
+  const removePropertiesHandler = (e: any, index: number) => {
     const removeProperties = props.list.price.filter(
-      (item: any, itemIndex: any) => index !== itemIndex,
+      (item: any, itemIndex: number) => index !== itemIndex,
     )
     props.setList({
       ...props.list.price,
@@ -54,14 +47,14 @@ const DetailList = (props: any) => {
 
   return (
     <View>
-      {props.list.price.map((attribute: any, index: any) => {
+      {props.list.price.map((attribute: any, index: number) => {
         return (
           <View key={index} style={style.InputPriceWrapper}>
             <View style={style.InputPrice}>
               <TextInput
                 style={style.InputContent}
                 testID="class"
-                placeholder={'...class'}
+                placeholder={'class'}
                 onChangeText={e => {
                   propertiesHandler(e, index, 'class')
                 }}
@@ -72,7 +65,7 @@ const DetailList = (props: any) => {
               <TextInput
                 style={style.InputContent}
                 testID="price"
-                placeholder={'...price'}
+                placeholder={'price'}
                 keyboardType="number-pad"
                 onChangeText={e => {
                   propertiesHandler(e, index, 'price')
@@ -84,7 +77,7 @@ const DetailList = (props: any) => {
               <TextInput
                 style={style.InputContent}
                 testID="count"
-                placeholder={'...count'}
+                placeholder={'count'}
                 keyboardType="number-pad"
                 onChangeText={e => {
                   propertiesHandler(e, index, 'count')
@@ -93,22 +86,26 @@ const DetailList = (props: any) => {
               ></TextInput>
             </View>
             <TouchableOpacity
-              style={{ marginLeft: 10, marginTop: 5 }}
+              style={style.IconButton}
               onPress={e => {
                 removePropertiesHandler(e, index)
               }}
             >
-              <AntDesign name="minuscircle" size={24} color="black" />
+              <AntDesign
+                name="minuscircle"
+                size={moderateScale(24)}
+                color="black"
+              />
             </TouchableOpacity>
           </View>
         )
       })}
       <View>
         <TouchableOpacity
-          style={{ marginLeft: 20, marginBottom: 5 }}
+          style={style.IconButton}
           onPress={addPropertiesHandler}
         >
-          <AntDesign name="pluscircle" size={24} color="black" />
+          <AntDesign name="pluscircle" size={moderateScale(24)} color="black" />
         </TouchableOpacity>
       </View>
     </View>
@@ -117,21 +114,29 @@ const DetailList = (props: any) => {
 
 const style = ScaledSheet.create({
   InputPriceWrapper: {
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   InputPrice: {
-    marginLeft: '15@mvs',
-    marginTop: '5@mvs',
-    marginBottom: '10@mvs',
     width: SCREEN_WIDTH / 4,
-    height: '30@vs',
+    marginRight: '5@msr',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
+    marginBottom: '10@msr',
   },
   InputContent: {
     alignItems: 'center',
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: '20@msr',
+  },
+  IconButton: {
+    marginLeft: '7@msr',
+    marginTop: '5@msr',
   },
 })
 

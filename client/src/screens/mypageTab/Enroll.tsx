@@ -1,11 +1,10 @@
 import * as React from 'react'
 import axios from 'axios'
 import { RootState } from '../../store/Index'
-import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { ScaledSheet } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import {
   View,
-  StyleSheet,
   Text,
   TextInput,
   StatusBar,
@@ -29,11 +28,9 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
 
-interface Props {
-  props: any
-}
+interface Props {}
 
-const Enroll: React.FC<Props> = props => {
+const Enroll: React.FC<Props> = () => {
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
@@ -68,7 +65,6 @@ const Enroll: React.FC<Props> = props => {
   const [deposit, setDeposit] = useState<Number>(0)
 
   const pickImage = async (e: string) => {
-    // No permissions request is necessary for launching the image library
     const name = e
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -85,7 +81,7 @@ const Enroll: React.FC<Props> = props => {
   const onStart = () => {
     let money = 0
     {
-      list.price.map((value, index) => {
+      list.price.map(value => {
         money += Number(value.count)
       })
     }
@@ -97,38 +93,11 @@ const Enroll: React.FC<Props> = props => {
     // 조건문 달아서 axios POST
     console.log(list)
     await axios
-      .post(
-        ENROLL_URL,
-        {
-          title: '코드 스테이츠 디너 이벤트',
-          promoter: '이인수',
-          address: '0xf0a29e430d12065bfa9a5e0bc694f26accb151f4',
-          location: '경기',
-          sub_location: '아파트 6층 603호',
-          category: 'concert',
-          type: 'entry',
-          thumnail:
-            'https://images.unsplash.com/photo-1573055418049-c8e0b7e3403b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-          token_image_url: 'https://i.ibb.co/3vbbn8F/react-logo.png',
-          price: [
-            { class: 'A', price: 500, count: 100 },
-            { class: 'B', price: 300, count: 500 },
-          ],
-          contents: '든든한 국밥 한 그릇',
-          option: {},
-          recruit_start_date: 1657706400,
-          recruit_end_date: 1657706400,
-          event_start_date: 1657706400,
-          event_end_date: 1657706400,
-          created_date: 1657706400,
-          modified_date: 1657706400,
+      .post(ENROLL_URL, list, {
+        headers: {
+          Cookie: AccessToken,
         },
-        {
-          headers: {
-            Cookie: AccessToken,
-          },
-        },
-      )
+      })
       .then(res => {
         console.log(res.data)
       })
@@ -163,7 +132,7 @@ const Enroll: React.FC<Props> = props => {
                 <Text style={style.enrollContentText}>
                   이벤트 등록 및 마감 {value == 'date' ? '기간' : '시간'}
                 </Text>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={style.rowContentWrapper}>
                   <View style={style.DateTimeContent}>
                     <SetDateAndTime
                       setRecruitStart={setList}
@@ -172,7 +141,7 @@ const Enroll: React.FC<Props> = props => {
                       mode={value}
                     />
                   </View>
-                  <Text>~</Text>
+                  <Text> ~ </Text>
                   <View style={style.DateTimeContent}>
                     <SetDateAndTime
                       setRecruitEnd={setList}
@@ -193,7 +162,7 @@ const Enroll: React.FC<Props> = props => {
                 <Text style={style.enrollContentText}>
                   이벤트 시작 및 종료 {value == 'date' ? '기간' : '시간'}
                 </Text>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={style.rowContentWrapper}>
                   <View style={style.DateTimeContent}>
                     <SetDateAndTime
                       setEventStart={setList}
@@ -202,7 +171,7 @@ const Enroll: React.FC<Props> = props => {
                       mode={value}
                     />
                   </View>
-                  <Text>~</Text>
+                  <Text> ~ </Text>
                   <View style={style.DateTimeContent}>
                     <SetDateAndTime
                       setEventEnd={setList}
@@ -223,12 +192,12 @@ const Enroll: React.FC<Props> = props => {
           <SetSellTypeModal list={list} setList={setList} />
           <View>
             <Text style={style.enrollContentText}>가격</Text>
-            <View style={style.priceWrapper}>
+            <View style={style.rowContentWrapper}>
               {/* 가격 (3개의 칸) */}
               {list.type === 'sale' ? (
                 <DetailPrice list={list} setList={setList} />
               ) : (
-                <View style={{ flexDirection: 'row' }}>
+                <View style={style.rowContentWrapper}>
                   <View style={style.InputPrice}>
                     <Text style={{ fontSize: 20, textAlign: 'center' }}>
                       {list.price[0].class}
@@ -238,7 +207,7 @@ const Enroll: React.FC<Props> = props => {
                     <TextInput
                       style={{ fontSize: 20, textAlign: 'center' }}
                       testID="price"
-                      placeholder={'...price'}
+                      placeholder={'price'}
                       keyboardType="number-pad"
                       onChangeText={(e: any) => {
                         setList({
@@ -246,14 +215,14 @@ const Enroll: React.FC<Props> = props => {
                           price: [{ ...list.price[0], ['price']: e }],
                         })
                       }}
-                      value={list.price[0].price}
+                      value={String(list.price[0].price)}
                     ></TextInput>
                   </View>
                   <View style={style.InputPrice}>
                     <TextInput
                       style={{ fontSize: 20, textAlign: 'center' }}
                       testID="count"
-                      placeholder={'...count'}
+                      placeholder={'count'}
                       keyboardType="number-pad"
                       onChangeText={(e: any) => {
                         setList({
@@ -261,7 +230,7 @@ const Enroll: React.FC<Props> = props => {
                           price: [{ ...list.price[0], ['count']: e }],
                         })
                       }}
-                      value={list.price[0].count}
+                      value={String(list.price[0].count)}
                     ></TextInput>
                   </View>
                 </View>
@@ -296,7 +265,7 @@ const Enroll: React.FC<Props> = props => {
           </View>
           {/* 썸네일 이미지 */}
           <View>
-            <Text style={style.enrollContentText}>썸네일 이미지</Text>
+            <Text style={style.enrollContentText}>대표 이미지</Text>
             <TouchableOpacity onPress={() => pickImage('thumnail')}>
               <View style={style.enrollInputLarge}>
                 <Image
@@ -332,7 +301,9 @@ const Enroll: React.FC<Props> = props => {
 
       {/* 등록 버튼 */}
       <TouchableOpacity onPress={onStart}>
-        <Text style={style.enrollSubmmit}>등록</Text>
+        <View style={style.enrollSubmmitButtonContainer}>
+          <Text style={style.enrollSubmmitButton}>등록</Text>
+        </View>
       </TouchableOpacity>
       <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
         <View style={style.modalContainer}>
@@ -370,81 +341,78 @@ const style = ScaledSheet.create({
   enrollContainer: {
     flex: 1,
     backgroundColor: 'white',
+    padding: '20@msr',
   },
   enrollTitle: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: STATUSBAR_HEIGHT,
-    marginBottom: STATUSBAR_HEIGHT,
+    marginVertical: '25@msr',
   },
   enrollTitleText: {
-    textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: '30@msr',
   },
   enrollContentText: {
-    left: '20@mvs',
     fontSize: '20@mvs',
     fontWeight: 'bold',
+    color: '#333333',
+    paddingVertical: '5@msr',
   },
   DateTimeContent: {
-    marginLeft: '12@mvs',
-    marginRight: '12@mvs',
-    marginTop: '5@vs',
-    marginBottom: '10@vs',
     width: SCREEN_WIDTH / 2 - 30,
-    maxHeight: '30@vs',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
   },
   InputPrice: {
-    marginLeft: '20@mvs',
-    marginRight: '10@mvs',
-    marginTop: '10@mvs',
-    marginBottom: '10@mvs',
-    width: SCREEN_WIDTH / 4,
-    height: '30@vs',
+    width: SCREEN_WIDTH / 3.5,
+    marginRight: '5@msr',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
   },
 
   enrollInput: {
-    marginLeft: '15@mvs',
-    marginRight: '15@mvs',
-    marginTop: '5@mvs',
-    marginBottom: '10@mvs',
-    maxHeight: '30@vs',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
+    marginBottom: '10@msr',
   },
   enrollInputLarge: {
-    marginLeft: '15@mvs',
-    marginRight: '15@mvs',
-    marginTop: '5@mvs',
-    marginBottom: '10@mvs',
     maxWidth: SCREEN_WIDTH - 30,
+    padding: '10@msr',
     height: '200@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    marginBottom: '10@msr',
   },
-  priceWrapper: {
+  rowContentWrapper: {
     flex: 1,
     flexDirection: 'row',
+    marginBottom: '10@msr',
+    justifyContent: 'space-between',
   },
-  enrollSubmmit: {
-    width: SCREEN_WIDTH - 30,
-    height: STATUSBAR_HEIGHT,
-    marginLeft: '15@mvs',
-    marginTop: '10@mvs',
-    marginBottom: '10@mvs',
-    textAlign: 'center',
+  enrollSubmmitButtonContainer: {
+    marginTop: 20,
+    justifyContent: 'center',
     alignItems: 'center',
+    height: STATUSBAR_HEIGHT,
     borderRadius: 10,
+    backgroundColor: '#3AACFF',
+  },
+  enrollSubmmitButton: {
     fontSize: '20@mvs',
     fontWeight: 'bold',
     color: 'white',
-    backgroundColor: '#3AACFF',
   },
   modalContainer: {
     flex: 1,

@@ -37,7 +37,7 @@ const SaleRefundPolicy: React.FC<saleRefundPolicyProps> = () => {
         <InnerText innerText={'이벤트 취소 시 환불 금액 안내'} size={15} />
         <InnerText
           innerText={
-            ' - tt 에서는 기획자의 이벤트 취소 및 계약 위반 시 티켓금액의 103%를 환불해드립니다.'
+            ' - TT 에서는 기획자의 이벤트 취소 및 계약 위반 시 티켓금액의 103%를 환불해드립니다.'
           }
           size={15}
         />

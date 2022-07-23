@@ -32,7 +32,7 @@ const ConcertTypesModal = (props: any) => {
   return (
     <View>
       <Text style={style.enrollContentText}>이벤트 종류</Text>
-      <View style={style.modalWrapper}>
+      <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
             <Text style={{ left: 20, fontSize: 20 }}>
@@ -67,30 +67,28 @@ const ConcertTypesModal = (props: any) => {
 }
 
 const style = ScaledSheet.create({
-  modalWrapper: {},
   enrollContentText: {
-    left: '20@mvs',
     fontSize: '20@mvs',
     fontWeight: 'bold',
+    color: '#333333',
+    paddingVertical: '5@msr',
   },
   enrollInput: {
-    marginLeft: '15@mvs',
-    marginRight: '15@mvs',
-    marginTop: '5@mvs',
-    marginBottom: '10@mvs',
-    maxHeight: '30@vs',
+    minHeight: '25@vs',
+    maxHeight: '25@vs',
     borderWidth: 1,
     borderRadius: 10,
+    borderColor: 'gray',
+    justifyContent: 'center',
+    marginBottom: '10@msr',
   },
   modalContainer: {
     flex: 1,
-
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalSelectBody: {
-    overflow: 'scroll',
-    width: SCREEN_WIDTH / 2,
+    width: SCREEN_WIDTH * 0.7,
     height: SCREEN_HEIGHT / 2,
     backgroundColor: 'white',
     justifyContent: 'center',
@@ -98,16 +96,16 @@ const style = ScaledSheet.create({
     borderRadius: 10,
   },
   modalSelect: {
-    width: SCREEN_WIDTH / 3,
+    width: SCREEN_WIDTH * 0.5,
     backgroundColor: '#3AACFF',
     borderRadius: 10,
-    borderWidth: 0.5,
-    margin: 5,
+    margin: '10@msr',
   },
   modalText: {
-    fontSize: 20,
+    fontSize: '20@vs',
     color: 'white',
     textAlign: 'center',
+    padding: '5@msr',
   },
   blankSpace: {
     position: 'absolute',
