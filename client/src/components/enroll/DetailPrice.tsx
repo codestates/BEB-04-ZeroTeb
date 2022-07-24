@@ -63,31 +63,32 @@ const DetailList = (props: Props) => {
           attribute: { class: string; price: number; count: number },
           index: number,
         ) => {
-          return (
-            <View key={index} style={style.InputPriceWrapper}>
-              <View style={style.InputPrice}>
-                <TextInput
-                  style={style.InputContent}
-                  testID="class"
-                  placeholder={'class'}
-                  onChangeText={e => {
-                    propertiesHandler(e, index, 'class')
-                  }}
-                  value={attribute.class}
-                ></TextInput>
-              </View>
-              <View style={style.InputPrice}>
-                <TextInput
-                  style={style.InputContent}
-                  testID="price"
-                  placeholder={'price'}
-                  keyboardType="number-pad"
-                  onChangeText={e => {
-                    propertiesHandler(e, index, 'price')
-                  }}
+        return (
+          <View>
+          <View key={index} style={style.InputPriceWrapper}>
+            <View style={style.InputPrice}>
+              <TextInput
+                style={style.InputContent}
+                testID="class"
+                placeholder={'class'}
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'class')
+                }}
+                value={attribute.class}
+              ></TextInput>
+            </View>
+            <View style={style.InputPrice}>
+              <TextInput
+                style={style.InputContent}
+                testID="price"
+                placeholder={'price'}
+                keyboardType="number-pad"
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'price')
+                }}
                   value={attribute.price.toString()}
-                ></TextInput>
-              </View>
+              ></TextInput>
+            </View>
               <View style={style.InputPrice}>
                 <TextInput
                   style={style.InputContent}

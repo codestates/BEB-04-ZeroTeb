@@ -113,25 +113,29 @@ const Enroll: React.FC<Props> = () => {
     // 조건문 달아서 axios POST
     try{
       console.log('이벤트 등록 중~~~');
-      const result = await axios
+       await axios
         .post(ENROLL_URL, list, {
           headers: {
             Cookie: AccessToken,
           },
         })
-        .then(res => {
-          console.log(res.data)        
+        .then((res) => {
+          console.log('res:',res) 
+          // return res
         })
-      console.log(result);
-      // if(result.message){
-      //   console.log('이벤트 등록 실패ㅠㅠ')
-      //   alert('이벤트 등록 실패ㅠㅠ')
-      // }else{
-      //   console.log('이벤트 등록 성공!!')
-      //   alert('이벤트 등록 성공!!')     
-      //   navigation.goBack() //마이 페이지로 돌아감 
-      // }    
+        // .then((res)=>{
+        //   if(res){
+        //     console.log('이벤트 등록 실패ㅠㅠ')
+        //     alert('이벤트 등록 실패ㅠㅠ')
+        //   }
+        //   else{
+        //     console.log('이벤트 등록 성공!!')
+        //     alert('이벤트 등록 성공!!')     
+            
+        //   }
+        // })
       setModalVisible(false)
+      navigation.goBack() //마이 페이지로 돌아감 
     }catch(e){
       console.log('이벤트 등록 중 에러 발생')
       console.log(e)
