@@ -35,7 +35,7 @@ export type MyPageStackParamList = {
     token_image_url?: string
   }
   QRLoad: { qrcodeXML: any }
-  QRread: undefined
+  QRread: { event_id: any }
   Enroll: undefined
   MyList: { type: string }
   Notice: undefined

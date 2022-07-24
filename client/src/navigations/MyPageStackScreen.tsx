@@ -21,11 +21,7 @@ export default function MyPageStackScreen() {
 
   return (
     <MyPageStack.Navigator>
-      <MyPageStack.Screen
-        name="Enroll"
-        component={Enroll}
-        options={{ headerTitle: '' }}
-      />
+      
       {KilpAddress ? (
         <MyPageStack.Screen
           name="MyPage"
@@ -60,6 +56,11 @@ export default function MyPageStackScreen() {
       <MyPageStack.Screen
         name="TicketDetail"
         component={TicketDetail}
+        options={{ headerTitle: '' }}
+      />
+      <MyPageStack.Screen
+        name="Enroll"
+        component={Enroll}
         options={{ headerTitle: '' }}
       />
       <MyPageStack.Screen

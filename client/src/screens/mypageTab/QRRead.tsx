@@ -3,9 +3,11 @@ import { View, StyleSheet, Text, Button } from 'react-native'
 import axios, { AxiosRequestConfig } from 'axios'
 import { BarCodeScanner } from 'expo-barcode-scanner'
 
-const QRread = () => {
-  const [hasPermission, setHasPermission] = useState(null)
-  const [scanned, setScanned] = useState(false)
+
+const QRread = ({route}) =>{
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  console.log('event_id:',route.params.event_id);
 
   useEffect(() => {
     ;(async () => {
@@ -15,9 +17,12 @@ const QRread = () => {
   }, [])
 
   const handleBarCodeScanned = async ({ type, data }) => {
-    setScanned(true)
+
+    setScanned(true);
     const value = data.split(' ')
-    const params = { nonce: value[2] }
+    console.log(value);
+    const params = { nonce: value[2], event_id: route.params.event_id};
+
     try {
       const config: AxiosRequestConfig = {
         method: 'post',
