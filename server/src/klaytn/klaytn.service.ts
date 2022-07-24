@@ -4,14 +4,10 @@ import Caver, { AbiItem, Contract, KeyringContainer } from 'caver-js';
 import { ipfsMetadataUpload } from 'lib/pinata';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
-import {
-  ContractEventDto,
-  ContracCreateEventkDto,
-  ContractEventClassType,
-  ContractBuyerType,
-} from './klaytn.entity';
+import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from './klaytn.entity';
 const CONTRACT_ADDRESS =
   process.env.CONTRACT_ADDRESS || '0x58B279B626bb87434FF6BED41B20913eBf85E1D2';
 const GAS = '10000000';
@@ -274,7 +270,7 @@ export class KlaytnService {
   }
 
   // 토큰 구매자 조회
-  async getTokenBuyers(eventId: number): Promise<ContractBuyerType[]> {
+  async getTokenHolders(eventId: number): Promise<HoldingType[]> {
     const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
     // console.log(eventClassCount);
     const results = [];
