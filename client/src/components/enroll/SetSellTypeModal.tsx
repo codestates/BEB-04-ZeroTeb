@@ -7,6 +7,7 @@ import {
   Modal,
   Dimensions,
 } from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')

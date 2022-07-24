@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
 } from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -51,11 +52,21 @@ const PlaceModal = (props: any) => {
       <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
-            <Text
-              style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
-            >
-              {props.list.location}
-            </Text>
+            {props.list.location === '' ? (
+              <View style={{ left: moderateScale(10) }}>
+                <AntDesign
+                  name="pluscircle"
+                  size={moderateScale(18)}
+                  color="black"
+                />
+              </View>
+            ) : (
+              <Text
+                style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
+              >
+                {props.list.location}
+              </Text>
+            )}
           </View>
         </TouchableOpacity>
         <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
@@ -114,7 +125,7 @@ const style = ScaledSheet.create({
   },
   modalSelectBody: {
     width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_HEIGHT *0.6,
+    height: SCREEN_HEIGHT * 0.6,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignContent: 'center',
@@ -123,7 +134,7 @@ const style = ScaledSheet.create({
   },
   modalSelect: {
     width: SCREEN_WIDTH / 4,
-    height: SCREEN_HEIGHT *0.055,
+    height: SCREEN_HEIGHT * 0.055,
     backgroundColor: '#3AACFF',
     borderRadius: '10@msr',
     margin: '5@msr',
