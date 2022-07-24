@@ -358,7 +358,11 @@ export class EventService {
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
         // await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
-        createdEvent[i].$set({ status: 'minted' });
+        await createdEvent[i].$set({ status: 'minted' }).save();
+        await this.EventModel.updateOne(
+          { event_id: eventId },
+          { $set: { status: 'minted' } },
+        ).exec();
       }
     } catch (error) {
       console.error(error);
