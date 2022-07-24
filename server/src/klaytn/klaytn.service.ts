@@ -360,16 +360,6 @@ export class KlaytnService {
   }
 
   async test() {
-    // console.log('Event Test :');
-    // await this.contract.events
-    //   .allEvents()
-    //   .on('connected', function (subscriptionId) {
-    //     console.log(subscriptionId);
-    //   })
-    //   .on('data', function (event) {
-    //     console.log(111);
-    //     console.log(event); // same results as the optional callback above
-    //   })
-    //   .on('error', console.error);
+    // this.getTokenHolders(0).then(console.log);
   }
 }
