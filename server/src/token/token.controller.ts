@@ -19,8 +19,8 @@ export class TokenController {
   }
 
   @Post('qrcode/validation')
-  checkValidation(@Body() nonce: string) {
-    return this.tokenService.checkValidation(nonce);
+  checkValidation(@Body() nonce: string, @Body() event_id: number) {
+    return this.tokenService.checkValidation(nonce, event_id);
   }
 
   @UseGuards(AuthGuard)
