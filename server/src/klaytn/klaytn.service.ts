@@ -99,10 +99,17 @@ export class KlaytnService {
       event.endTime,
     ];
     let price = 0;
-    for (let i = 0; i < event.classPrices.length; i++) {
-      price += event.classPrices[i] * event.classCounts[i];
+    if (event.eventType === 0) {
+      for (let i = 0; i < event.classPrices.length; i++) {
+        price += event.classPrices[i] * event.classCounts[i];
+      }
+      price *= 0.05;
+    } else if (event.eventType === 1) {
+      for (let i = 0; i < event.classPrices.length; i++) {
+        price += 5 * event.classCounts[i];
+      }
+      price *= 0.05;
     }
-    price *= 0.05;
     price *= 10 ** 18;
     // const user = await this.UserModel.findOne({ address: event.creator });
     const user = await this.UserModel.findOne({ test_address: event.creator });
