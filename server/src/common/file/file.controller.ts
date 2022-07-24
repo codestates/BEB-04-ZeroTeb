@@ -24,7 +24,7 @@ export class FileController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   create(@UploadedFile() file) {
-    const path = file.path.replace(BASE_FILE_PATH, '');
+    const path = file.path.replace(`${BASE_FILE_PATH}/`, '');
 
     // 원본파일명과 저장된 파일명을 리턴해서 다운로드 받을때 씀
     return {

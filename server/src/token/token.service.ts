@@ -4,17 +4,21 @@ import { Model } from 'mongoose';
 import { Nonce } from './schemas/token.schema';
 import axios from 'axios';
 import 'dotenv/config';
-import { Holding } from './schemas/holding.schema';
 import { Cron } from '@nestjs/schedule';
 import { KlaytnService } from 'src/klaytn/klaytn.service';
 import { BuyTokenDto } from './dto/buy-token.dto';
 import { EntryTokenDto } from './dto/entry-token.dto';
+import { EventStatus, EventStatusDocument } from 'src/event/schemas/event-status.schema';
+import { HoldingType } from './schemas/holding.schema';
+import { Participant, ParticipantDocument } from './schemas/participant.schema';
 
 @Injectable()
 export class TokenService {
   constructor(
     @InjectModel('Nonce') private readonly NonceModel: Model<Nonce>,
-    @InjectModel('Holding') private readonly HoldingModel: Model<Holding>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
+    @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
+    @InjectModel(Participant.name) private readonly ParticipantModel: Model<ParticipantDocument>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -176,9 +180,9 @@ export class TokenService {
   }
 
   // 토큰 구매자 조회
-  async getTokenBuyers(eventId: number) {
+  async getTokenHolders(eventId: number) {
     try {
-      return await this.klaytnService.getTokenBuyers(eventId);
+      return await this.klaytnService.getTokenHolders(eventId);
     } catch (error) {
       console.error(error);
     }
@@ -199,10 +203,41 @@ export class TokenService {
   }
 
   // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  @Cron('*/10 * * * * *')
+  @Cron('0,30 * * * * *')
   async getHoldingData() {
     console.log('address에 따른 토큰 정보 받기');
-    // await this.klaytnService.mintToken(2, 0);
-    // console.log(await this.klaytnService.getEvent(1));
+    // 'selling'
+    const sellingEventStatus = await this.EventStatusModel.find({ status: 'selling' }).exec();
+    for (let i = 0; i < sellingEventStatus.length; i++) {
+      const eventId = sellingEventStatus[i].get('event_id');
+      const eventTokenBuyers = await this.klaytnService.getTokenHolders(eventId);
+      for (let j = 0; j < eventTokenBuyers.length; j++) {
+        const holder = await this.HoldingModel.findById(eventTokenBuyers[j].token_id).exec();
+        if (holder === null) {
+          const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
+          newHolder.save();
+        } else {
+          holder.$set('address', eventTokenBuyers[j].address);
+        }
+      }
+    }
+    // 'applying'
+    const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
+    for (let i = 0; i < applyingEventStatus.length; i++) {
+      const eventId = applyingEventStatus[i].get('event_id');
+      const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
+      const eventParticipantsCount = await this.ParticipantModel.find({
+        event_id: eventId,
+      })
+        .count()
+        .exec();
+      const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
+        event_id: eventId,
+        address,
+      }));
+      const addParticipants = new this.ParticipantModel(participantSchemas);
+      await addParticipants.save();
+    }
+    // 'end' - 이벤트 종료 후 토큰 거래
   }
 }

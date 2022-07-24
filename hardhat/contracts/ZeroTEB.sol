@@ -12,6 +12,17 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     Counters.Counter private _eventIds;
     Counters.Counter private _tokenIds;
 
+    event CreateEvent(uint256 _eventId, uint256 _deposit);
+    event BuyToken(
+        uint256 _eventId,
+        uint256 _classId,
+        uint256 _number,
+        address _buyer,
+        uint256 _tokenId
+    );
+    event ApplyToken(uint256 _eventId, address[] _participants);
+    event EndEvent(uint256 _eventId, uint8 _eventEndStatus);
+
     // 이벤트 클래스 구조체
     struct EventClass {
         string name;
@@ -94,6 +105,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventIds.current();
     }
 
+    function totalToken() public view returns (uint256) {
+        return _tokenIds.current();
+    }
+
     function eventType(uint256 _eventId) public view returns (uint8) {
         return _events[_eventId].eventType;
     }
@@ -135,8 +150,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _startTime,
         uint256 _endTime
     ) public payable override returns (uint256 _eventId) {
-        _eventIds.increment();
-
         uint256 _total = 0;
         uint256 _deposit = 0;
         for (uint256 i = 0; i < _classPrices.length; i++) {
@@ -178,6 +191,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _amounts[_newEventId] = 0;
         // 반환
         _eventId = _newEventId;
+
+        emit CreateEvent(_eventId, _deposit);
+        _eventIds.increment();
     }
 
     // 이벤트 조회
@@ -222,8 +238,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _number,
         string memory _tokenUri
     ) public override onlyOwner returns (uint256) {
-        _tokenIds.increment();
-
         uint256 _newTokenId = _tokenIds.current();
         _safeMint(msg.sender, _newTokenId);
         _setTokenURI(_newTokenId, _tokenUri);
@@ -265,6 +279,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         );
 
         uint256 _tokenId;
+        uint256 number_ = _number;
 
         // 자리를 선택하는 경우
         if (_isSelect) {
@@ -278,6 +293,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             ) {
                 _tokenId = _events[_eventId].class[_classId].tokens[i];
                 if (_tokenExtentions[_tokenId].isTrade) {
+                    number_ = i;
                     break;
                 }
             }
@@ -292,6 +308,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _tokenExtentions[_tokenId].isTrade = false;
         _events[_eventId].class[_classId].ownerTotal += 1;
         _amounts[_eventId] += msg.value;
+
+        emit BuyToken(_eventId, _classId, number_, msg.sender, _tokenId);
+        _tokenIds.increment();
     }
 
     // 토큰 구매자 조회
@@ -333,6 +352,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         }
         _eventParticipants[_eventId].push(msg.sender);
         _amounts[_eventId] += msg.value;
+        emit ApplyToken(_eventId, _eventParticipants[_eventId]);
     }
 
     // 이벤트 응모자 조회
@@ -418,12 +438,14 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     {
         uint256 _deposit = _deposits[_eventId];
         uint256 _compensation; // 실패 시 사용자 보상
+        address _owner = owner();
 
         // 이벤트가 성공적으로 이루어진 경우
         if (_eventEndStatus == 1) {
             payable(_events[_eventId].creator).transfer(
                 _amounts[_eventId] + _deposit
             );
+            _deposits[_eventId] = 0;
 
             // 이벤트가 실패한 경우
         } else if (_eventEndStatus == 0) {
@@ -450,6 +472,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
                                     _events[_eventId].class[i].price +
                                         _compensation
                                 );
+                            _deposits[_eventId] -= _compensation;
                         }
                     }
                 }
@@ -467,6 +490,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
                 }
             }
         }
+        payable(_owner).transfer(_deposits[_eventId]);
+        emit EndEvent(_eventId, _eventEndStatus);
     }
 
     /**

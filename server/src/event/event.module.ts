@@ -7,9 +7,9 @@ import { EventResultSchema } from './schemas/eventResult.schema';
 import { LikedEventSchema } from './schemas/likedEvent.schema';
 import { ScheduleModule } from '@nestjs/schedule';
 import { User, UserSchema } from 'src/auth/schemas/user.schema';
-import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from 'src/auth/auth.module';
 import { EventStatus, EventStatusSchema } from './schemas/event-status.schema';
+import { HoldingSchema } from 'src/token/schemas/holding.schema';
 
 @Module({
   imports: [
@@ -20,6 +20,7 @@ import { EventStatus, EventStatusSchema } from './schemas/event-status.schema';
       { name: 'LikedEvent', schema: LikedEventSchema },
       { name: User.name, schema: UserSchema },
       { name: EventStatus.name, schema: EventStatusSchema },
+      { name: 'Holding', schema: HoldingSchema },
     ]),
     ScheduleModule.forRoot(),
   ],
