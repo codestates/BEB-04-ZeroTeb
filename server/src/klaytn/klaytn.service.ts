@@ -268,7 +268,6 @@ export class KlaytnService {
           gas: GAS,
           value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
         });
-
       return false;
     } catch (err) {
       console.error(err);
@@ -315,10 +314,10 @@ export class KlaytnService {
         value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
       });
 
-      return true;
+      return false;
     } catch (err) {
       console.error(err);
-      return false;
+      return true;
     }
   }
 
