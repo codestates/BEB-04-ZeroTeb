@@ -155,8 +155,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
             <InnerText innerText={'응모기간 : '} size={15} />
             <InnerText
               innerText={`${getDateAndTime(
-                eventDetail.event_start_date,
-              )} ~ ${getDateAndTime(eventDetail.event_end_date)}`}
+                eventDetail.recruit_start_date,
+              )} ~ ${getDateAndTime(eventDetail.recruit_end_date)}`}
               size={15}
             />
           </View>

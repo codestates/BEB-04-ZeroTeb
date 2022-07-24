@@ -24,6 +24,7 @@ import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
 import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
+import FormData from 'form-data'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
@@ -32,9 +33,10 @@ const titleTextSize = 20;
 const inputBoxHeight = 30;
 const inputTextSize = 14;
 const inputLeft = 10;
-interface Props {}
 
-const Enroll: React.FC<Props> = () => {
+
+const Enroll = () => {
+  const [deposit, setDeposit] = useState<Number>(0)
   const navigation = useNavigation()
   // 지갑 주소
   const KilpAddress = useSelector(
@@ -71,25 +73,31 @@ const Enroll: React.FC<Props> = () => {
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
   })
-  const [deposit, setDeposit] = useState<Number>(0)
+  
 
   //썸네일, 토큰 이미지 선택
   const pickImage = async (e: string) => {
     console.log('이미지 선택')
+    
     const name = e
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     })
+    console.log('===========',result)
     if (!result.cancelled) {
-      if (name === 'token_image_url')
+      if (name === 'token_image_url'){
         setList({ ...list, token_image_url: result.uri })
-      else setList({ ...list, thumnail: result.uri })
+      }
+      else {
+        setList({ ...list, thumnail: result.uri })
+      }
     }
   }
   // 등록 이벤트 응모: 티켓당 count*5, 판매 price*count*0.05
+  
   const onStart = () => {
     console.log('onstart')
     let money = 0 // 보증금
@@ -108,10 +116,41 @@ const Enroll: React.FC<Props> = () => {
     setModalVisible(true)
   }
 
+
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
+    const filename = list.thumnail.split('/').pop();
+    const formData = new FormData();
+    formData.append('file', {uri: list.thumnail, name: filename, type: 'image/jpg'})
+    const filename2 = list.token_image_url.split('/').pop();
+    const formData2 = new FormData();
+    formData2.append('file', {uri: list.token_image_url, name: filename2, type: 'image/jpg'})
+    console.log('=============',formData);
     // 조건문 달아서 axios POST
     try{
+      console.log('썸네일 이미지 업로드 중~~~');
+      const thumRes = await axios
+      .post(`http://server.beeimp.com:18080/file`, formData, {
+        headers: {
+          'content-type': 'multipart/form-data',        
+        },
+        withCredentials: true
+      })
+      .then((res) => {
+        return res.data.savedPath
+      })
+      console.log('토큰 이미지 업로드 중~~~');
+      const tokenImgRes = await axios
+      .post(`http://server.beeimp.com:18080/file`, formData2, {
+        headers: {
+          'content-type': 'multipart/form-data',        
+        },
+        withCredentials: true
+      })
+      .then((res) => {
+        return res.data.savedPath
+      })
+      setList({...list, thumnail: `http://server.beeimp.com:18080/${thumRes}`, token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`});
       console.log('이벤트 등록 중~~~');
        await axios
         .post(ENROLL_URL, list, {
@@ -121,19 +160,7 @@ const Enroll: React.FC<Props> = () => {
         })
         .then((res) => {
           console.log('res:',res) 
-          // return res
         })
-        // .then((res)=>{
-        //   if(res){
-        //     console.log('이벤트 등록 실패ㅠㅠ')
-        //     alert('이벤트 등록 실패ㅠㅠ')
-        //   }
-        //   else{
-        //     console.log('이벤트 등록 성공!!')
-        //     alert('이벤트 등록 성공!!')     
-            
-        //   }
-        // })
       setModalVisible(false)
       navigation.goBack() //마이 페이지로 돌아감 
     }catch(e){
