@@ -25,12 +25,10 @@ import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
 import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
-import FormData from 'form-data'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
-
 const titleTextSize = 20
 const inputBoxHeight = 30
 const inputTextSize = 14
@@ -39,10 +37,7 @@ const inputLeft = 10
 const oneDay = 86400
 interface Props {}
 
-
-
-const Enroll = () => {
-  const [deposit, setDeposit] = useState<Number>(0)
+const Enroll: React.FC<Props> = () => {
   const navigation = useNavigation()
   // 지갑 주소
   const KilpAddress = useSelector(
@@ -56,9 +51,8 @@ const Enroll = () => {
   const userName = useSelector((state: RootState) => state.signin.userName)
   // 날짜 시간 구분용 list
   const mode = ['date', 'time']
-
-  // 최종적인 저장
-  const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
+  // 모달창 켜기 끄기
+  const [modalVisible, setModalVisible] = useState(false)
   // 등록할 이벤트 데이터
   const [list, setList] = useState<EnrollType>({
     title: '',
@@ -80,30 +74,25 @@ const Enroll = () => {
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
   })
-  
+  const [deposit, setDeposit] = useState<Number>(0)
 
   //썸네일, 토큰 이미지 선택
   const pickImage = async (e: string) => {
     console.log('이미지 선택')
-    
     const name = e
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     })
-    console.log('===========',result)
     if (!result.cancelled) {
-      if (name === 'token_image_url'){
+      if (name === 'token_image_url')
         setList({ ...list, token_image_url: result.uri })
-      }
-      else {
-        setList({ ...list, thumnail: result.uri })
-      }
+      else setList({ ...list, thumnail: result.uri })
     }
   }
-  // 등록 이벤트 응모: 티켓당 count*5, 판매 price*count*0.05
+  // 등록 이벤트
   const onStart = () => {
     console.log('onstart')
     let money = 0 // 보증금
@@ -138,61 +127,22 @@ const Enroll = () => {
   //   setModalVisible(true)
   // }
 
-
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
-    const filename = list.thumnail.split('/').pop();
-    const formData = new FormData();
-    formData.append('file', {uri: list.thumnail, name: filename, type: 'image/jpg'})
-    const filename2 = list.token_image_url.split('/').pop();
-    const formData2 = new FormData();
-    formData2.append('file', {uri: list.token_image_url, name: filename2, type: 'image/jpg'})
-    console.log('=============',formData);
     // 조건문 달아서 axios POST
-
-    try{
-      console.log('썸네일 이미지 업로드 중~~~');
-      const thumRes = await axios
-      .post(`http://server.beeimp.com:18080/file`, formData, {
-        headers: {
-          'content-type': 'multipart/form-data',        
-        },
-        withCredentials: true
-      })
-      .then((res) => {
-        return res.data.savedPath
-      })
-      console.log('토큰 이미지 업로드 중~~~');
-      const tokenImgRes = await axios
-      .post(`http://server.beeimp.com:18080/file`, formData2, {
-        headers: {
-          'content-type': 'multipart/form-data',        
-        },
-        withCredentials: true
-      })
-      .then((res) => {
-        return res.data.savedPath
-      })
-      setList({...list, thumnail: `http://server.beeimp.com:18080/${thumRes}`, token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`});
-      console.log('이벤트 등록 중~~~');
-       await axios
-        .post(ENROLL_URL, list, {
-          headers: {
-            Cookie: AccessToken,
-          },
-        })
-        .then((res) => {
-          console.log('res:',res) 
-        })
-      setModalVisible(false)
-      navigation.goBack() //마이 페이지로 돌아감 
-    }catch(e){
-      console.log('이벤트 등록 중 에러 발생')
-      console.log(e)
-      alert('에러 발생');
-      setModalVisible(false)
-    }
-
+    console.log(list)
+    console.log(AccessToken)
+    // await axios
+    //   .post(ENROLL_URL, list, {
+    //     headers: {
+    //       Cookie: AccessToken,
+    //     },
+    //   })
+    //   .then(res => {
+    //     console.log(res.data)
+    //     navigation.goBack() //마이 페이지로 돌아감
+    //   })
+    setModalVisible(false)
   }
 
   React.useEffect(() => {
@@ -325,6 +275,16 @@ const Enroll = () => {
           <SetSellTypeModal list={list} setList={setList} />
           <View>
             <Text style={style.enrollContentText}>가격</Text>
+            <Text
+              style={{
+                fontSize: moderateScale(13),
+                alignSelf: 'flex-start',
+                left: moderateScale(5),
+                marginBottom: moderateScale(10),
+              }}
+            >
+              ※ 등급/응모 가격/응모 개수
+            </Text>
             {/* 가격 (3개의 칸) */}
             {list.type === 'sale' ? (
               <DetailPrice list={list} setList={setList} />
@@ -585,7 +545,7 @@ const style = ScaledSheet.create({
     alignItems: 'center',
     height: '30@msr',
     borderRadius: '10@msr',
-    backgroundColor: '#5D8BF4',
+    backgroundColor: '#3AACFF',
   },
   enrollSubmmitButton: {
     fontSize: '20@msr',
