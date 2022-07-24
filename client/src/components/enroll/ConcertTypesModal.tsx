@@ -1,11 +1,6 @@
 import * as React from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
+import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -30,14 +25,24 @@ const ConcertTypesModal = (props: any) => {
   }
   return (
     <View>
-      <Text style={style.enrollContentText}>이벤트 종류</Text>      
+      <Text style={style.enrollContentText}>이벤트 종류</Text>
       <TouchableOpacity onPress={onStart}>
         <View style={style.enrollInput}>
-          <Text
-            style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
-          >
-            {props.list.category}
-          </Text>
+          {props.list.category === '' ? (
+            <View style={{ left: moderateScale(10) }}>
+              <AntDesign
+                name="pluscircle"
+                size={moderateScale(18)}
+                color="black"
+              />
+            </View>
+          ) : (
+            <Text
+              style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
+            >
+              {props.list.category}
+            </Text>
+          )}
         </View>
       </TouchableOpacity>
       <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
@@ -60,7 +65,7 @@ const ConcertTypesModal = (props: any) => {
             })}
           </View>
         </View>
-      </Modal>      
+      </Modal>
     </View>
   )
 }
