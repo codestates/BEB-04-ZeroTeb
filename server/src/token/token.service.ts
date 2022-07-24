@@ -217,7 +217,7 @@ export class TokenService {
           const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
           newHolder.save();
         } else {
-          holder.$set('address', eventTokenBuyers[j].address);
+          await holder.$set('address', eventTokenBuyers[j].address).save();
         }
       }
     }
@@ -226,6 +226,7 @@ export class TokenService {
     for (let i = 0; i < applyingEventStatus.length; i++) {
       const eventId = applyingEventStatus[i].get('event_id');
       const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
+      console.log('eventParticipants :', eventParticipants);
       const eventParticipantsCount = await this.ParticipantModel.find({
         event_id: eventId,
       })
@@ -235,6 +236,8 @@ export class TokenService {
         event_id: eventId,
         address,
       }));
+      console.log('participantSchemas :', participantSchemas);
+      if (participantSchemas.length === 0) return;
       const addParticipants = new this.ParticipantModel(participantSchemas);
       await addParticipants.save();
     }
