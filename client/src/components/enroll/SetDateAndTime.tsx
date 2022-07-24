@@ -4,6 +4,10 @@ import { ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { getDate, getTime } from '../../utils/unixTime'
+import RNDateTimePicker from '@react-native-community/datetimepicker'
+
+// 하루를 초로 나타낼 시
+const oneDay = 86400
 
 const SetDateAndTime = (props: any) => {
   const setRecruitStart = props.setRecruitStart
@@ -11,7 +15,7 @@ const SetDateAndTime = (props: any) => {
   const setEventStart = props.setEventStart
   const setEventEnd = props.setEventEnd
 
-  let value
+  let value: number
   if (props.type === 'recruit_start_date') value = props.list.recruit_start_date
   else if (props.type === 'recruit_end_date')
     value = props.list.recruit_end_date
@@ -27,39 +31,59 @@ const SetDateAndTime = (props: any) => {
       if (props.type === 'recruit_start_date')
         setRecruitStart({
           ...props.list,
-          recruit_start_date: Math.floor(Number(selectedDate) / 1000),
+          recruit_start_date: value,
         })
       else if (props.type === 'recruit_end_date')
         setRecruitEnd({
           ...props.list,
-          recruit_end_date: Math.floor(Number(selectedDate) / 1000),
+          recruit_end_date: value,
         })
       else if (props.type === 'event_start_date')
         setEventStart({
           ...props.list,
-          event_start_date: Math.floor(Number(selectedDate) / 1000),
+          event_start_date: value,
         })
       else
         setEventEnd({
           ...props.list,
-          event_end_date: Math.floor(Number(selectedDate) / 1000),
+          event_end_date: value,
         })
       setShow(false)
     } else {
       const currentDate = Math.floor(Number(selectedDate) / 1000)
+      // 이벤트 구매/응모 기간 시작날짜
       if (props.type === 'recruit_start_date') {
         if (currentDate <= Math.floor(Number(new Date()) / 1000 - 1000))
           alert('이미 지나간 날입니다.')
-        else setRecruitStart({ ...props.list, recruit_start_date: currentDate })
-      } else if (props.type === 'recruit_end_date') {
+        else if (currentDate > props.list.recruit_end_date) {
+          setRecruitStart({
+            ...props.list,
+            recruit_start_date: currentDate,
+            recruit_end_date: currentDate + oneDay,
+          })
+        } else
+          setRecruitStart({ ...props.list, recruit_start_date: currentDate })
+      }
+      // 이벤트 구매/응모 기간 끝나는 날짜
+      else if (props.type === 'recruit_end_date') {
         if (currentDate < props.list.recruit_start_date)
           alert('등록보다 후에 해야합니다.')
         else setRecruitEnd({ ...props.list, recruit_end_date: currentDate })
-      } else if (props.type === 'event_start_date') {
-        if (currentDate <= props.list.recruit_start_date)
+      }
+      // 이벤트 행사 기간 시작날짜
+      else if (props.type === 'event_start_date') {
+        if (currentDate <= props.list.recruit_end_date)
           alert('마감보다 후에 해야합니다.')
-        else setEventStart({ ...props.list, event_start_date: currentDate })
-      } else {
+        else if (currentDate > props.list.event_end_date) {
+          setEventStart({
+            ...props.list,
+            event_start_date: currentDate,
+            event_end_date: currentDate + oneDay,
+          })
+        } else setEventStart({ ...props.list, event_start_date: currentDate })
+      }
+      // 이벤트 행사 기간 끝나는 날짜
+      else {
         if (currentDate < props.list.event_start_date)
           alert('시작보다 후에 해야합니다.')
         else setEventEnd({ ...props.list, event_end_date: currentDate })
@@ -82,9 +106,10 @@ const SetDateAndTime = (props: any) => {
         )}
         {/* 모달 부분 */}
         {show && (
-          <DateTimePicker
+          <RNDateTimePicker
             testID="test"
             value={new Date(value * 1000)}
+            // display={props.mode === 'date' ? 'default' : 'spinner'}
             mode={props.mode}
             is24Hour={true}
             onChange={onChangeDateTime}
@@ -98,7 +123,7 @@ const SetDateAndTime = (props: any) => {
 const style = ScaledSheet.create({
   dateTimeCSS: {
     textAlign: 'center',
-    fontSize: '20@msr',
+    fontSize: '15@msr',
   },
 })
 
