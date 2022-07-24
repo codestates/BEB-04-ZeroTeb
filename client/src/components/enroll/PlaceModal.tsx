@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   View,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Modal,
@@ -35,6 +34,8 @@ const PlaceModal = (props: any) => {
   ]
 
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
+
+  //모달창 on/off
   const onStart = () => {
     setModalVisible(true)
   }
@@ -43,6 +44,7 @@ const PlaceModal = (props: any) => {
     setModalVisible(false)
     setList({ ...props.list, location: e })
   }
+
   return (
     <View>
       <Text style={style.enrollContentText}>장소</Text>
@@ -81,7 +83,7 @@ const PlaceModal = (props: any) => {
       <Text style={style.enrollContentText}>나머지 주소</Text>
       <View style={style.enrollInput}>
         <TextInput
-          style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+          style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
           value={props.list.sub_location}
           onChangeText={text => setList({ ...props.list, sub_location: text })}
         ></TextInput>
@@ -98,8 +100,7 @@ const style = ScaledSheet.create({
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
@@ -113,7 +114,7 @@ const style = ScaledSheet.create({
   },
   modalSelectBody: {
     width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_HEIGHT / 2,
+    height: SCREEN_HEIGHT *0.6,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignContent: 'center',
@@ -122,6 +123,7 @@ const style = ScaledSheet.create({
   },
   modalSelect: {
     width: SCREEN_WIDTH / 4,
+    height: SCREEN_HEIGHT *0.055,
     backgroundColor: '#3AACFF',
     borderRadius: '10@msr',
     margin: '5@msr',

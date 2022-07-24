@@ -42,6 +42,7 @@ const DetailList = (props: Props) => {
   }
 
   const removePropertiesHandler = (e: any, index: number) => {
+    console.log()
     const removeProperties = props.list.price.filter(
       (
         item: { class: string; price: number; count: number },
@@ -111,9 +112,36 @@ const DetailList = (props: Props) => {
                 />
               </TouchableOpacity>
             </View>
-          )
-        },
-      )}
+
+            <View style={style.InputPrice}>
+              <TextInput
+                style={style.InputContent}
+                testID="count"
+                placeholder={'count'}
+                keyboardType="number-pad"
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'count')
+                }}
+                value={attribute.count}
+              ></TextInput>
+            </View>
+            {index === 0 || undefined ? null: 
+            <TouchableOpacity
+              style={style.IconButton}
+              onPress={e => {
+                removePropertiesHandler(e, index)
+              }}
+            >
+              <AntDesign
+                name="minuscircle"
+                size={moderateScale(24)}
+                color="black"
+              />
+            </TouchableOpacity>
+            }
+          </View>
+        )
+      })}
       <View>
         <TouchableOpacity
           style={style.IconButton}
@@ -137,6 +165,7 @@ const style = ScaledSheet.create({
     marginRight: '5@msr',
     minHeight: '25@vs',
     maxHeight: '25@vs',
+    // height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
