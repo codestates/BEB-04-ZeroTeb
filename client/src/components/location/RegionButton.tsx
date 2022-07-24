@@ -30,9 +30,9 @@ const styles = ScaledSheet.create({
     height: '40@vs',
     borderWidth: 1,
     borderRadius: 10,
-    color: 'skyblue',
+    color: '#5D8BF4',
     borderStyle: 'solid',
-    borderColor: 'skyblue',
+    borderColor: '#5D8BF4',
   },
   textContainer: {
     fontSize: '15@msr',

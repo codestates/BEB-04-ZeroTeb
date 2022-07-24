@@ -429,7 +429,7 @@ const style = ScaledSheet.create({
     alignItems: 'center',
     height: STATUSBAR_HEIGHT,
     borderRadius: '10@msr',
-    backgroundColor: '#3AACFF',
+    backgroundColor: '#5D8BF4',
   },
   enrollSubmmitButton: {
     fontSize: '20@msr',

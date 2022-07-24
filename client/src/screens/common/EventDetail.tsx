@@ -25,7 +25,6 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import AfterTransactionModal from '../../components/event/AfterTransactionModal'
-import LoadingImg from '../../components/common/LoadingImg'
 import LoadingModal from '../../components/common/LoadingModal'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
