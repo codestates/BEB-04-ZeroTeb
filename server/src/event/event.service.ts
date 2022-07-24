@@ -14,6 +14,7 @@ import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
 import { ipfsGetData, ipfsMetadataUpload } from 'lib/pinata';
 import { EventStatus, EventStatusDocument } from './schemas/event-status.schema';
 import { EventStatusDto } from './dto/event-status.dto';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 @Injectable()
 export class EventService {
@@ -23,6 +24,7 @@ export class EventService {
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
     @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -348,11 +350,11 @@ export class EventService {
       if (!createdEvent) throw new Error('CreateEvent가 없습니다.');
       for (let i = 0; i < createdEvent.length; i++) {
         const eventId = createdEvent[i].get('event_id');
-        // console.log('eventId :', eventId);
+        console.log('eventId :', eventId);
         const event = await this.klaytnService.getEvent(eventId);
-        // console.log('eventUri :', event.eventUri);
+        console.log('eventUri :', event.eventUri);
         const eventData = await ipfsGetData(event.eventUri);
-        // console.log('eventData :', eventData);
+        console.log('eventData :', eventData);
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
         await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
@@ -473,6 +475,11 @@ export class EventService {
     for (let i = 0; i < preparingEvents2.length; i++) {
       const eventId = preparingEvents2[i].get('event_id');
       await this.klaytnService.transferEventWinner(eventId);
+      // 이벤트 당첨자 조회
+      const winners = this.klaytnService.getTokenHolders(eventId);
+      // 이벤트 당첨자 홀더로 디비 저장
+      const holders = new this.HoldingModel(winners);
+      await holders.save();
       await this.EventStatusModel.updateOne(
         { event_id: eventId },
         {
@@ -560,9 +567,8 @@ export class EventService {
     // 이벤트 응모자 디비 저장
   }
 
-  // @Cron('* * * * * *')
-  // async test(): Promise<void> {
-  //   const eventStatus = await this.klaytnService.getEventLength();
-  //   console.log(eventStatus);
-  // }
+  @Cron('* * * * * *')
+  async test(): Promise<void> {
+    await this.klaytnService.test();
+  }
 }
