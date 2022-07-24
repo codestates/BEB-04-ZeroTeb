@@ -9,7 +9,7 @@ import { HoldingType } from 'src/token/schemas/holding.schema';
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
 import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x58B279B626bb87434FF6BED41B20913eBf85E1D2';
+  process.env.CONTRACT_ADDRESS || '0xe017216fcB7775B07C6189d32f26D5b895F3a284';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
@@ -316,7 +316,7 @@ export class KlaytnService {
   }
 
   // 응모자 조회
-  async getEventParticipants(eventId: number) {
+  async getEventParticipants(eventId: number): Promise<string[]> {
     return await this.contract.methods.getEventParticipants(eventId).call();
   }
 
@@ -351,5 +351,17 @@ export class KlaytnService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async test() {
+    // console.log('Event Test :');
+    // await this.contract.events
+    //   .Transfer()
+    //   .on('data', function (event) {
+    //     console.log(111);
+    //     console.log(event); // same results as the optional callback above
+    //   })
+    //   .on('error', console.error);
+    // console.log(await this.contract.events.Transfer());
   }
 }
