@@ -18,27 +18,6 @@ const KlipAddress: FunctionComponent<KlipAddressProps> = () => {
   const onBtnGetKlipAddr = () => {};
 
   useEffect(() => {
-    if (klipState.requestKey === '') {
-      const bappName = 'TT_APP';
-      const successLink = '';
-      const failLink = '';
-      const requestConfig: AxiosRequestConfig = {
-        method: 'post',
-        url: 'https://a2a-api.klipwallet.com/v2/a2a/prepare',
-        data: {
-          bapp: { name: bappName },
-          callback: { success: successLink, fail: failLink },
-          type: 'auth',
-        },
-      };
-      axios(requestConfig).then((res) => {
-        dispatch(klipActions.set_requestKey(res.data.request_key));
-        dispatch(klipActions.set_status(res.data.status));
-      });
-    }
-  }, []);
-
-  useEffect(() => {
     const requestAuth = setInterval(() => {
       if (klipState.status === 'prepared' && klipState.requestKey !== '') {
         const requestConfig: AxiosRequestConfig = {
@@ -58,11 +37,13 @@ const KlipAddress: FunctionComponent<KlipAddressProps> = () => {
           if (!data.address) return false;
           dispatch(klipActions.set_requestKey(''));
           dispatch(klipActions.set_klaytnAddress(data.address));
+          dispatch(klipActions.set_status(data.status));
           clearInterval(requestAuth);
+          router.push('/');
           return true;
         });
       }
-    }, 5000);
+    }, 1500);
     return () => {
       clearInterval(requestAuth);
     };
@@ -93,8 +74,12 @@ const KlipAddress: FunctionComponent<KlipAddressProps> = () => {
   } else if (klipState.klaytnAddress) {
     return (
       <a
+        style={{
+          color: 'white',
+          fontSize: '1.2em',
+        }}
         target="_blank"
-        href={`${process.env.REACT_APP_SCOPE_URL}/account/${klipState.klaytnAddress}`}
+        href={`https://www.klaytnfinder.io/account/${klipState.klaytnAddress}`}
         rel="noreferrer"
       >
         {klipState.klaytnAddress}
