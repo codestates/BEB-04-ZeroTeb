@@ -51,7 +51,7 @@ pipeline {
         sh """docker run -d \
                 --name zteb-server \
                 -p 18080:8080 \
-                -v ~/docker_volume/zeroteb/static:/app/static
+                -v /home/beeimp/docker_volume/zeroteb/static:/app/static
                 -e MONGODB_USERNAME='${MONGODB_USERNAME}' \
                 -e MONGODB_PASSWORD='${MONGODB_PASSWORD}' \
                 -e ALLTHATNODE_API_KEY='${ALLTHATNODE_API_KEY}' \
