@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Text, Dimensions, Pressable } from 'react-native'
+import { View, StyleSheet, Text, Dimensions, Pressable } from 'react-native'
 import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { firstLetter } from '../../utils/utils'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 interface profileProps {
   userInfo: UserType
@@ -44,7 +44,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'created' })}
           >
             <AvatarIcon
-              size={moderateScale(40)}
+              size={moderateScale(50)}
               color={'lightgrey'}
               title={userInfo.history.created}
             />
@@ -56,7 +56,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'entry' })}
           >
             <AvatarIcon
-              size={moderateScale(40)}
+              size={moderateScale(50)}
               color={'lightgrey'}
               title={userInfo.history.entry}
             />
@@ -68,23 +68,10 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'sale' })}
           >
             <AvatarIcon
-              size={moderateScale(40)}
+              size={moderateScale(50)}
               color={'lightgrey'}
               title={userInfo.history.sale}
             />
-          </Pressable>
-        </View>
-        <View style={styles.infoIconContainer}>
-          <Text style={styles.infoText}>리더기</Text>
-          <Pressable
-            // onPress={() => navigation.navigate('QRread')}
-          >
-          <AvatarIcon
-            size={moderateScale(40)}
-            color={'lightgrey'}
-            title={'QR'}
-          />
-
           </Pressable>
         </View>
       </View>
@@ -128,9 +115,15 @@ const styles = ScaledSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     padding: '10@msr',
-    width: SCREEN_WIDTH * 0.23,
+
+    width: SCREEN_WIDTH * 0.28,
+    height: SCREEN_HEIGHT * 0.14,
   },
-  infoText: { justifyContent: 'flex-start', padding: '5@msr' },
+  infoText: {
+    fontSize: '18@msr',
+    justifyContent: 'flex-start',
+    padding: '10@msr',
+  },
 })
 
 export default MyPageHeader
