@@ -1,9 +1,9 @@
 import type { NextPage } from 'next';
 import { useEffect } from 'react';
-import { KlipLoginBtn } from '../../components/klip/KlipLoginBtn';
 import { getCookie } from 'cookies-next';
 import { decodeJwt } from '../../modules/utils';
 import { useRouter } from 'next/router';
+import AuthSignIn from '../../layouts/auth/signin';
 
 const AuthSignInPage: NextPage = () => {
   const accessToken = getCookie('access_token');
@@ -14,12 +14,7 @@ const AuthSignInPage: NextPage = () => {
       router.push('/');
     }
   }, []);
-  return (
-    <div>
-      SignIn
-      <KlipLoginBtn></KlipLoginBtn>
-    </div>
-  );
+  return <AuthSignIn></AuthSignIn>;
 };
 
 export default AuthSignInPage;
