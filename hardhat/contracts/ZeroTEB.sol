@@ -94,6 +94,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventIds.current();
     }
 
+    function totalToken() public view returns (uint256) {
+        return _tokenIds.current();
+    }
+
     function eventType(uint256 _eventId) public view returns (uint8) {
         return _events[_eventId].eventType;
     }
