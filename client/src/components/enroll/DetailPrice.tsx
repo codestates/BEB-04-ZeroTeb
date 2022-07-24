@@ -21,6 +21,7 @@ const DetailList = (props: any) => {
     })
   }
 
+  // price 항목 추가 함수
   const addPropertiesHandler = () => {
     props.setList({
       ...props.list,
@@ -35,13 +36,13 @@ const DetailList = (props: any) => {
     })
   }
 
+  // price 항목 삭제 함수
   const removePropertiesHandler = (e: any, index: number) => {
-    console.log()
     const removeProperties = props.list.price.filter(
       (item: any, itemIndex: number) => index !== itemIndex,
     )
     props.setList({
-      ...props.list.price,
+      ...props.list,
       price: removeProperties,
     })
   }
@@ -86,7 +87,7 @@ const DetailList = (props: any) => {
                 value={attribute.count}
               ></TextInput>
             </View>
-            {index === 0 || undefined ? null: 
+            {index === 0 || undefined ? <View style={{width: moderateScale(25)}}></View>: 
             <TouchableOpacity
               style={style.IconButton}
               onPress={e => {
@@ -103,30 +104,26 @@ const DetailList = (props: any) => {
           </View>
         )
       })}
-      <View>
-        <TouchableOpacity
-          style={style.IconButton}
-          onPress={addPropertiesHandler}
-        >
-          <AntDesign name="pluscircle" size={moderateScale(24)} color="black" />
-        </TouchableOpacity>
-      </View>
+      {/* 항목 추가 버튼 */}
+      <TouchableOpacity
+        style={style.IconButton}
+        onPress={addPropertiesHandler}
+      >
+        <AntDesign name="pluscircle" size={moderateScale(25)} color="black" />
+      </TouchableOpacity>
     </View>
   )
 }
 
 const style = ScaledSheet.create({
   InputPriceWrapper: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   InputPrice: {
     width: SCREEN_WIDTH / 4,
     marginRight: '5@msr',
-    minHeight: '25@vs',
-    maxHeight: '25@vs',
-    // height: '30@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
@@ -136,11 +133,11 @@ const style = ScaledSheet.create({
   InputContent: {
     alignItems: 'center',
     textAlign: 'center',
-    fontSize: '20@msr',
+    fontSize: '15@msr',
   },
   IconButton: {
-    marginLeft: '7@msr',
     marginTop: '5@msr',
+    alignItems: 'center'
   },
 })
 

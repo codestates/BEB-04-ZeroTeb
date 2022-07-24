@@ -89,57 +89,55 @@ const Enroll: React.FC<Props> = () => {
       else setList({ ...list, thumnail: result.uri })
     }
   }
-  // 등록 이벤트
-    const onStart = () => {
+  // 등록 이벤트 응모: 티켓당 count*5, 판매 price*count*0.05
+  const onStart = () => {
     console.log('onstart')
     let money = 0 // 보증금
-    let depositNum = 0.05 //비율?
-    list.price.map((value, index) => {
-      money += value.price * value.count
-    })
     // 응모일때
     if (list.type === 'entry') {
-      depositNum *= 100
+      console.log(list.price[0].count * 5)
+      setDeposit(list.price[0].count * 5)
     }
-    setDeposit(money * depositNum)
+    else{
+      list.price.map((value, index) => {
+        money += value.price * value.count
+      })
+      console.log(money * 0.05)
+      setDeposit(money * 0.05)
+    }
     setModalVisible(true)
   }
-  // const onStart = () => {
-  //   console.log('onstart')
-  //   let money = 0
-  //   // 응모일때
-  //   if (list.type === 'entry') {
-  //     money += Number(list.price[0].count)
-  //     setDeposit(money * 5)
-  //   }
-  //   // 판매일때
-  //   else {
-  //     {
-  //       list.price.map((value, index) => {
-  //         money += Number(value.price * value.count)
-  //       })
-  //       setDeposit(money * 0.05)
-  //     }
-  //   }
-  //   setModalVisible(true)
-  // }
 
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
     // 조건문 달아서 axios POST
-    console.log(list)
-    console.log(AccessToken);
-    await axios
-      .post(ENROLL_URL, list, {
-        headers: {
-          Cookie: AccessToken,
-        },
-      })
-      .then(res => {
-        console.log(res.data)
-        navigation.goBack() //마이 페이지로 돌아감
-      })
-    setModalVisible(false)
+    try{
+      console.log('이벤트 등록 중~~~');
+      const result = await axios
+        .post(ENROLL_URL, list, {
+          headers: {
+            Cookie: AccessToken,
+          },
+        })
+        .then(res => {
+          console.log(res.data)        
+        })
+      console.log(result);
+      // if(result.message){
+      //   console.log('이벤트 등록 실패ㅠㅠ')
+      //   alert('이벤트 등록 실패ㅠㅠ')
+      // }else{
+      //   console.log('이벤트 등록 성공!!')
+      //   alert('이벤트 등록 성공!!')     
+      //   navigation.goBack() //마이 페이지로 돌아감 
+      // }    
+      setModalVisible(false)
+    }catch(e){
+      console.log('이벤트 등록 중 에러 발생')
+      console.log(e)
+      alert('에러 발생');
+      setModalVisible(false)
+    }
   }
 
   React.useEffect(()=>{
@@ -230,62 +228,70 @@ const Enroll: React.FC<Props> = () => {
           {/* 장소 (체크박스) */}
           <PlaceModalSelect list={list} setList={setList} />
 
-          {/* 판매 타입 */}
+          {/* 판매 형태 */}
           <SetSellTypeModal list={list} setList={setList} />
+
+          {/* 가격 */}
           <View>
             <Text style={style.enrollContentText}>가격</Text>
             <View style={style.rowContentWrapper}>
               {/* 가격 (3개의 칸) */}
               {list.type === 'sale' ? (
+                //sale 정보 받기
                 <DetailPrice list={list} setList={setList} />
               ) : (
-                <View style={style.rowContentWrapper}>
-                  <View style={style.InputPrice}>
-                    <Text
-                      style={{
-                        fontSize: moderateScale(20),
-                        textAlign: 'center',
-                      }}
-                    >
-                      {list.price[0].class}
-                    </Text>
+                // entry 정보 받기
+                <View>                
+                  <View style={style.rowContentWrapper}>
+                    <View style={style.InputPrice}>
+                      <Text
+                        style={{
+                          fontSize: moderateScale(15),
+                          textAlign: 'center',
+                        }}
+                      >
+                        {list.price[0].class}
+                      </Text>
+                    </View>
+                    <View style={style.InputPrice}>
+                      <TextInput
+                        style={{
+                          fontSize: moderateScale(15),
+                          textAlign: 'center',
+                        }}
+                        testID="price"
+                        placeholder={'price'}
+                        keyboardType="number-pad"
+                        onChangeText={(e: any) => {
+                          setList({
+                            ...list,
+                            price: [{ ...list.price[0], ['price']: e }],
+                          })
+                        }}
+                        value={String(list.price[0].price)}
+                      ></TextInput>
+                    </View>
+                    <View style={style.InputPrice}>
+                      <TextInput
+                        style={{
+                          fontSize: moderateScale(15),
+                          textAlign: 'center',
+                        }}
+                        testID="count"
+                        placeholder={'count'}
+                        keyboardType="number-pad"
+                        onChangeText={(e: any) => {
+                          setList({
+                            ...list,
+                            price: [{ ...list.price[0], ['count']: e }],
+                          })
+                        }}
+                        value={String(list.price[0].count)}
+                      ></TextInput>                    
+                    </View>
+                    
                   </View>
-                  <View style={style.InputPrice}>
-                    <TextInput
-                      style={{
-                        fontSize: moderateScale(20),
-                        textAlign: 'center',
-                      }}
-                      testID="price"
-                      placeholder={'price'}
-                      keyboardType="number-pad"
-                      onChangeText={(e: any) => {
-                        setList({
-                          ...list,
-                          price: [{ ...list.price[0], ['price']: e }],
-                        })
-                      }}
-                      value={String(list.price[0].price)}
-                    ></TextInput>
-                  </View>
-                  <View style={style.InputPrice}>
-                    <TextInput
-                      style={{
-                        fontSize: moderateScale(20),
-                        textAlign: 'center',
-                      }}
-                      testID="count"
-                      placeholder={'count'}
-                      keyboardType="number-pad"
-                      onChangeText={(e: any) => {
-                        setList({
-                          ...list,
-                          price: [{ ...list.price[0], ['count']: e }],
-                        })
-                      }}
-                      value={String(list.price[0].count)}
-                    ></TextInput>
-                  </View>
+                  <Text style={{fontSize: moderateScale(13), alignSelf: 'flex-start', left: moderateScale(5)}}>※ 등급/응모 가격/응모 개수</Text>
                 </View>
               )}
             </View>
@@ -306,27 +312,30 @@ const Enroll: React.FC<Props> = () => {
               <TextInput
                 style={{
                   flex: 1,
-                  fontSize: moderateScale(16),
+                  fontSize: moderateScale(15),
                   textAlign: 'left',
+                  textAlignVertical: 'top',
+                  padding: moderateScale(5)
                 }}
                 multiline={true}
                 numberOfLines={4}
                 value={list.contents}
                 onChangeText={text => setList({ ...list, contents: text })}
-              ></TextInput>
+              ></TextInput>              
             </View>
           </View>
           {/* 썸네일 이미지 */}
           <View>
-            <Text style={style.enrollContentText}>대표 이미지</Text>
+            <Text style={style.enrollContentText}>이벤트 썸네일</Text>
             <TouchableOpacity onPress={() => pickImage('thumnail')}>
               <View style={style.enrollInputLarge}>
                 <Image
                   source={{ uri: list.thumnail }}
                   style={{
-                    margin: 10,
-                    width: SCREEN_WIDTH - 60,
-                    height: 180,
+                    margin: moderateScale(5),
+                    width: SCREEN_WIDTH - moderateScale(80),
+                    height: moderateScale(180),
+                    resizeMode: 'cover'
                   }}
                 />
               </View>
@@ -341,8 +350,8 @@ const Enroll: React.FC<Props> = () => {
                 <Image
                   source={{ uri: list.token_image_url }}
                   style={{
-                    margin: moderateScale(10),
-                    width: SCREEN_WIDTH - moderateScale(60),
+                    margin: moderateScale(5),
+                    width: SCREEN_WIDTH - moderateScale(80),
                     height: moderateScale(180),
                   }}
                 />
@@ -358,22 +367,20 @@ const Enroll: React.FC<Props> = () => {
           <Text style={style.enrollSubmmitButton}>등록</Text>
         </View>
       </TouchableOpacity>
+
+      {/* 보증금 확인 모달 */}
       <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
         <View style={style.modalContainer}>
           <View
             style={style.blankSpace}
             onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
           />
-          <View style={style.modalSelectBody}>
-            <Text
-              style={{
-                width: SCREEN_WIDTH / 2,
-                fontSize: moderateScale(24),
-                marginBottom: moderateScale(20),
-              }}
-            >
-              현재 보증금은 {deposit} Klay 입니다. {'\n'} 보증금을 확인하시고
-              진행해주세요.
+          <View style={style.modalSelectBody}>          
+            <Text style={{width: SCREEN_WIDTH *0.6, fontSize: moderateScale(20), marginBottom: moderateScale(20), textAlign: 'center'}}>
+              현재 보증금: {deposit} Klay
+            </Text>
+            <Text style={{width: SCREEN_WIDTH *0.6, fontSize: moderateScale(11), marginBottom: moderateScale(20), textAlign: 'center'}}>
+              등록을 진행 하시려면 확인을 눌러주세요.
             </Text>
             <View style={{}}>
               <TouchableOpacity onPress={onCheckEnroll}>
@@ -421,17 +428,13 @@ const style = ScaledSheet.create({
   InputPrice: {
     width: SCREEN_WIDTH / 3.5,
     marginRight: '5@msr',
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
     justifyContent: 'center',
   },
-
   enrollInput: {
-    // minHeight: '30@msr',
-    // maxHeight: '30@msr',
     height: moderateScale(inputBoxHeight),
     borderWidth: 1,
     borderRadius: '10@msr',
@@ -440,25 +443,27 @@ const style = ScaledSheet.create({
     marginBottom: '10@msr',
   },
   enrollInputLarge: {
-    maxWidth: SCREEN_WIDTH - moderateScale(30),
+    width: SCREEN_WIDTH - moderateScale(45),
     padding: '10@msr',
-    height: '200@msr',
+    height: '210@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
     marginBottom: '10@msr',
+    justifyContent: 'center',
+    // alignItems: 'center',
   },
   rowContentWrapper: {
     flex: 1,
     flexDirection: 'row',
     marginBottom: '10@msr',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   enrollSubmmitButtonContainer: {
     marginTop: '20@msr',
     justifyContent: 'center',
     alignItems: 'center',
-    height: STATUSBAR_HEIGHT,
+    height: '30@msr',
     borderRadius: '10@msr',
     backgroundColor: '#3AACFF',
   },
@@ -480,9 +485,8 @@ const style = ScaledSheet.create({
     opacity: 0.5,
   },
   modalSelectBody: {
-    overflow: 'scroll',
     width: SCREEN_WIDTH * (2 / 3),
-    height: SCREEN_HEIGHT / 2,
+    height: SCREEN_HEIGHT * 0.3,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
@@ -490,8 +494,7 @@ const style = ScaledSheet.create({
   },
   modalSubmmit: {
     width: SCREEN_WIDTH / 2,
-    height: STATUSBAR_HEIGHT,
-    marginTop: '15@msr',
+    height: '30@msr',
     marginBottom: '15@msr',
     textAlign: 'center',
     borderRadius: '10@msr',

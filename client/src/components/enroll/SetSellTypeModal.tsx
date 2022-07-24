@@ -24,12 +24,14 @@ const SetSellTypeModal = (props: any) => {
   }
   return (
     <View>
-      <Text style={style.enrollContentText}>판매 타입(응모, 구매)</Text>
+      <View style={style.sellTitle}>
+        <Text style={style.enrollContentText}>판매 형태</Text>
+      </View>
       <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
             <Text
-              style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+              style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
             >
               {props.list.type}
             </Text>
@@ -69,8 +71,7 @@ const style = ScaledSheet.create({
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
@@ -109,6 +110,10 @@ const style = ScaledSheet.create({
     backgroundColor: '#000000',
     opacity: 0.5,
   },
+  sellTitle:{
+    flexDirection:'row',
+    alignItems: 'center'
+  }
 })
 
 export default SetSellTypeModal
