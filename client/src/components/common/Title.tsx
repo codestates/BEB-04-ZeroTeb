@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import { moderateScale } from 'react-native-size-matters'
+import { useFonts } from 'expo-font'
 
 interface titleProps {
   title: string
@@ -8,9 +9,22 @@ interface titleProps {
 }
 
 const Title: React.FC<titleProps> = ({ title, size }) => {
+  const [loaded] = useFonts({
+    Montserrat: require('../../../assets/fonts/gangwoneduallBold.ttf'),
+  })
+
+  if (!loaded) {
+    return null
+  }
   return (
     <View style={style.titleContainer}>
-      <Text style={{ fontSize: moderateScale(size), fontWeight: '500' }}>
+      <Text
+        style={{
+          fontSize: moderateScale(size),
+          fontWeight: '500',
+          fontFamily: 'Montserrat',
+        }}
+      >
         {title}
       </Text>
     </View>
