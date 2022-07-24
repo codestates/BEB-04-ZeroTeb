@@ -10,6 +10,7 @@ import TicketDetail from '../screens/mypageTab/TicketDetail'
 import QRLoad from '../screens/mypageTab/QRLoad'
 import QRread from '../screens/mypageTab/QRRead'
 import MyList from '../screens/mypageTab/MyList'
+import Notice from '../screens/mypageTab/Notice'
 
 export default function MyPageStackScreen() {
   const MyPageStack = createNativeStackNavigator<MyPageStackParamList>()
@@ -59,6 +60,11 @@ export default function MyPageStackScreen() {
       <MyPageStack.Screen
         name="TicketDetail"
         component={TicketDetail}
+        options={{ headerTitle: '' }}
+      />
+      <MyPageStack.Screen
+        name="Notice"
+        component={Notice}
         options={{ headerTitle: '' }}
       />
     </MyPageStack.Navigator>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 
 interface Props {
@@ -9,8 +9,14 @@ interface Props {
 
 export default function RegionButton(prop: Props) {
   return (
-    <Pressable onPress={()=>{prop.selectRegion(prop.region)}}>
-        <View style={styles.buttonContainer}><Text style={styles.textContainer}>{prop.region}</Text></View>
+    <Pressable
+      onPress={() => {
+        prop.selectRegion(prop.region)
+      }}
+    >
+      <View style={styles.buttonContainer}>
+        <Text style={styles.textContainer}>{prop.region}</Text>
+      </View>
     </Pressable>
   )
 }
@@ -24,11 +30,11 @@ const styles = ScaledSheet.create({
     height: '40@vs',
     borderWidth: 1,
     borderRadius: 10,
-    color: 'skyblue',
+    color: '#5D8BF4',
     borderStyle: 'solid',
-    borderColor: 'skyblue',    
+    borderColor: '#5D8BF4',
   },
-  textContainer:{
-    fontSize: '15@msr'
-  }
+  textContainer: {
+    fontSize: '15@msr',
+  },
 })

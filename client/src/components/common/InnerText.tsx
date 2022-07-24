@@ -21,6 +21,7 @@ const style = StyleSheet.create({
   innerTextContainer: {
     alignItems: 'flex-start',
     marginHorizontal: moderateScale(10),
+    marginVertical: moderateScale(5),
   },
 })
 
