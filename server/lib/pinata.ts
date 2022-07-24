@@ -88,6 +88,7 @@ const ipfsGetData = async (url: string, type: 'json' | 'file' = 'json') => {
       headers: {
         'Content-Type': contentType[type],
       },
+      responseType: type === 'json' ? 'json' : 'stream',
     });
     return res.data;
   } catch (error) {}
