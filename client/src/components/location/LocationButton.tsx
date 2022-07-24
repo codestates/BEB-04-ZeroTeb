@@ -1,19 +1,16 @@
 import * as React from 'react'
-import { Alert, Pressable, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
-import { useState, useEffect } from 'react'
-import * as Location from 'expo-location'
+import { useState } from 'react'
 import RegionSelectModal from './RegionSelectModal'
-import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 
-interface Props{
+interface Props {
   region: string
 }
 
 export default function LocationButton(props: Props) {
-  // const [myLosition, setMyLosition] = useState<[number, number]>([0, 0])
   const [modalVisible, setModalVisible] = useState(false)
   const navigation = useNavigation()
 
@@ -23,7 +20,7 @@ export default function LocationButton(props: Props) {
 
   return (
     <View style={style.locationButtonContainer}>
-      <Pressable style={style.allLocationButtonContainner} onPress={onStart} >
+      <Pressable style={style.allLocationButtonContainner} onPress={onStart}>
         <Text style={style.allLocationButtonText}>{props.region}</Text>
         <FontAwesome5
           name="arrow-circle-down"
@@ -34,9 +31,13 @@ export default function LocationButton(props: Props) {
       <RegionSelectModal
         modalVisible={modalVisible}
         setModalVisible={setModalVisible}
-        body={undefined}
       />
-      <Pressable style={style.myLocationButtonContainner} onPress={()=>{navigation.navigate('MyLocationListup')}}>
+      <Pressable
+        style={style.myLocationButtonContainner}
+        onPress={() => {
+          navigation.navigate('MyLocationListup')
+        }}
+      >
         <FontAwesome5
           name="location-arrow"
           size={moderateScale(12)}

@@ -29,11 +29,16 @@ export type SearchStackParamList = {
 export type MyPageStackParamList = {
   SignIn: { gotoMyPage: boolean }
   MyPage: { kilpAddress?: string; accessToken?: string }
-  TicketDetail: { address?: string; token_id?: string; token_image_url?: string}
+  TicketDetail: {
+    address?: string
+    token_id?: string
+    token_image_url?: string
+  }
   QRLoad: { qrcodeXML: any }
   QRread: { event_id: any }
   Enroll: undefined
   MyList: { type: string }
+  Notice: undefined
 }
 
 export interface RootStackParamList

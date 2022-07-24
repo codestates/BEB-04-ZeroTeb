@@ -10,7 +10,7 @@ interface titleProps {
 
 const Title: React.FC<titleProps> = ({ title, size }) => {
   const [loaded] = useFonts({
-    Montserrat: require('../../../assets/fonts/gangwoneduallBold.ttf'),
+    Leferi: require('../../../assets/fonts/LeferiPointSpecial.ttf'),
   })
 
   if (!loaded) {
@@ -21,8 +21,7 @@ const Title: React.FC<titleProps> = ({ title, size }) => {
       <Text
         style={{
           fontSize: moderateScale(size),
-          fontWeight: '500',
-          fontFamily: 'Montserrat',
+          fontFamily: 'Leferi',
         }}
       >
         {title}

@@ -119,7 +119,7 @@ export default function Home() {
           <>
             <View>
               <Title title={'찾았다 내 취향 💕'} size={22} />
-              <Title title={' TT 에서 발견!'} size={22} />
+              <Title title={'TT 에서 발견!'} size={22} />
               <Banner eventList={bannerList} />
               <Pressable //입력창 누르면 Search tab으로 이동
                 onPressIn={() => navigation.navigate('SearchStackScreen')}

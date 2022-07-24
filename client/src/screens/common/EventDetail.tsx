@@ -14,7 +14,7 @@ import InnerText from '../../components/common/InnerText'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
 import Title from '../../components/common/Title'
-import CheckModal from '../../components/event/CheckModal'
+import BeforeTransaction from '../../components/event/BeforeTransactionModal'
 import EntryBottomContent from '../../components/event/EntryBottomContent'
 import SaleBottomContent from '../../components/event/SaleBottomContent'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
@@ -24,6 +24,8 @@ import { profile_url } from '../../utils/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import AfterTransactionModal from '../../components/event/AfterTransactionModal'
+import LoadingModal from '../../components/common/LoadingModal'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const radioButtonsData: RadioButtonProps[] = [{}]
@@ -35,7 +37,10 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   const route = useRoute()
   const eventDetail = route.params?.event
 
-  const [modalVisible, setModalVisible] = React.useState<boolean>(false)
+  const [btModalVisible, setBtModalVisible] = React.useState<boolean>(false)
+  const [loadingModalVisible, setLoadingModalVisible] =
+    React.useState<boolean>(false)
+  const [atModalVisible, setAtModalVisible] = React.useState<boolean>(false)
 
   const navigation = useNavigation()
   const KilpAddress = useSelector(
@@ -46,9 +51,9 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     const newArr: RadioButtonProps[] = []
     prices.map((el, index) => {
       return newArr.push({
-        id: index,
+        id: index.toString(),
         label: el.class + ' Class / ' + el.price + ' Klay',
-        value: el.price,
+        value: el.price.toString(),
         selected: false,
         size: moderateScale(20),
         labelStyle: style.eventText,
@@ -79,16 +84,14 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     if (KilpAddress === '') {
       navigation.navigate('SignIn', { gotoMyPage: false })
     } else {
-
-    setModalVisible(true)
-
+      setBtModalVisible(true)
     }
   }
 
   const getPayment = async () => {
-    setModalVisible(false)
+    setBtModalVisible(false)
+    setLoadingModalVisible(true)
 
-    
     console.log('이제 클립으로 결제 진행')
 
     // 구매 , 응모에 따라 다른 데이터를 보내줘야 한다.
@@ -121,19 +124,32 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       const res = await axios(config)
 
       console.log(res.data)
+      if (res.data.message === '정상적으로 응모되었습니다.') {
+        console.log('ok')
+        setLoadingModalVisible(false)
+        setAtModalVisible(true)
+      }
     } catch (e) {
       console.log(e)
     }
-
   }
 
   return (
     <ScrollView style={style.eventOuterContainer}>
-      <CheckModal
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+      <LoadingModal
+        loadingModalVisible={loadingModalVisible}
+        setLoadingModalVisible={setLoadingModalVisible}
+      />
+      <BeforeTransaction
+        btModalVisible={btModalVisible}
+        setBtModalVisible={setBtModalVisible}
         body={selectPrice}
         getPayment={getPayment}
+      />
+      <AfterTransactionModal
+        atModalVisible={atModalVisible}
+        setAtModalVisible={setAtModalVisible}
+        body={undefined}
       />
       <View style={style.eventImgContainer}>
         <Image
