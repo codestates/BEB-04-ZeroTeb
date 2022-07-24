@@ -257,7 +257,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             tokenType: _tokenType,
             isTrade: true
         });
-
+        _tokenIds.increment();
         return _eventId;
     }
 
@@ -318,7 +318,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _amounts[_eventId] += msg.value;
 
         emit BuyToken(_eventId, _classId, number_, msg.sender, _tokenId);
-        _tokenIds.increment();
     }
 
     // 토큰 구매자 조회
