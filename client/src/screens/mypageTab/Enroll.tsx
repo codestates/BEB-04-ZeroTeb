@@ -28,12 +28,10 @@ import PlaceModalSelect from '../../components/enroll/PlaceModal'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
-const titleTextSize = 20
-const inputBoxHeight = 30
-const inputTextSize = 14
-const inputLeft = 10
-// 하루를 초로 나타낼 시
-const oneDay = 86400
+const titleTextSize = 20; 
+const inputBoxHeight = 30;
+const inputTextSize = 14;
+const inputLeft = 10;
 interface Props {}
 
 const Enroll: React.FC<Props> = () => {
@@ -48,9 +46,8 @@ const Enroll: React.FC<Props> = () => {
   )
   // 로그인된 사용자 이름
   const userName = useSelector((state: RootState) => state.signin.userName)
-  // 날짜 시간 구분용 list
+  //
   const mode = ['date', 'time']
-
   // 최종적인 저장
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
   // 등록할 이벤트 데이터
@@ -68,9 +65,9 @@ const Enroll: React.FC<Props> = () => {
     contents: '',
     option: {},
     recruit_start_date: Math.floor(Number(new Date()) / 1000),
-    recruit_end_date: Math.floor(Number(new Date()) / 1000 + oneDay),
-    event_start_date: Math.floor(Number(new Date()) / 1000 + oneDay * 2),
-    event_end_date: Math.floor(Number(new Date()) / 1000 + oneDay * 3),
+    recruit_end_date: Math.floor(Number(new Date()) / 1000),
+    event_start_date: Math.floor(Number(new Date()) / 1000),
+    event_end_date: Math.floor(Number(new Date()) / 1000),
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
   })
@@ -114,7 +111,6 @@ const Enroll: React.FC<Props> = () => {
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
     // 조건문 달아서 axios POST
-
     try{
       console.log('이벤트 등록 중~~~');
        await axios
@@ -148,8 +144,8 @@ const Enroll: React.FC<Props> = () => {
     }
   }
 
-  React.useEffect(() => {
-    console.log(list)
+  React.useEffect(()=>{
+    console.log(list);
   }, [list])
 
   return (
@@ -164,10 +160,7 @@ const Enroll: React.FC<Props> = () => {
             <Text style={style.enrollContentText}>제목</Text>
             <View style={style.enrollInput}>
               <TextInput
-                style={{
-                  left: moderateScale(inputLeft),
-                  fontSize: moderateScale(inputTextSize),
-                }}
+                style={{ left: moderateScale(inputLeft), fontSize: moderateScale(inputTextSize) }}
                 value={list.title}
                 onChangeText={text => setList({ ...list, title: text })}
               ></TextInput>
@@ -175,101 +168,66 @@ const Enroll: React.FC<Props> = () => {
           </View>
           {/* 이벤트 종류 */}
           <ConcertTypes list={list} setList={setList} />
-          <View>
-            <Text style={style.enrollContentText}>이벤트 구매/응모 기간</Text>
-          </View>
-          <View style={style.DateTimeWrapper}>
-            {/* 기간 (TextInput 2개 필요)*/}
-            <View>
-              {mode.map((value, index) => {
-                return (
-                  <View key={index} style={style.rowContentWrapper}>
-                    <View style={style.DateTimeContent}>
-                      <SetDateAndTime
-                        setRecruitStart={setList}
-                        type={'recruit_start_date'}
-                        list={list}
-                        mode={value}
-                      />
-                    </View>
-                  </View>
-                )
-              })}
-            </View>
-            <Text
-              style={{
-                fontSize: moderateScale(25),
-                top: moderateScale(12),
-              }}
-            >
-              {' '}
-              ~{' '}
-            </Text>
-            <View>
-              {mode.map((value, index) => {
-                return (
-                  <View key={index} style={style.rowContentWrapper}>
-                    <View style={style.DateTimeContent}>
-                      <SetDateAndTime
-                        setRecruitEnd={setList}
-                        type={'recruit_end_date'}
-                        list={list}
-                        mode={value}
-                      />
-                    </View>
-                  </View>
-                )
-              })}
-            </View>
-          </View>
 
-          <View>
-            <Text style={style.enrollContentText}>이벤트 행사 기간</Text>
-          </View>
-          <View style={style.DateTimeWrapper}>
-            {/* 기간 (TextInput 2개 필요)*/}
-            <View>
-              {mode.map((value, index) => {
-                return (
-                  <View key={index} style={style.rowContentWrapper}>
-                    <View style={style.DateTimeContent}>
-                      <SetDateAndTime
-                        setEventStart={setList}
-                        type={'event_start_date'}
-                        list={list}
-                        mode={value}
-                      />
-                    </View>
+          {/* 기간 (TextInput 2개 필요)*/}
+          {mode.map((value, index) => {
+            return (
+              <View key={index}>
+                <Text style={style.enrollContentText}>
+                  이벤트 구매/응모 {value == 'date' ? '기간' : '시간'}
+                </Text>
+                <View style={style.rowContentWrapper}>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setRecruitStart={setList}
+                      type={'recruit_start_date'}
+                      list={list}
+                      mode={value}
+                    />
                   </View>
-                )
-              })}
-            </View>
-            <Text
-              style={{
-                fontSize: moderateScale(25),
-                top: moderateScale(12),
-              }}
-            >
-              {' '}
-              ~{' '}
-            </Text>
-            <View>
-              {mode.map((value, index) => {
-                return (
-                  <View key={index} style={style.rowContentWrapper}>
-                    <View style={style.DateTimeContent}>
-                      <SetDateAndTime
-                        setEventEnd={setList}
-                        type={'event_end_date'}
-                        list={list}
-                        mode={value}
-                      />
-                    </View>
+                  <Text> ~ </Text>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setRecruitEnd={setList}
+                      type={'recruit_end_date'}
+                      list={list}
+                      mode={value}
+                    />
                   </View>
-                )
-              })}
-            </View>
-          </View>
+                </View>
+              </View>
+            )
+          })}
+
+          {/* 기간 (TextInput 2개 필요)*/}
+          {mode.map((value, index) => {
+            return (
+              <View key={index}>
+                <Text style={style.enrollContentText}>
+                  이벤트 행사 {value == 'date' ? '기간' : '시간'}
+                </Text>
+                <View style={style.rowContentWrapper}>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setEventStart={setList}
+                      type={'event_start_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                  <Text> ~ </Text>
+                  <View style={style.DateTimeContent}>
+                    <SetDateAndTime
+                      setEventEnd={setList}
+                      type={'event_end_date'}
+                      list={list}
+                      mode={value}
+                    />
+                  </View>
+                </View>
+              </View>
+            )
+          })}
 
           {/* 장소 (체크박스) */}
           <PlaceModalSelect list={list} setList={setList} />
@@ -339,42 +297,8 @@ const Enroll: React.FC<Props> = () => {
                   </View>
                   <Text style={{fontSize: moderateScale(13), alignSelf: 'flex-start', left: moderateScale(5)}}>※ 등급/응모 가격/응모 개수</Text>
                 </View>
-                <View style={style.InputPrice}>
-                  <TextInput
-                    style={{
-                      fontSize: moderateScale(15),
-                      textAlign: 'center',
-                    }}
-                    placeholder={'price'}
-                    keyboardType="number-pad"
-                    onChangeText={(e: any) => {
-                      setList({
-                        ...list,
-                        price: [{ ...list.price[0], ['price']: e }],
-                      })
-                    }}
-                    // value={String(list.price[0].price)}
-                  ></TextInput>
-                </View>
-                <View style={style.InputPrice}>
-                  <TextInput
-                    style={{
-                      fontSize: moderateScale(15),
-                      textAlign: 'center',
-                    }}
-                    placeholder={'count'}
-                    keyboardType="number-pad"
-                    onChangeText={(e: any) => {
-                      setList({
-                        ...list,
-                        price: [{ ...list.price[0], ['count']: e }],
-                      })
-                    }}
-                    // value={String(list.price[0].count)}
-                  ></TextInput>
-                </View>
-              </View>
-            )}
+              )}
+            </View>
           </View>
 
           {/* 보증금 */}
@@ -497,12 +421,8 @@ const style = ScaledSheet.create({
     color: '#333333',
     paddingVertical: '5@msr',
   },
-  DateTimeWrapper: {
-    flex: 1,
-    flexDirection: 'row',
-  },
   DateTimeContent: {
-    width: SCREEN_WIDTH / 2 - moderateScale(37),
+    width: SCREEN_WIDTH / 2 - moderateScale(30),
     height: moderateScale(inputBoxHeight),
     borderWidth: 1,
     borderRadius: '10@msr',
@@ -579,7 +499,6 @@ const style = ScaledSheet.create({
   modalSubmmit: {
     width: SCREEN_WIDTH / 2,
     height: '30@msr',
-    marginTop: '15@msr',
     marginBottom: '15@msr',
     textAlign: 'center',
     borderRadius: '10@msr',

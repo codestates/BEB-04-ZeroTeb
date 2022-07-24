@@ -124,7 +124,7 @@ const DetailList = (props: Props) => {
                 onChangeText={e => {
                   propertiesHandler(e, index, 'count')
                 }}
-                value={attribute.count}
+                value={attribute.count.toString()}
               ></TextInput>
             </View>
             {index === 0 || undefined ? <View style={{width: moderateScale(25)}}></View>: 
