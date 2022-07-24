@@ -7,6 +7,7 @@ import {
   Modal,
   Dimensions,
 } from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -29,7 +30,7 @@ const SetSellTypeModal = (props: any) => {
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
             <Text
-              style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+              style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
             >
               {props.list.type}
             </Text>
@@ -69,8 +70,7 @@ const style = ScaledSheet.create({
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
