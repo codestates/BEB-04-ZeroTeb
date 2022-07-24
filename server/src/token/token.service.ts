@@ -116,15 +116,20 @@ export class TokenService {
   }
 
   // QR 코드 생성시 발행한 nonce 값의 유효성 검사 함수
-  async checkValidation(nonce: string) {
+  async checkValidation(nonce: string, event_id: number) {
     console.log('checkValidation');
     //nonce가 유효한지 DB를 통해 확인
+    console.log('value:', nonce);
     try {
       const id = Object.values(nonce)[0];
-      const validation = await this.NonceModel.findById(id);
-
+      const eventId = Object.values(nonce)[1];
+      const validationNonce = await this.NonceModel.find({ event_id: eventId, _id: id });
+      console.log('validationNonce', validationNonce);
+      if (validationNonce.length < 1) {
+        return new Error('해당하는 nonce 데이터가 없습니다.');
+      }
       //해당 nonce의 유효기한이 남았는지 확인
-      const valResult = this.checkEx(validation.date);
+      const valResult = this.checkEx(validationNonce[0].date);
 
       let message: string;
       valResult ? (message = '유효한 QR') : (message = '유효하지 않은 QR');
