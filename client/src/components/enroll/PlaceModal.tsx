@@ -48,7 +48,7 @@ const PlaceModal = (props: any) => {
 
   return (
     <View>
-      <Text style={style.enrollContentText}>장소</Text>
+      <Text style={style.enrollContentText}>주소</Text>
       <View>
         <TouchableOpacity onPress={onStart}>
           <View style={style.enrollInput}>
@@ -91,7 +91,7 @@ const PlaceModal = (props: any) => {
           </View>
         </Modal>
       </View>
-      <Text style={style.enrollContentText}>나머지 주소</Text>
+      <Text style={style.enrollContentText}>상세 주소</Text>
       <View style={style.enrollInput}>
         <TextInput
           style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
