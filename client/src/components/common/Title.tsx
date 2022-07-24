@@ -21,7 +21,6 @@ const Title: React.FC<titleProps> = ({ title, size }) => {
       <Text
         style={{
           fontSize: moderateScale(size),
-          fontWeight: '500',
           fontFamily: 'Montserrat',
         }}
       >
