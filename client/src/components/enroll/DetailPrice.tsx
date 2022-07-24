@@ -2,10 +2,16 @@ import * as React from 'react'
 import { View, TextInput, Dimensions, TouchableOpacity } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { AntDesign } from '@expo/vector-icons'
+import { EnrollType } from '../../models/Event'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
-const DetailList = (props: any) => {
+interface Props {
+  list: EnrollType
+  setList: Function
+}
+
+const DetailList = (props: Props) => {
   // list={list} setList={setList} props.list
   const propertiesHandler = (e: any, index: number, name: string) => {
     props.setList({
@@ -39,7 +45,10 @@ const DetailList = (props: any) => {
   // price 항목 삭제 함수
   const removePropertiesHandler = (e: any, index: number) => {
     const removeProperties = props.list.price.filter(
-      (item: any, itemIndex: number) => index !== itemIndex,
+      (
+        item: { class: string; price: number; count: number },
+        itemIndex: number,
+      ) => index !== itemIndex,
     )
     props.setList({
       ...props.list,
@@ -49,8 +58,13 @@ const DetailList = (props: any) => {
 
   return (
     <View>
-      {props.list.price.map((attribute: any, index: number) => {
+      {props.list.price.map(
+        (
+          attribute: { class: string; price: number; count: number },
+          index: number,
+        ) => {
         return (
+          <View>
           <View key={index} style={style.InputPriceWrapper}>
             <View style={style.InputPrice}>
               <TextInput
@@ -72,30 +86,21 @@ const DetailList = (props: any) => {
                 onChangeText={e => {
                   propertiesHandler(e, index, 'price')
                 }}
-                // value={String(attribute.price)}
+                  value={attribute.price.toString()}
               ></TextInput>
             </View>
-            <View style={style.InputPrice}>
-              <TextInput
-                style={style.InputContent}
-                testID="count"
-                placeholder={'count'}
-                keyboardType="number-pad"
-                onChangeText={e => {
-                  propertiesHandler(e, index, 'count')
-                }}
-                // value={String(attribute.count)}
-              ></TextInput>
-            </View>
-            {index === 0 || undefined ? (
-              <View style={style.IconButton}>
-                <AntDesign
-                  name="minuscircle"
-                  size={moderateScale(24)}
-                  color="gray"
-                />
+              <View style={style.InputPrice}>
+                <TextInput
+                  style={style.InputContent}
+                  testID="count"
+                  placeholder={'count'}
+                  keyboardType="number-pad"
+                  onChangeText={e => {
+                    propertiesHandler(e, index, 'count')
+                  }}
+                  value={attribute.count.toString()}
+                ></TextInput>
               </View>
-            ) : (
               <TouchableOpacity
                 style={style.IconButton}
                 onPress={e => {
@@ -108,7 +113,34 @@ const DetailList = (props: any) => {
                   color="black"
                 />
               </TouchableOpacity>
-            )}
+            </View>
+
+            <View style={style.InputPrice}>
+              <TextInput
+                style={style.InputContent}
+                testID="count"
+                placeholder={'count'}
+                keyboardType="number-pad"
+                onChangeText={e => {
+                  propertiesHandler(e, index, 'count')
+                }}
+                value={attribute.count.toString()}
+              ></TextInput>
+            </View>
+            {index === 0 || undefined ? <View style={{width: moderateScale(25)}}></View>: 
+            <TouchableOpacity
+              style={style.IconButton}
+              onPress={e => {
+                removePropertiesHandler(e, index)
+              }}
+            >
+              <AntDesign
+                name="minuscircle"
+                size={moderateScale(24)}
+                color="black"
+              />
+            </TouchableOpacity>
+            }
           </View>
         )
       })}
@@ -130,7 +162,7 @@ const style = ScaledSheet.create({
   },
   InputPrice: {
     width: SCREEN_WIDTH / 4,
-    minHeight: '25@vs',
+    marginRight: '5@msr',
     height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
@@ -144,8 +176,6 @@ const style = ScaledSheet.create({
     fontSize: '15@msr',
   },
   IconButton: {
-    marginLeft: '10@msr',
-    marginRight: '5@msr',
     marginTop: '5@msr',
     alignItems: 'center'
   },
