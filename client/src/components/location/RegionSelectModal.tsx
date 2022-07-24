@@ -10,7 +10,6 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface Props {
   modalVisible: boolean
   setModalVisible: any
-  body: any
 }
 const RegionSelectModal = (props: Props) => {
   const [regionList, setRegionList] = useState([
@@ -66,7 +65,6 @@ const RegionSelectModal = (props: Props) => {
             })}
           </View>
         </View>
-        {/* {props.body} */}
       </View>
     </Modal>
   )

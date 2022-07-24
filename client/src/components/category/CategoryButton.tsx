@@ -9,8 +9,13 @@ import {
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+interface Props {
+  onPress: Function
+  contentURL: string
+  contentTitle: string
+}
 
-export default function CategoryButton(prop: any) {
+export default function CategoryButton(prop: Props) {
   return (
     <View style={style.categoryButtonOuterContainer}>
       <Pressable

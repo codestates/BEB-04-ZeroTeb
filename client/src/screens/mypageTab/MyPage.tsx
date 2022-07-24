@@ -37,7 +37,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
     (state: RootState) => state.signin.KilpAddress,
   )
   const dispatch = useDispatch()
-  
+
   //사용자 정보
   const [myState, setMyState] = useState<UserType>({
     username: 'tt',
@@ -50,10 +50,10 @@ const MyPage: React.FC<Props> = ({ route }) => {
     },
     tokens: [{}],
   })
-  
+
   // 사용자 정보 받아오기
   const getUserInfo = async () => {
-    console.log('kaddress:',KilpAddress);
+    console.log('kaddress:', KilpAddress)
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
@@ -61,12 +61,12 @@ const MyPage: React.FC<Props> = ({ route }) => {
         withCredentials: true,
       }
       const res = await axios(config)
-      if(res.data.message){
-        alert(res.data.message);
-      }else{
+      if (res.data.message) {
+        alert(res.data.message)
+      } else {
         setMyState(res.data)
         dispatch(signinActions.setUsername(res.data.username))
-      }      
+      }
     } catch (err) {
       alert(err)
     }
@@ -127,7 +127,6 @@ const MyPage: React.FC<Props> = ({ route }) => {
       tabIndexRef.current = idx
     }
   }, [])
-
 
   const syncScrollOffset = () => {
     const focusedTabKey = tabRoutes[tabIndexRef.current].key
@@ -236,6 +235,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
           listArrRef={listArrRef}
           isTabFocused={isFocused}
           userInfo={myState}
+          tabBarHeight={TABBAR_HEIGHT}
         />
       )
     },

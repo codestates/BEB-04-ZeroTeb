@@ -1,12 +1,5 @@
 import * as React from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')

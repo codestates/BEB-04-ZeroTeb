@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, StyleSheet, Text, Dimensions, Pressable } from 'react-native'
+import { View, Text, Dimensions, Pressable } from 'react-native'
 import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
@@ -76,14 +76,12 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         </View>
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>리더기</Text>
-          <Pressable
-            onPress={() => navigation.navigate('QRread')}
-          >
-          <AvatarIcon
-            size={moderateScale(40)}
-            color={'lightgrey'}
-            title={'QR'}
-          />
+          <Pressable onPress={() => navigation.navigate('QRread')}>
+            <AvatarIcon
+              size={moderateScale(40)}
+              color={'lightgrey'}
+              title={'QR'}
+            />
           </Pressable>
         </View>
       </View>
@@ -127,7 +125,6 @@ const styles = ScaledSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     padding: '10@msr',
-
     width: SCREEN_WIDTH * 0.23,
   },
   infoText: { justifyContent: 'flex-start', padding: '5@msr' },
