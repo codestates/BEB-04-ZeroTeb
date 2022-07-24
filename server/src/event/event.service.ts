@@ -356,9 +356,9 @@ export class EventService {
         const eventData = await ipfsGetData(event.eventUri);
         console.log('eventData :', eventData);
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
-        await createdEvent[i].updateOne({ $set: { status: 'minting' } });
+        // await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
-        await createdEvent[i].updateOne({ $set: { status: 'minted' } });
+        createdEvent[i].$set({ status: 'minted' });
       }
     } catch (error) {
       console.error(error);
