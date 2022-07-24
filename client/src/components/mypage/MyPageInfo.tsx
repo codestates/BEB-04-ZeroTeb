@@ -1,9 +1,22 @@
+import { useNavigation } from '@react-navigation/native'
 import React, { useCallback } from 'react'
-import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  Animated,
+  Dimensions,
+  Pressable,
+  Alert,
+} from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
+import { useSelector } from 'react-redux'
 import { UserType } from '../../models/User'
+import { RootState } from '../../store/Index'
+import * as Clipboard from 'expo-clipboard'
 
-const Data = ['지갑정보', '구매내역', '응모내역', '공지사항', '문의하기']
+const Data = ['지갑정보', '공지사항', '응모내역', '구매내역']
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 interface infoProps {
   headerHeight: number
@@ -12,21 +25,69 @@ interface infoProps {
   isTabFocused: boolean
   scrollY: number
   userInfo: UserType
+  tabBarHeight: number
 }
 
 const MyPageInfo: React.FC<infoProps> = props => {
-  const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo } = props
+  const {
+    headerHeight,
+    tabRoute,
+    listArrRef,
+    isTabFocused,
+    userInfo,
+    tabBarHeight,
+  } = props
+  const navigation = useNavigation()
+  const KilpAddress = useSelector(
+    (state: RootState) => state.signin.KilpAddress,
+  )
+
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(KilpAddress)
+  }
+
+  const createTwoButtonAlert = () =>
+    Alert.alert(`${userInfo.username}님의 지갑주소`, KilpAddress, [
+      {
+        text: 'Copy',
+        onPress: () => copyToClipboard(),
+        style: 'cancel',
+      },
+      { text: 'OK' },
+    ])
+
+  const PressHandler = (index: number) => {
+    switch (index) {
+      case 0:
+        createTwoButtonAlert()
+        break
+      case 1:
+        navigation.navigate('Notice')
+        break
+      case 2:
+        navigation.navigate('MyList', { type: 'entry' })
+        break
+      case 3:
+        navigation.navigate('MyList', { type: 'sale' })
+        break
+    }
+  }
 
   const renderItem = useCallback(({ item, index }) => {
     return (
-      <View
+      <Pressable
         style={{
-          ...styles.itemContainer,
-          // backgroundColor: index % 2 === 0 ? 'lightgray' : 'lightyellow',
+          width: '50%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderColor: 'white',
+          borderWidth: 1,
+          height: (SCREEN_HEIGHT - headerHeight - tabBarHeight * 3.85) / 2,
         }}
+        onPress={() => PressHandler(index)}
       >
         <Text style={styles.itemText}>{item}</Text>
-      </View>
+      </Pressable>
     )
   }, [])
 
@@ -53,8 +114,10 @@ const MyPageInfo: React.FC<infoProps> = props => {
           }
         }}
         data={Data}
+        numColumns={2}
         renderItem={renderItem}
         keyExtractor={keyExtractor}
+        horizontal={false}
         contentContainerStyle={{
           paddingTop: headerHeight,
         }}
@@ -79,12 +142,6 @@ const MyPageInfo: React.FC<infoProps> = props => {
 const styles = ScaledSheet.create({
   rootContainer: {
     flex: 1,
-  },
-  itemContainer: {
-    width: '100%',
-    height: '60@msr',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   itemText: {
     fontSize: '25@msr',
