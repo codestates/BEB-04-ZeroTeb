@@ -98,7 +98,7 @@ const SetDateAndTime = (props: any) => {
 const style = ScaledSheet.create({
   dateTimeCSS: {
     textAlign: 'center',
-    fontSize: '20@msr',
+    fontSize: '15@msr',
   },
 })
 

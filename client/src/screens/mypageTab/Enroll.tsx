@@ -28,22 +28,29 @@ import PlaceModalSelect from '../../components/enroll/PlaceModal'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
-
+const titleTextSize = 20; 
+const inputBoxHeight = 30;
+const inputTextSize = 14;
+const inputLeft = 10;
 interface Props {}
 
 const Enroll: React.FC<Props> = () => {
   const navigation = useNavigation()
+  // 지갑 주소
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
+  // jwt 토큰
   const AccessToken = useSelector(
     (state: RootState) => state.signin.AccessToken,
   )
+  // 로그인된 사용자 이름
   const userName = useSelector((state: RootState) => state.signin.userName)
-  // console.log(AccessToken)
+  //
   const mode = ['date', 'time']
   // 최종적인 저장
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
+  // 등록할 이벤트 데이터
   const [list, setList] = useState<EnrollType>({
     title: '',
     promoter: userName,
@@ -66,7 +73,9 @@ const Enroll: React.FC<Props> = () => {
   })
   const [deposit, setDeposit] = useState<Number>(0)
 
+  //썸네일, 토큰 이미지 선택
   const pickImage = async (e: string) => {
+    console.log('이미지 선택')
     const name = e
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -80,28 +89,46 @@ const Enroll: React.FC<Props> = () => {
       else setList({ ...list, thumnail: result.uri })
     }
   }
-  const onStart = () => {
-    let money = 0
+  // 등록 이벤트
+    const onStart = () => {
+    console.log('onstart')
+    let money = 0 // 보증금
+    let depositNum = 0.05 //비율?
+    list.price.map((value, index) => {
+      money += value.price * value.count
+    })
     // 응모일때
     if (list.type === 'entry') {
-      money += Number(list.price[0].count)
-      setDeposit(money * 5)
+      depositNum *= 100
     }
-    // 판매일때
-    else {
-      {
-        list.price.map((value, index) => {
-          money += Number(value.price * value.count)
-        })
-        setDeposit(money * 0.05)
-      }
-    }
+    setDeposit(money * depositNum)
     setModalVisible(true)
   }
+  // const onStart = () => {
+  //   console.log('onstart')
+  //   let money = 0
+  //   // 응모일때
+  //   if (list.type === 'entry') {
+  //     money += Number(list.price[0].count)
+  //     setDeposit(money * 5)
+  //   }
+  //   // 판매일때
+  //   else {
+  //     {
+  //       list.price.map((value, index) => {
+  //         money += Number(value.price * value.count)
+  //       })
+  //       setDeposit(money * 0.05)
+  //     }
+  //   }
+  //   setModalVisible(true)
+  // }
 
+  // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
     // 조건문 달아서 axios POST
     console.log(list)
+    console.log(AccessToken);
     await axios
       .post(ENROLL_URL, list, {
         headers: {
@@ -110,10 +137,14 @@ const Enroll: React.FC<Props> = () => {
       })
       .then(res => {
         console.log(res.data)
-        navigation.goBack()
+        navigation.goBack() //마이 페이지로 돌아감
       })
     setModalVisible(false)
   }
+
+  React.useEffect(()=>{
+    console.log(list);
+  }, [list])
 
   return (
     <View style={style.enrollContainer}>
@@ -121,13 +152,13 @@ const Enroll: React.FC<Props> = () => {
         <View style={style.enrollTitle}>
           <Text style={style.enrollTitleText}>이벤트 등록</Text>
         </View>
-        <View style={{ flex: 1 }}>
+        <View>
           {/* 제목 */}
           <View>
             <Text style={style.enrollContentText}>제목</Text>
             <View style={style.enrollInput}>
               <TextInput
-                style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
+                style={{ left: moderateScale(inputLeft), fontSize: moderateScale(inputTextSize) }}
                 value={list.title}
                 onChangeText={text => setList({ ...list, title: text })}
               ></TextInput>
@@ -141,7 +172,7 @@ const Enroll: React.FC<Props> = () => {
             return (
               <View key={index}>
                 <Text style={style.enrollContentText}>
-                  이벤트 등록 및 마감 {value == 'date' ? '기간' : '시간'}
+                  이벤트 구매/응모 {value == 'date' ? '기간' : '시간'}
                 </Text>
                 <View style={style.rowContentWrapper}>
                   <View style={style.DateTimeContent}>
@@ -171,7 +202,7 @@ const Enroll: React.FC<Props> = () => {
             return (
               <View key={index}>
                 <Text style={style.enrollContentText}>
-                  이벤트 시작 및 종료 {value == 'date' ? '기간' : '시간'}
+                  이벤트 행사 {value == 'date' ? '기간' : '시간'}
                 </Text>
                 <View style={style.rowContentWrapper}>
                   <View style={style.DateTimeContent}>
@@ -374,15 +405,14 @@ const style = ScaledSheet.create({
     fontSize: '30@msr',
   },
   enrollContentText: {
-    fontSize: '20@msr',
+    fontSize: moderateScale(titleTextSize),
     fontWeight: 'bold',
     color: '#333333',
     paddingVertical: '5@msr',
   },
   DateTimeContent: {
     width: SCREEN_WIDTH / 2 - moderateScale(30),
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: moderateScale(inputBoxHeight),
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
@@ -400,8 +430,9 @@ const style = ScaledSheet.create({
   },
 
   enrollInput: {
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    // minHeight: '30@msr',
+    // maxHeight: '30@msr',
+    height: moderateScale(inputBoxHeight),
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',

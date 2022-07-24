@@ -1,7 +1,6 @@
 import * as React from 'react'
 import {
   View,
-  StyleSheet,
   Text,
   TouchableOpacity,
   Modal,
@@ -31,53 +30,50 @@ const ConcertTypesModal = (props: any) => {
   }
   return (
     <View>
-      <Text style={style.enrollContentText}>이벤트 종류</Text>
-      <View>
-        <TouchableOpacity onPress={onStart}>
-          <View style={style.enrollInput}>
-            <Text
-              style={{ left: moderateScale(20), fontSize: moderateScale(20) }}
-            >
-              {props.list.category}
-            </Text>
+      <Text style={style.enrollContentText}>이벤트 종류</Text>      
+      <TouchableOpacity onPress={onStart}>
+        <View style={style.enrollInput}>
+          <Text
+            style={{ left: moderateScale(10), fontSize: moderateScale(15) }}
+          >
+            {props.list.category}
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
+        <View style={style.modalContainer}>
+          <View
+            style={style.blankSpace}
+            onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
+          />
+          <View style={style.modalSelectBody}>
+            {category.map((keyword, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={style.modalSelect}
+                  onPress={() => onSelectType(keyword)}
+                >
+                  <Text style={style.modalText}>{keyword}</Text>
+                </TouchableOpacity>
+              )
+            })}
           </View>
-        </TouchableOpacity>
-        <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
-          <View style={style.modalContainer}>
-            <View
-              style={style.blankSpace}
-              onTouchEnd={() => setModalVisible(false)} // 모달 빈 공간을 누르면 창 닫기
-            />
-            <View style={style.modalSelectBody}>
-              {category.map((keyword, index) => {
-                return (
-                  <TouchableOpacity
-                    key={index}
-                    style={style.modalSelect}
-                    onPress={() => onSelectType(keyword)}
-                  >
-                    <Text style={style.modalText}>{keyword}</Text>
-                  </TouchableOpacity>
-                )
-              })}
-            </View>
-          </View>
-        </Modal>
-      </View>
+        </View>
+      </Modal>      
     </View>
   )
 }
 
 const style = ScaledSheet.create({
   enrollContentText: {
-    fontSize: '20@msr',
+    fontSize: '18@msr',
     fontWeight: 'bold',
     color: '#333333',
     paddingVertical: '5@msr',
   },
   enrollInput: {
-    minHeight: '25@msr',
-    maxHeight: '25@msr',
+    height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
@@ -91,7 +87,7 @@ const style = ScaledSheet.create({
   },
   modalSelectBody: {
     width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_HEIGHT / 2,
+    height: SCREEN_HEIGHT * 0.6,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',

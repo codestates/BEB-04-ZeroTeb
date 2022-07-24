@@ -36,6 +36,7 @@ const DetailList = (props: any) => {
   }
 
   const removePropertiesHandler = (e: any, index: number) => {
+    console.log()
     const removeProperties = props.list.price.filter(
       (item: any, itemIndex: number) => index !== itemIndex,
     )
@@ -85,6 +86,7 @@ const DetailList = (props: any) => {
                 value={attribute.count}
               ></TextInput>
             </View>
+            {index === 0 || undefined ? null: 
             <TouchableOpacity
               style={style.IconButton}
               onPress={e => {
@@ -97,6 +99,7 @@ const DetailList = (props: any) => {
                 color="black"
               />
             </TouchableOpacity>
+            }
           </View>
         )
       })}
@@ -123,6 +126,7 @@ const style = ScaledSheet.create({
     marginRight: '5@msr',
     minHeight: '25@vs',
     maxHeight: '25@vs',
+    // height: '30@msr',
     borderWidth: 1,
     borderRadius: '10@msr',
     borderColor: 'gray',
