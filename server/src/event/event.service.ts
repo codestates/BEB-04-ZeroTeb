@@ -106,7 +106,7 @@ export class EventService {
         modified_date,
         x: point.documents[0].x, //location 기반 좌표 lat
         y: point.documents[0].y, //location 기반 좌표 lon
-        status: '시작 전',
+        status: 'created',
         remaining: totalSeat,
         totalSeat,
       };
