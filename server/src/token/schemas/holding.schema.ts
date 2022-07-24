@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
 export const HoldingSchema = new mongoose.Schema({
-  token_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  token_id: { type: Number, required: true, unique: true },
   event_id: { type: Number, required: true },
   address: { type: String, required: true },
   number: { type: Number, require: true },
