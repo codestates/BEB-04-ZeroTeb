@@ -46,9 +46,9 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     const newArr: RadioButtonProps[] = []
     prices.map((el, index) => {
       return newArr.push({
-        id: index,
+        id: index.toString(),
         label: el.class + ' Class / ' + el.price + ' Klay',
-        value: el.price,
+        value: el.price.toString(),
         selected: false,
         size: moderateScale(20),
         labelStyle: style.eventText,
@@ -79,16 +79,13 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     if (KilpAddress === '') {
       navigation.navigate('SignIn', { gotoMyPage: false })
     } else {
-
-    setModalVisible(true)
-
+      setModalVisible(true)
     }
   }
 
   const getPayment = async () => {
     setModalVisible(false)
 
-    
     console.log('이제 클립으로 결제 진행')
 
     // 구매 , 응모에 따라 다른 데이터를 보내줘야 한다.
@@ -124,7 +121,6 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     } catch (e) {
       console.log(e)
     }
-
   }
 
   return (
