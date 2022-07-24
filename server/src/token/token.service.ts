@@ -226,7 +226,7 @@ export class TokenService {
     for (let i = 0; i < applyingEventStatus.length; i++) {
       const eventId = applyingEventStatus[i].get('event_id');
       const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-      console.log('eventParticipants :', eventParticipants);
+      // console.log('eventParticipants :', eventParticipants);
       const eventParticipantsCount = await this.ParticipantModel.find({
         event_id: eventId,
       })
@@ -236,10 +236,9 @@ export class TokenService {
         event_id: eventId,
         address,
       }));
-      console.log('participantSchemas :', participantSchemas);
+      // console.log('participantSchemas :', participantSchemas);
       if (participantSchemas.length === 0) return;
-      const addParticipants = new this.ParticipantModel(participantSchemas);
-      await addParticipants.save();
+      await this.ParticipantModel.create(participantSchemas);
     }
     // 'end' - 이벤트 종료 후 토큰 거래
   }
