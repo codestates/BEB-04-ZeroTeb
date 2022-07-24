@@ -152,8 +152,16 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     ) public payable override returns (uint256 _eventId) {
         uint256 _total = 0;
         uint256 _deposit = 0;
-        for (uint256 i = 0; i < _classPrices.length; i++) {
-            _total = _total + (_classPrices[i] * _classCounts[i]);
+        if (_eventType == 0) {
+            for (uint256 i = 0; i < _classPrices.length; i++) {
+                _total = _total + (_classPrices[i] * _classCounts[i]);
+            }
+        } else if (_eventType == 1) {
+            for (uint256 i = 0; i < _classPrices.length; i++) {
+                _total = _total + (5 * _classCounts[i]);
+            }
+        } else {
+            revert("Invalid value.");
         }
         _total = _total * 1 ether;
         _deposit = (_total / 100) * 5;
