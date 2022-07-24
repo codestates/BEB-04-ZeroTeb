@@ -140,7 +140,7 @@ export class EventService {
       const eventStatus = new this.EventStatusModel(eventStatusDto);
       await eventStatus.save();
 
-      return saveResult;
+      return { message: 'success' };
     } catch (e) {
       console.log(e);
       return { message: 'Failed to create event' };
