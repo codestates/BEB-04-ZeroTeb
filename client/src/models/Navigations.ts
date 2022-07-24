@@ -31,7 +31,7 @@ export type MyPageStackParamList = {
   MyPage: { kilpAddress?: string; accessToken?: string }
   TicketDetail: { address?: string; token_id?: string; token_image_url?: string}
   QRLoad: { qrcodeXML: any }
-  QRread: undefined
+  QRread: { event_id: any }
   Enroll: undefined
   MyList: { type: string }
 }

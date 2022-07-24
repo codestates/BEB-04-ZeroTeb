@@ -8,10 +8,10 @@ import {
 import axios, { AxiosRequestConfig } from 'axios'
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-const QRread = () =>{
+const QRread = ({route}) =>{
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-
+  console.log('event_id:',route.params.event_id);
   useEffect(() => {
     (async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();//권한 요청
@@ -21,8 +21,9 @@ const QRread = () =>{
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
-    const value = data.split(' ')   
-    const params = { nonce: value[2]};
+    const value = data.split(' ')
+    console.log(value);
+    const params = { nonce: value[2], event_id: route.params.event_id};
     try {
       const config: AxiosRequestConfig = {
         method: 'post',

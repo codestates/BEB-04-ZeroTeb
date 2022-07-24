@@ -77,7 +77,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         <View style={styles.infoIconContainer}>
           <Text style={styles.infoText}>리더기</Text>
           <Pressable
-            onPress={() => navigation.navigate('QRread')}
+            // onPress={() => navigation.navigate('QRread')}
           >
           <AvatarIcon
             size={moderateScale(40)}
