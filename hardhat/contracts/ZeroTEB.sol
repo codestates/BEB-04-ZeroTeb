@@ -252,11 +252,19 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
         _events[_eventId].class[_classId].tokens[_number] = _newTokenId;
 
-        _tokenExtentions[_newTokenId] = TokenExtention({
-            eventId: _eventId,
-            tokenType: _tokenType,
-            isTrade: true
-        });
+        if (_events[_eventId].eventType == 0) {
+            _tokenExtentions[_newTokenId] = TokenExtention({
+                eventId: _eventId,
+                tokenType: _tokenType,
+                isTrade: true
+            });
+        } else {
+            _tokenExtentions[_newTokenId] = TokenExtention({
+                eventId: _eventId,
+                tokenType: _tokenType,
+                isTrade: false
+            });
+        }
         _tokenIds.increment();
         return _eventId;
     }
