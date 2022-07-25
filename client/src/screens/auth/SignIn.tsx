@@ -24,7 +24,7 @@ interface SignInProps {
 
 const SignIn: React.FC<SignInProps> = ({ route }) => {
   const [isChecked, setisChecked] = useState(false)
-
+  const [lockBtn, setLockBtn] = useState(true)
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const KilpAddress = useSelector(
@@ -36,14 +36,19 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
 
   //지갑 연동하는 함수 실행
   const getUserData = async () => {
-    await KlipAPI.getAddress(
-      async (address: string) => {
-        dispatch(signinActions.setKilpAddress(address))
-      },
-      async (accessToken: string) => {
-        dispatch(signinActions.setAccessToken(accessToken))
-      },
-    )
+    if(lockBtn){
+      setLockBtn(false)
+      await KlipAPI.getAddress(
+        async (address: string) => {
+          dispatch(signinActions.setKilpAddress(address))
+        },
+        async (accessToken: string) => {
+          dispatch(signinActions.setAccessToken(accessToken))
+          setLockBtn(true)
+        },
+      )
+      
+    }
   }
 
   React.useEffect(() => {

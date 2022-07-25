@@ -16,7 +16,7 @@ function CategoryListup({ route }) {
     setRefreshing(true)
     setListData([])
     getListData()
-    wait(2000).then(() => setRefreshing(false))
+    wait(1000).then(() => setRefreshing(false))
   }, [])
   const params = route.params.catagoryName.toLowerCase() // 카테고리 타이틀
 

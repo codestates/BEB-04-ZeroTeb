@@ -78,6 +78,7 @@ const Enroll = () => {
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
   }
+  
   // 등록할 이벤트 데이터
   const [list, setList] = useState<EnrollType>(initData)
   const [deposit, setDeposit] = useState<Number>(0) // 보증금 useState
@@ -98,10 +99,35 @@ const Enroll = () => {
       aspect: [4, 3],
       quality: 1,
     })
+    
+
     if (!result.cancelled) {
-      if (name === 'token_image_url')
-        setList({ ...list, token_image_url: result.uri })
-      else setList({ ...list, thumnail: result.uri })
+      const filename = result.uri.split('/').pop()
+      const formData = new FormData()
+      formData.append('file', {
+        uri: result.uri,
+        name: filename,
+        type: 'image/jpg',
+      })
+      const resultPath = await axios
+          .post(`http://server.beeimp.com:18080/file`, formData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          })
+          .then(res => {
+            return res.data.savedPath
+          })
+
+      if (name === 'token_image_url'){
+        console.log('토큰 이미지 업로드!')        
+        setList({ ...list, token_image_url: `http://server.beeimp.com:18080/file?fn=${resultPath}` })
+      }
+      else {
+        console.log('썸네일 이미지 업로드!')
+        setList({ ...list, thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`})
+      }
     }
   }
   // 등록 이벤트
@@ -112,63 +138,25 @@ const Enroll = () => {
     // 응모일때
     if (list.type === 'entry') {
       console.log(list.price[0].count * 5)
-      setDeposit(list.price[0].count * 5)
+      setDeposit(Math.floor(list.price[0].count * 5))
     } else {
       list.price.map((value, index) => {
         money += value.price * value.count
       })
       console.log(money * 0.05)
-      setDeposit(money * 0.05)
+      setDeposit(Math.floor(money * 0.05))
     }
   }
 
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
-    const filename = list.thumnail.split('/').pop()
-    const formData = new FormData()
-    formData.append('file', {
-      uri: list.thumnail,
-      name: filename,
-      type: 'image/jpg',
-    })
-    const filename2 = list.token_image_url.split('/').pop()
-    const formData2 = new FormData()
-    formData2.append('file', {
-      uri: list.token_image_url,
-      name: filename2,
-      type: 'image/jpg',
-    })
-    console.log('=============', formData)
-    // 조건문 달아서 axios POST
 
-    try {
-      console.log('썸네일 이미지 업로드 중~~~')
-      const thumRes = await axios
-        .post(`http://server.beeimp.com:18080/file`, formData, {
-          headers: {
-            'content-type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        })
-        .then(res => {
-          return res.data.savedPath
-        })
-      console.log('토큰 이미지 업로드 중~~~')
-      const tokenImgRes = await axios
-        .post(`http://server.beeimp.com:18080/file`, formData2, {
-          headers: {
-            'content-type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        })
-        .then(res => {
-          return res.data.savedPath
-        })
-      setList({
-        ...list,
-        thumnail: `http://server.beeimp.com:18080/${thumRes}`,
-        token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`,
-      })
+
+
+    if(list.thumnail === ' ' || list.token_image_url === ' '){
+      alert('이미지 업로드 중~ 기다리세요!')
+    }else{
+    try{
       console.log('이벤트 등록 중~~~')
       await axios
         .post(ENROLL_URL, list, {
@@ -187,6 +175,7 @@ const Enroll = () => {
       alert('에러 발생')
       setModalVisible(false)
     }
+  }
   }
   // 등록버튼 활성화 / 비활성화
   // 전체 list 요소들 다 검사하는
