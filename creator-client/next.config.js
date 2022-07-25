@@ -1,6 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `http://server.beeimp.com:18080/:path*`,
+      },
+      {
+        source: '/data-api/:path*',
+        destination: `https://www.juso.go.kr/addrlink/addrLinkApi.do/:path*`,
+      },
+    ];
+  },
   swcMinify: true,
   experimental: {
     emotion:

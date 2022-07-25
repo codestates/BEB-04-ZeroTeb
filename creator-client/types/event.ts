@@ -3,6 +3,7 @@ interface CreateEventType {
   address: string;
   promoter: string;
   location: string;
+  sub_location: string;
   category: string;
   type: 'entry' | 'sale';
   thumnail: string;

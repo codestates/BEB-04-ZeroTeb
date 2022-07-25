@@ -1,3 +1,3 @@
-import AuthSignInWrapper from './Wrapper';
+import AuthSignInWrapper from './wapper';
 
 export { AuthSignInWrapper };

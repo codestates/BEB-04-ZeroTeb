@@ -10,6 +10,7 @@ const initialState: CreateState = {
   address: '',
   promoter: '',
   location: '',
+  sub_location: '',
   category: '',
   type: 'entry',
   thumnail: '',
@@ -40,6 +41,9 @@ export const createEventSlice = createSlice({
     },
     set_location: (state, action: PayloadAction<string>) => {
       state.location = action.payload;
+    },
+    set_sub_location: (state, action: PayloadAction<string>) => {
+      state.sub_location = action.payload;
     },
     set_category: (state, action: PayloadAction<string>) => {
       state.category = action.payload;
