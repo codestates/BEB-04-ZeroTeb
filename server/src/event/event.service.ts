@@ -573,9 +573,13 @@ export class EventService {
 
   // @Cron('* * * * * *')
   // async test(): Promise<void> {
-<<<<<<< Updated upstream
-  //   await this.klaytnService.test();
-=======
->>>>>>> Stashed changes
+  //   // await this.klaytnService.test();
+  //   console.log('start');
+  //   const data = await this.Event.find().exec();
+  //   for (let i = 0; i < data.length; i++) {
+  //     console.log(i);
+  //     await data[i].$set({ address: data[i].get('address').toLowerCase() }).save();
+  //   }
+  //   console.log('end');
   // }
 }
