@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import axios, { AxiosRequestConfig } from 'axios';
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { klipActions } from '../../store/klipSlice';
-import KlipAddress from './KlipAddress';
+import KlipAddress from './address';
 
-const KlipLogin = () => {
+const KlipLogin: FunctionComponent = () => {
   const [clicked, setClicked] = React.useState(false);
   const klipState = useSelector((state: RootState) => state.klip);
   const dispatch = useDispatch();
