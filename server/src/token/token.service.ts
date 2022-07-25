@@ -262,7 +262,9 @@ export class TokenService {
     console.log('구매자 조회 시작');
     const getTokensData = await this.klaytnService.getTokens('');
     if (getTokensData.message || !getTokensData.items) throw new Error(getTokensData.message);
-    const tokens = getTokensData.items;
+    const tokens = getTokensData.items.filter(
+      (item) => item.owner !== process.env.OWNER_ADDRESS ?? '',
+    );
     console.log('token 개수 :', tokens.length);
     for (let i = 0; i < tokens.length; i++) {
       const tokenId = parseInt(tokens[i].tokenId, 16);
@@ -288,8 +290,8 @@ export class TokenService {
     console.log('getHoldingData 업데이트 완료!');
   }
 
-  // @Cron('*/5 * * * * *')
-  // async test(): Promise<void> {
-  //   await this.klaytnService.test();
-  // }
+  @Cron('*/5 * * * * *')
+  async test(): Promise<void> {
+    await this.klaytnService.test();
+  }
 }
