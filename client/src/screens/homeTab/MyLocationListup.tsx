@@ -69,7 +69,7 @@ function MyLocationListup() {
       {load ? (
         <Image
           source={{
-            uri: 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Loading_2.gif',
+            uri: 'https://i.ibb.co/5vP1d8X/Spin-1s-200px-without-Background.gif',
           }}
           style={{
             width: moderateScale(100),
