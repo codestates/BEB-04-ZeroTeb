@@ -10,6 +10,7 @@ import { User, UserSchema } from 'src/auth/schemas/user.schema';
 import { AuthModule } from 'src/auth/auth.module';
 import { EventStatus, EventStatusSchema } from './schemas/event-status.schema';
 import { HoldingSchema } from 'src/token/schemas/holding.schema';
+import { Participant, ParticipantSchema } from 'src/token/schemas/participant.schema';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { HoldingSchema } from 'src/token/schemas/holding.schema';
       { name: User.name, schema: UserSchema },
       { name: EventStatus.name, schema: EventStatusSchema },
       { name: 'Holding', schema: HoldingSchema },
+      { name: Participant.name, schema: ParticipantSchema },
     ]),
     ScheduleModule.forRoot(),
   ],

@@ -15,6 +15,7 @@ import { ipfsGetData, ipfsMetadataUpload } from 'lib/pinata';
 import { EventStatus, EventStatusDocument } from './schemas/event-status.schema';
 import { EventStatusDto } from './dto/event-status.dto';
 import { HoldingType } from 'src/token/schemas/holding.schema';
+import { Participant, ParticipantDocument } from 'src/token/schemas/participant.schema';
 
 @Injectable()
 export class EventService {
@@ -25,6 +26,7 @@ export class EventService {
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
     @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
     @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
+    @InjectModel(Participant.name) private readonly ParticipantModel: Model<ParticipantDocument>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -329,7 +331,7 @@ export class EventService {
     console.log('거리', dist / 1000, 'km');
     return dist / 1000;
   }
-
+  // 배너 뿌리는 API
   async getBanner() {
     console.log('getBanner');
     try {
@@ -340,7 +342,51 @@ export class EventService {
       return { message: 'Fail to import ad' };
     }
   }
+  // 내 구매 목록 반환 API
+  async getMySaleList(address: string) {
+    try {
+      console.log('add:', address);
+      const mySaleTokenList = await this.HoldingModel.find({ address: address });
+      // console.log(mySaleTokenList);
+      let filedList = [];
+      mySaleTokenList.forEach((ele) => {
+        if (!filedList.includes(ele.event_id)) {
+          filedList = [...filedList, ele.event_id];
+        }
+      });
+      console.log(filedList);
+      let result = [];
+      for (const i of filedList) {
+        // console.log(i);
+        const value = await this.EventModel.find({ event_id: i });
+        result = [...result, ...value];
+      }
 
+      return result;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your sale evnetList' };
+    }
+  }
+  // 내 구매 목록 반환 API
+  async getMyEntryList(address: string) {
+    try {
+      console.log('address:', address);
+      const myEntryTokenList = await this.ParticipantModel.find({ address: address });
+
+      let result = [];
+      for (const i of myEntryTokenList) {
+        console.log(i);
+        const value = await this.EventModel.find({ event_id: i.event_id });
+        result = [...result, ...value];
+      }
+
+      return result;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your entry evnetList' };
+    }
+  }
   // 이벤트 리스트 받아서 holdings에 업데이트
   @Cron('0 */1 * * * *') // 15분 마다 진행
   async mintTokens(): Promise<void> {
