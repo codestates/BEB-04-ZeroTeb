@@ -8,17 +8,31 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const DetailList = (props: any) => {
   // list={list} setList={setList} props.list
   const propertiesHandler = (e: any, index: number, name: string) => {
-    props.setList({
-      ...props.list,
-      price: [
-        ...props.list.price.slice(0, index),
-        {
-          ...props.list.price[index],
-          [name]: e,
-        },
-        ...props.list.price.slice(index + 1),
-      ],
-    })
+    if (name === 'class') {
+      props.setList({
+        ...props.list,
+        price: [
+          ...props.list.price.slice(0, index),
+          {
+            ...props.list.price[index],
+            [name]: e,
+          },
+          ...props.list.price.slice(index + 1),
+        ],
+      })
+    } else {
+      props.setList({
+        ...props.list,
+        price: [
+          ...props.list.price.slice(0, index),
+          {
+            ...props.list.price[index],
+            [name]: Number(e),
+          },
+          ...props.list.price.slice(index + 1),
+        ],
+      })
+    }
   }
 
   const addPropertiesHandler = () => {
@@ -71,7 +85,7 @@ const DetailList = (props: any) => {
                 onChangeText={e => {
                   propertiesHandler(e, index, 'price')
                 }}
-                // value={String(attribute.price)}
+                value={String(attribute.price)}
               ></TextInput>
             </View>
             <View style={style.InputPrice}>
@@ -83,7 +97,7 @@ const DetailList = (props: any) => {
                 onChangeText={e => {
                   propertiesHandler(e, index, 'count')
                 }}
-                // value={String(attribute.count)}
+                value={String(attribute.count)}
               ></TextInput>
             </View>
 
@@ -112,12 +126,12 @@ const DetailList = (props: any) => {
           </View>
         )
       })}
-      <View>
+      <View style={{ alignItems: 'center' }}>
         <TouchableOpacity
           style={style.IconButton}
           onPress={addPropertiesHandler}
         >
-          <AntDesign name="pluscircle" size={moderateScale(24)} color="black" />
+          <AntDesign name="pluscircle" size={moderateScale(22)} color="black" />
         </TouchableOpacity>
       </View>
     </View>

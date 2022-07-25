@@ -36,9 +36,8 @@ const inputTextSize = 14
 const inputLeft = 10
 // 하루를 초로 나타낼 시
 const oneDay = 86400
-interface Props {}
 
-const Enroll= () => {
+const Enroll = () => {
   const navigation = useNavigation()
   // 지갑 주소
   const KilpAddress = useSelector(
@@ -102,8 +101,7 @@ const Enroll= () => {
     if (list.type === 'entry') {
       console.log(list.price[0].count * 5)
       setDeposit(list.price[0].count * 5)
-    }
-    else{
+    } else {
       list.price.map((value, index) => {
         money += value.price * value.count
       })
@@ -112,62 +110,98 @@ const Enroll= () => {
     }
   }
 
-
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
-    const filename = list.thumnail.split('/').pop();
-    const formData = new FormData();
-    formData.append('file', {uri: list.thumnail, name: filename, type: 'image/jpg'})
-    const filename2 = list.token_image_url.split('/').pop();
-    const formData2 = new FormData();
-    formData2.append('file', {uri: list.token_image_url, name: filename2, type: 'image/jpg'})
-    console.log('=============',formData);
+    const filename = list.thumnail.split('/').pop()
+    const formData = new FormData()
+    formData.append('file', {
+      uri: list.thumnail,
+      name: filename,
+      type: 'image/jpg',
+    })
+    const filename2 = list.token_image_url.split('/').pop()
+    const formData2 = new FormData()
+    formData2.append('file', {
+      uri: list.token_image_url,
+      name: filename2,
+      type: 'image/jpg',
+    })
+    console.log('=============', formData)
     // 조건문 달아서 axios POST
 
-    try{
-      console.log('썸네일 이미지 업로드 중~~~');
+    try {
+      console.log('썸네일 이미지 업로드 중~~~')
       const thumRes = await axios
-      .post(`http://server.beeimp.com:18080/file`, formData, {
-        headers: {
-          'content-type': 'multipart/form-data',        
-        },
-        withCredentials: true
-      })
-      .then((res) => {
-        return res.data.savedPath
-      })
-      console.log('썸네일 주소:', thumRes)
-      console.log('토큰 이미지 업로드 중~~~');
+        .post(`http://server.beeimp.com:18080/file`, formData, {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        })
+        .then(res => {
+          return res.data.savedPath
+        })
+      console.log('토큰 이미지 업로드 중~~~')
       const tokenImgRes = await axios
-      .post(`http://server.beeimp.com:18080/file`, formData2, {
-        headers: {
-          'content-type': 'multipart/form-data',        
-        },
-        withCredentials: true
+        .post(`http://server.beeimp.com:18080/file`, formData2, {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        })
+        .then(res => {
+          return res.data.savedPath
+        })
+      setList({
+        ...list,
+        thumnail: `http://server.beeimp.com:18080/${thumRes}`,
+        token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`,
       })
-      .then((res) => {
-        return res.data.savedPath
-      })
-      console.log('토큰 주소:', tokenImgRes)
-      setList({...list, thumnail: `http://server.beeimp.com:18080/${thumRes}`, token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`});
-      console.log('이벤트 등록 중~~~');
-       await axios
+      console.log('이벤트 등록 중~~~')
+      await axios
         .post(ENROLL_URL, list, {
           headers: {
             Cookie: AccessToken,
           },
         })
-        .then((res) => {
-          console.log('res:',res) 
+        .then(res => {
+          console.log('res:', res)
         })
       setModalVisible(false)
-      navigation.goBack() //마이 페이지로 돌아감 
-    }catch(e){
+      navigation.goBack() //마이 페이지로 돌아감
+    } catch (e) {
       console.log('이벤트 등록 중 에러 발생')
       console.log(e)
-      alert('에러 발생');
+      alert('에러 발생')
       setModalVisible(false)
     }
+  }
+
+  const onCheckList = () => {
+    let key: string
+    let priceKey: string
+    let check: boolean = true
+    for (key in list) {
+      if (key === 'price') {
+        list[key].map((value, index) => {
+          for (priceKey in value) {
+            if (value[priceKey] === '') {
+              check = false
+            }
+            if (value[priceKey] === 0) {
+              check = false
+            }
+          }
+        })
+      }
+      if (list[key] === '') {
+        check = false
+      }
+      if (list[key] === ' ') {
+        check = false
+      }
+    }
+    return check
   }
 
   React.useEffect(() => {
@@ -336,10 +370,10 @@ const Enroll= () => {
                     onChangeText={(e: any) => {
                       setList({
                         ...list,
-                        price: [{ ...list.price[0], ['price']: e }],
+                        price: [{ ...list.price[0], ['price']: Number(e) }],
                       })
                     }}
-                    // value={String(list.price[0].price)}
+                    value={String(list.price[0].price)}
                   ></TextInput>
                 </View>
                 <View style={style.InputPrice}>
@@ -353,10 +387,10 @@ const Enroll= () => {
                     onChangeText={(e: any) => {
                       setList({
                         ...list,
-                        price: [{ ...list.price[0], ['count']: e }],
+                        price: [{ ...list.price[0], ['count']: Number(e) }],
                       })
                     }}
-                    // value={String(list.price[0].count)}
+                    value={String(list.price[0].count)}
                   ></TextInput>
                 </View>
               </View>
@@ -459,11 +493,19 @@ const Enroll= () => {
       </ScrollView>
 
       {/* 등록 버튼 */}
-      <TouchableOpacity onPress={onStart}>
-        <View style={style.enrollSubmmitButtonContainer}>
-          <Text style={style.enrollSubmmitButton}>등록</Text>
-        </View>
-      </TouchableOpacity>
+      {onCheckList() ? (
+        <TouchableOpacity onPress={onStart}>
+          <View style={style.enrollSubmmitButtonContainer}>
+            <Text style={style.enrollSubmmitButton}>등록</Text>
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={onStart} disabled>
+          <View style={style.enrollSubmmitButtonContainerDisable}>
+            <Text style={style.enrollSubmmitButton}>등록</Text>
+          </View>
+        </TouchableOpacity>
+      )}
       <Modal animationType={'fade'} transparent={true} visible={modalVisible}>
         <View style={style.modalContainer}>
           <View
@@ -538,10 +580,7 @@ const style = ScaledSheet.create({
     borderColor: 'gray',
     justifyContent: 'center',
   },
-
   enrollInput: {
-    // minHeight: '30@msr',
-    // maxHeight: '30@msr',
     height: moderateScale(inputBoxHeight),
     borderWidth: 1,
     borderRadius: '10@msr',
@@ -571,6 +610,14 @@ const style = ScaledSheet.create({
     height: '30@msr',
     borderRadius: '10@msr',
     backgroundColor: '#3AACFF',
+  },
+  enrollSubmmitButtonContainerDisable: {
+    marginTop: '20@msr',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '30@msr',
+    borderRadius: '10@msr',
+    backgroundColor: 'gray',
   },
   enrollSubmmitButton: {
     fontSize: '20@msr',
