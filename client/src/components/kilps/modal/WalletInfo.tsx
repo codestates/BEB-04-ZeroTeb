@@ -28,7 +28,7 @@ const decodePayload = (tokenData: string) => {
 
 
 //지갑 주소 수집
-export const getAddress = (callback: any, tokenback: any) => {
+export const getAddress = (callback: any,tokenback: any) => {
   axios
     .post(A2P_API_PREPARE_URL, {
       //prepare [request_key 받아오기]
@@ -67,6 +67,7 @@ export const getAddress = (callback: any, tokenback: any) => {
       }
 
       getAccessToken = setInterval(async () => {
+        console.log('setInterval')
         // result [accessToken 가져오기]
         await axios
           .post(`http://server.beeimp.com:18080/auth/signin`, params, {
