@@ -369,7 +369,7 @@ export class EventService {
     }
   }
 
-  @Cron('0 */1 * * * *')
+  @Cron('0 0,15,30,45 * * * *')
   async getTokens(): Promise<void> {
     const nowTimestamp = Number(Date.now().toString().substring(0, 10));
     console.log('상태 변경 :', new Date(nowTimestamp * 1000));
