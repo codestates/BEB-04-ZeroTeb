@@ -41,7 +41,7 @@ export class TokenService {
   }
 
   // 주소와 token_id로 QR code 생성 및 nonce 발행하는 함수
-  async createTokenQR(address: string, token_id: number) {
+  async createTokenQR(address: string, token_id: number, event_id: number) {
     console.log('createTokenQR');
     //유효한 계정(로그인)일 경우, 받은 주소에 해당 토큰 확인 (이 부분은 나중에 다른 데이터 확인해야함 Nonce X)
     // 계정(로그인) 확인 코드 필요
@@ -59,6 +59,7 @@ export class TokenService {
       const noncedata = await this.NonceModel.findOne({
         address: `${address}`,
         token_id: `${token_id}`,
+        event_id: `${event_id}`,
       }).exec();
 
       const now = new Date(); // 현재 날짜
@@ -71,6 +72,7 @@ export class TokenService {
           address,
           token_id,
           date: ex,
+          event_id,
         });
         saveResult = await newNonce.save();
       }
@@ -84,7 +86,7 @@ export class TokenService {
         console.log('유효기한 지남');
         console.log('유효기한 갱신');
         await this.NonceModel.updateOne(
-          { token_id: noncedata.token_id, address: noncedata.address },
+          { token_id: noncedata.token_id, address: noncedata.address, event_id: event_id },
           { $set: { date: ex } },
         );
         saveResult = noncedata;
@@ -94,7 +96,7 @@ export class TokenService {
       //QR 생성 요청 API
       //참고 사이트 https://www.qr-code-generator.com/qr-code-api/?target=api-ad
       const nonce = saveResult._id; //nonce값은 무작이로 정해지는 _id값을 사용
-      const text = `${address} ${token_id} ${nonce} format:(address, token_id, nonce)`;
+      const text = `${nonce} ${event_id} format:(nonce, event_id)`;
       const api = process.env.QR_API_KEY;
       const param = {
         frame_name: 'no-frame',
@@ -121,10 +123,10 @@ export class TokenService {
     console.log('checkValidation');
     //nonce가 유효한지 DB를 통해 확인
     console.log('value:', nonce);
+    // console.log('hvalue:' nonce.Hex)
+    console.log('event_id:', event_id);
     try {
-      const id = Object.values(nonce)[0];
-      const eventId = Object.values(nonce)[1];
-      const validationNonce = await this.NonceModel.find({ event_id: eventId, _id: id });
+      const validationNonce = await this.NonceModel.find({ _id: nonce, event_id: event_id }).exec();
       console.log('validationNonce', validationNonce);
       if (validationNonce.length < 1) {
         return new Error('해당하는 nonce 데이터가 없습니다.');

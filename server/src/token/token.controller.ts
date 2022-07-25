@@ -14,12 +14,16 @@ export class TokenController {
     return this.tokenService.findTokenList(address);
   }
   @Get('qrcode')
-  createTokenQR(@Query('address') address: string, @Query('token_id') token_id: number): any {
-    return this.tokenService.createTokenQR(address, token_id);
+  createTokenQR(
+    @Query('address') address: string,
+    @Query('token_id') token_id: number,
+    @Query('event_id') event_id: number,
+  ): any {
+    return this.tokenService.createTokenQR(address, token_id, event_id);
   }
 
   @Post('qrcode/validation')
-  checkValidation(@Body() nonce: string, @Body() event_id: number) {
+  checkValidation(@Body('nonce') nonce: string, @Body('event_id') event_id: number) {
     return this.tokenService.checkValidation(nonce, event_id);
   }
 
