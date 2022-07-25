@@ -102,9 +102,9 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       console.log('sale')
       url = 'http://server.beeimp.com:18080/token/buy'
       data = {
-        event_id: 0,
-        class_id: 0,
-        number: 0,
+        // event_id: eventDetail.event_id,
+        // class_id: selectValue[0].id,
+        // number: 0,
       }
     } else {
       console.log('entry')
