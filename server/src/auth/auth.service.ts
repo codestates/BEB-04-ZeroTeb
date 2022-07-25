@@ -11,6 +11,7 @@ import { UserInfoDto } from './dto/userInfo.dto';
 import { LikedEvent } from 'src/event/schemas/likedEvent.schema';
 import { Event } from 'src/event/schemas/event.schema';
 import { Cron } from '@nestjs/schedule';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
   usernameModel: Model<UsernameDocument>;
   EventModel: Model<Event>;
   LikedEventModel: Model<LikedEvent>;
+  HoldingModel: Model<HoldingType>;
   constructor(
     private jwtService: JwtService,
     // @InjectConnection(User.name) private userModel: Model<User>,
@@ -28,6 +30,7 @@ export class AuthService {
     this.usernameModel = mongooseConnection.model(Username.name);
     this.EventModel = mongooseConnection.model('Event');
     this.LikedEventModel = mongooseConnection.model('LikedEvent');
+    this.HoldingModel = mongooseConnection.model('Holding');
   }
 
   async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
@@ -68,7 +71,7 @@ export class AuthService {
           newUser.username = usernameData.get('username');
 
           const testWallet = await newWallet(newUser.address);
-          newUser.test_address = testWallet.address;
+          newUser.test_address = testWallet.address.toLowerCase();
           newUser.test_private_key = testWallet.privateKey;
 
           await this.userModel.create(newUser);
@@ -123,6 +126,22 @@ export class AuthService {
       // const likedList = await this.LikedEventModel.find({ address: address });
       // const likedId = likedList.map((ele) => ele.event_id);
       // userInfoDto.history.sale = await this.EventModel.count({ event_id: likedId });
+      userInfoDto.tokens = [];
+      // console.log(address);
+      const tokens = await this.HoldingModel.find({ address: address }).exec();
+      // console.log(tokens);
+      if (tokens.length > 0) {
+        for (let i = 0; i < tokens.length; i++) {
+          const event = await this.EventModel.findOne({
+            event_id: tokens[i].event_id,
+          }).exec();
+          userInfoDto.tokens.push({
+            token_id: tokens[i].token_id,
+            token_image_url: event.token_image_url,
+          });
+        }
+      }
+      console.log(userInfoDto);
       return userInfoDto;
     } catch (err) {
       return {
