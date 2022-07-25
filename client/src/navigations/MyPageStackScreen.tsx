@@ -22,7 +22,6 @@ export default function MyPageStackScreen() {
 
   return (
     <MyPageStack.Navigator>
-      
       {KilpAddress ? (
         <MyPageStack.Screen
           name="MyPage"
