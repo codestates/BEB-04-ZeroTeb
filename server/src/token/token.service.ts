@@ -234,25 +234,25 @@ export class TokenService {
     //     }
     //   }
     // }
-    // // 'applying'
-    // const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
-    // for (let i = 0; i < applyingEventStatus.length; i++) {
-    //   const eventId = applyingEventStatus[i].get('event_id');
-    //   const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-    //   // console.log('eventParticipants :', eventParticipants);
-    //   const eventParticipantsCount = await this.ParticipantModel.find({
-    //     event_id: eventId,
-    //   })
-    //     .count()
-    //     .exec();
-    //   const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
-    //     event_id: eventId,
-    //     address,
-    //   }));
-    //   // console.log('participantSchemas :', participantSchemas);
-    //   if (participantSchemas.length === 0) return;
-    //   await this.ParticipantModel.create(participantSchemas);
-    // }
+    // 'applying'
+    const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
+    for (let i = 0; i < applyingEventStatus.length; i++) {
+      const eventId = applyingEventStatus[i].get('event_id');
+      const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
+      // console.log('eventParticipants :', eventParticipants);
+      const eventParticipantsCount = await this.ParticipantModel.find({
+        event_id: eventId,
+      })
+        .count()
+        .exec();
+      const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
+        event_id: eventId,
+        address,
+      }));
+      // console.log('participantSchemas :', participantSchemas);
+      if (participantSchemas.length === 0) return;
+      await this.ParticipantModel.create(participantSchemas);
+    }
     // // 'end' - 이벤트 종료 후 토큰 거래
 
     const getTokensData = await this.klaytnService.getTokens('');
@@ -261,7 +261,7 @@ export class TokenService {
     for (let i = 0; i < tokens.length; i++) {
       const tokenId = parseInt(tokens[i].tokenId, 16);
       const owner = tokens[i].owner.toLowerCase();
-      const holding = await this.HoldingModel.find({ token_id: tokenId }).exec();
+      const holding = await this.HoldingModel.findOne({ token_id: tokenId }).exec();
       if (!holding) {
         const eventId = await this.klaytnService.eventOf(tokenId);
         const holdingData = new this.HoldingModel({
