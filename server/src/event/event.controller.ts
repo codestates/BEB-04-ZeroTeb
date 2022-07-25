@@ -67,4 +67,14 @@ export class EventController {
   findBanner() {
     return this.eventService.getBanner();
   }
+
+  @Get('mysale')
+  findMySale(@Query('address') address: string) {
+    return this.eventService.getMySaleList(address);
+  }
+
+  @Get('myentry')
+  findMyEntry(@Query('address') address: string) {
+    return this.eventService.getMyEntryList(address);
+  }
 }
