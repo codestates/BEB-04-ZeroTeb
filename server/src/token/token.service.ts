@@ -217,7 +217,9 @@ export class TokenService {
       const eventId = sellingEventStatus[i].get('event_id');
       const eventTokenBuyers = await this.klaytnService.getTokenHolders(eventId);
       for (let j = 0; j < eventTokenBuyers.length; j++) {
-        const holder = await this.HoldingModel.findById(eventTokenBuyers[j].token_id).exec();
+        const holder = await this.HoldingModel.findOne({
+          token_id: eventTokenBuyers[j].token_id,
+        }).exec();
         if (holder === null) {
           const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
           newHolder.save();
