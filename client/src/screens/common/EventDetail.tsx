@@ -70,16 +70,16 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   const [radioButtons, setRadioButtons] =
     React.useState<RadioButtonProps[]>(radioButtonsData)
 
-  // 라디오 버튼으로 선택한 가격
+  // 라디오 버튼으로 선택한 값
   const [selectValue, setSelectValue] = React.useState<RadioButtonProps>(
-    eventDetail.price,
+    radioButtons[0],
   )
   function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
     const selectValue = radioButtonsArray.filter(
       button => button.selected === true,
     )
     console.log(selectValue)
-    setSelectValue(...selectValue)
+    setSelectValue(selectValue[0])
     setRadioButtons(radioButtonsArray)
   }
 
