@@ -26,6 +26,7 @@ import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import AfterTransactionModal from '../../components/event/AfterTransactionModal'
 import LoadingModal from '../../components/common/LoadingModal'
+import EventImg from '../../components/common/EventImg'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const radioButtonsData: RadioButtonProps[] = [{}]
@@ -56,7 +57,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         value: el.price.toString(),
         selected: false,
         size: moderateScale(20),
-        labelStyle: style.eventText,
+        labelStyle: style.RadioButtonText,
       })
     })
     newArr[0].selected = true
@@ -211,6 +212,15 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       <View style={style.eventContentContainer}>
         <InnerText innerText={eventDetail.contents} size={15} />
       </View>
+      <Title title={'토큰 이미지'} size={20} />
+      <View style={style.eventContentContainer}>
+        <EventImg
+          imgUri={eventDetail.token_image_url}
+          width={200}
+          height={200}
+        />
+      </View>
+      <View style={style.eventContentContainer}></View>
       {eventDetail.type === 'sale' ? (
         <SaleBottomContent eventDetail={eventDetail} />
       ) : (
@@ -258,12 +268,13 @@ const style = ScaledSheet.create({
     paddingVertical: '10@msr',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFCC00',
+    backgroundColor: '#5D8BF4',
     borderRadius: '15@msr',
-    borderColor: '#FEE396',
+    borderColor: '#5D8BF4',
     borderWidth: 1,
   },
-  eventText: { color: '#666666', fontSize: '12@msr' },
+  eventText: { color: '#ffffff', ontSize: '12@msr' },
+  RadioButtonText: { fontSize: '15@msr' },
   promoterContainer: {
     flex: 1,
     flexDirection: 'row',
