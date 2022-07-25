@@ -73,7 +73,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                   <View style={style.textWrapper}>
                     <Text style={style.SearchListTitle}>{event.title}</Text>
                     <Text style={style.SearchListSeat}>
-                      남은 좌석 : {event.remaining} /{/* {event.totalSeat} */}
+                      남은 좌석 : {event.remaining} /{event.totalSeat}
                     </Text>
                     <Text style={style.SearchListDate}>
                       공연 기간 : {getDate(event.event_start_date)} ~{' '}
@@ -89,7 +89,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                           <Text>당첨 확인</Text>
                         </View>
                       </Pressable>
-                    ) : ( 
+                    ) : type === 'created' ? ( 
                       <Pressable
                         onPress={() => {
                           navigation.navigate('QRread', {event_id: event.event_id})
@@ -99,7 +99,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                           <Text>QR 확인</Text>
                         </View>
                       </Pressable>
-                    ) : null}
+                    ) : null : null}
                   </View>
                 </View>
               </View>
