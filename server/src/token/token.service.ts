@@ -222,7 +222,7 @@ export class TokenService {
         }).exec();
         if (holder === null) {
           const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
-          newHolder.save();
+          await newHolder.save();
         } else {
           await holder.$set('address', eventTokenBuyers[j].address).save();
         }
