@@ -12,7 +12,7 @@ import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import axios, { AxiosRequestConfig } from 'axios'
 import { useNavigation } from '@react-navigation/native'
-import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
@@ -71,35 +71,55 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                 </View>
                 <View style={style.SearchListTextContainer}>
                   <View style={style.textWrapper}>
-                    <Text style={style.SearchListTitle}>{event.title}</Text>
-                    <Text style={style.SearchListSeat}>
-                      남은 좌석 : {event.remaining} /{event.totalSeat}
+                    <Text style={style.SearchListTitle} ellipsizeMode={'tail'}>
+                      {event.title}
                     </Text>
-                    <Text style={style.SearchListDate}>
-                      공연 기간 : {getDate(event.event_start_date)} ~{' '}
-                      {getDate(event.event_end_date)}
-                    </Text>
-                    {type === 'entry' || 'created' ? type === 'entry' ? ( 
-                      <Pressable
-                        onPress={() => {
-                          checkWin(event.event_id)
-                        }}
-                      >
-                        <View style={style.checkBtn}>
-                          <Text>당첨 확인</Text>
-                        </View>
-                      </Pressable>
-                    ) : type === 'created' ? ( 
-                      <Pressable
-                        onPress={() => {
-                          navigation.navigate('QRread', {event_id: event.event_id})
-                        }}
-                      >
-                        <View style={style.checkBtn}>
-                          <Text>QR 확인</Text>
-                        </View>
-                      </Pressable>
-                    ) : null : null}
+                    {event.type === 'sale' ? (
+                      <Text style={style.SearchListSeat}>
+                        남은 좌석 : {event.remaining} /{event.totalSeat}
+                      </Text>
+                    ) : (
+                      <Text style={style.SearchListSeat}>
+                        응모 인원 : {event.price[0].count}
+                      </Text>
+                    )}
+                    {event.type === 'sale' ? (
+                      <Text style={style.SearchListDate}>
+                        공연 기간 : {getDate(event.event_start_date)} ~{' '}
+                        {getDate(event.event_end_date)}
+                      </Text>
+                    ) : (
+                      <Text style={style.SearchListDate}>
+                        응모 기간 : {getDate(event.recruit_start_date)} ~{' '}
+                        {getDate(event.recruit_end_date)}
+                      </Text>
+                    )}
+
+                    {type === 'entry' || 'created' ? (
+                      type === 'entry' ? (
+                        <Pressable
+                          onPress={() => {
+                            checkWin(event.event_id)
+                          }}
+                        >
+                          <View style={style.checkBtn}>
+                            <Text>당첨 확인</Text>
+                          </View>
+                        </Pressable>
+                      ) : type === 'created' ? (
+                        <Pressable
+                          onPress={() => {
+                            navigation.navigate('QRread', {
+                              event_id: event.event_id,
+                            })
+                          }}
+                        >
+                          <View style={style.checkBtn}>
+                            <Text>QR 확인</Text>
+                          </View>
+                        </Pressable>
+                      ) : null
+                    ) : null}
                   </View>
                 </View>
               </View>
@@ -114,9 +134,10 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
 const style = ScaledSheet.create({
   listTitle: {
     marginTop: '5@msr',
-    marginBottom: '10@msr',
+    paddingBottom: '10@msr',
     fontSize: '17@msr',
     fontWeight: 'bold',
+    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   SearchListOuterContainer: {
     marginTop: '5@msr',
@@ -124,7 +145,7 @@ const style = ScaledSheet.create({
     maxWidth: SCREEN_WIDTH * 0.95,
   },
   SearchListInnerContainer: {
-    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     padding: '2@msr',
   },
   Wrapper: {
@@ -159,6 +180,7 @@ const style = ScaledSheet.create({
     alignItems: 'flex-end',
   },
   SearchListTitle: {
+    flex: 1,
     fontSize: '17@msr',
     fontWeight: '800',
     textAlign: 'right',
