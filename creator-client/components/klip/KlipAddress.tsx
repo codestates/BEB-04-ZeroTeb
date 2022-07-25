@@ -22,7 +22,7 @@ const KlipAddress: FunctionComponent<KlipAddressProps> = () => {
       if (klipState.status === 'prepared' && klipState.requestKey !== '') {
         const requestConfig: AxiosRequestConfig = {
           method: 'POST',
-          url: 'http://localhost:8080/auth/signin',
+          url: '/api/auth/signin',
           data: {
             request_key: klipState.requestKey,
           },
