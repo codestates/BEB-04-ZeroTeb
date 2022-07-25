@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import axios, { AxiosRequestConfig } from 'axios';
 import Caver, { AbiItem, Contract, KeyringContainer } from 'caver-js';
 import { ipfsMetadataUpload } from 'lib/pinata';
 import { Model } from 'mongoose';
@@ -11,8 +12,12 @@ import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from
 const CONTRACT_ADDRESS =
   process.env.CONTRACT_ADDRESS || '0x264481CEC02C6bff01207695CE3b0E3DB5ED5d92';
 const GAS = '10000000';
+
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
+
+const KAS_ACCESS_KEY_ID = process.env.KAS_ACCESS_KEY_ID ?? '';
+const KAS_SECRET_ACCESS_KEY = process.env.KAS_SECRET_ACCESS_KEY ?? '';
 
 @Injectable()
 export class KlaytnService {
@@ -371,7 +376,37 @@ export class KlaytnService {
     }
   }
 
+  async getTokens(cursor: string) {
+    const axiosRequestConfig: AxiosRequestConfig = {
+      method: 'GET',
+      url: `https://th-api.klaytnapi.com/v2/contract/nft/${CONTRACT_ADDRESS}/token`,
+      auth: {
+        username: KAS_ACCESS_KEY_ID,
+        password: KAS_SECRET_ACCESS_KEY,
+      },
+      headers: {
+        'x-chain-id': '1001',
+      },
+      params: {
+        size: 1000,
+        cursor: cursor,
+      },
+    };
+    const res = await axios(axiosRequestConfig);
+    const data = res.data;
+    if (data.message || !data.items) throw new Error(data.message);
+
+    if (data.cursor !== '') {
+      return {
+        ...data,
+        item: [...data.item, this.getTokens(data.cursor)],
+      };
+    } else {
+      return data;
+    }
+  }
+
   async test() {
-    // console.log(await this.getTokenHolders(2));
+    console.log(await this.getTokens(''));
   }
 }
