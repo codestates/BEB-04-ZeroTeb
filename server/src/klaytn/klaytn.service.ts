@@ -94,8 +94,8 @@ export class KlaytnService {
       event.classPrices,
       event.classCounts,
       event.openTime,
-      event.startTime,
       event.closeTime,
+      event.startTime,
       event.endTime,
     ];
     let price = 0;
@@ -360,6 +360,6 @@ export class KlaytnService {
   }
 
   async test() {
-    // this.getTokenHolders(0).then(console.log);
+    console.log(await this.getTokenHolders(2));
   }
 }
