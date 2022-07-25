@@ -139,7 +139,10 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
       const res = await axios(config)
 
       console.log(res.data)
-      if (res.data.message === '정상적으로 응모되었습니다.') {
+      if (
+        res.data.message === '정상적으로 응모되었습니다.' ||
+        res.data.message === '정상적으로 구매되었습니다.'
+      ) {
         console.log('ok')
         setLoadingModalVisible(false)
         setAtModalVisible(true)
