@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const TABBAR_HEIGHT = 60
 const wait = (timeout: number) => {
@@ -37,14 +38,13 @@ interface Props {
 }
 
 const MyPage: React.FC<Props> = ({ route }) => {
+  const dispatch = useDispatch()
   // test address 주소
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
-  const dispatch = useDispatch()
-
-  //사용자 정보
-  const [myState, setMyState] = useState<UserType>({
+  //사용자 정보 초기화 변수
+  const userInit: UserType = {
     username: 'tt',
     profile_url: 'CCCCFF',
     history: {
@@ -54,7 +54,10 @@ const MyPage: React.FC<Props> = ({ route }) => {
       liked: 0,
     },
     tokens: [{}],
-  })
+  }
+
+  //사용자 정보
+  const [myState, setMyState] = useState<UserType>(userInit)
 
   // 사용자 정보 받아오기
   const getUserInfo = async () => {
@@ -88,10 +91,14 @@ const MyPage: React.FC<Props> = ({ route }) => {
     { key: 'screen2', title: 'Info' },
   ])
   const [tabIndex, setTabIndex] = useState(0)
+
+  //새로고침 함수,변수
   const [refreshing, setRefreshing] = React.useState(false)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
-    wait(2000).then(() => setRefreshing(false))
+    setMyState(userInit)
+    getUserInfo()
+    wait(1000).then(() => setRefreshing(false))
   }, [])
 
   const tabIndexRef = useRef(0)
@@ -259,24 +266,32 @@ const MyPage: React.FC<Props> = ({ route }) => {
         <LoadingImg />
       ) : (
         <View style={styles.rootContainer}>
-          {headerHeight > 0 ? (
-            <TabView
-              navigationState={{ index: tabIndex, routes: tabRoutes }}
-              renderScene={renderScene}
-              renderTabBar={renderTabBar}
-              onIndexChange={onTabIndexChange}
-            />
-          ) : null}
-          <Animated.View
-            style={{
-              ...styles.headerContainer,
-              transform: [{ translateY: headerTranslateY }],
-            }}
-            onLayout={headerOnLayout}
-            pointerEvents="box-none"
+          <ScrollView
+            horizontal={true}
+            contentContainerStyle={{ flex: 1 }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           >
-            <MyPageHeader userInfo={myState} />
-          </Animated.View>
+            {headerHeight > 0 ? (
+              <TabView
+                navigationState={{ index: tabIndex, routes: tabRoutes }}
+                renderScene={renderScene}
+                renderTabBar={renderTabBar}
+                onIndexChange={onTabIndexChange}
+              />
+            ) : null}
+            <Animated.View
+              style={{
+                ...styles.headerContainer,
+                transform: [{ translateY: headerTranslateY }],
+              }}
+              onLayout={headerOnLayout}
+              pointerEvents="box-none"
+            >
+              <MyPageHeader userInfo={myState} />
+            </Animated.View>
+          </ScrollView>
         </View>
       )}
     </>

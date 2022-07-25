@@ -7,7 +7,9 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
+  Text,
   View,
+  RefreshControl,
 } from 'react-native'
 import { useSelector } from 'react-redux'
 import SearchList from '../../components/search/SearchList'
@@ -15,6 +17,9 @@ import { RootState } from '../../store/Index'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+const wait = (timeout: number) => {
+  return new Promise(resolve => setTimeout(resolve, timeout))
+}
 
 interface Props {
   type: string
@@ -25,6 +30,14 @@ export default function MyList({ route }) {
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
+
+  const [refreshing, setRefreshing] = React.useState(false)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    setTypeList([])
+    getTypeListHandler()
+    wait(1000).then(() => setRefreshing(false))
+  }, [])
 
   console.log('props', route.params.type)
   console.log('address', KilpAddress)
@@ -66,11 +79,17 @@ export default function MyList({ route }) {
 
   return (
     <View style={styles.container}>
-      <SearchList
-        sendList={typeList}
-        type={route.params.type}
-        address={KilpAddress}
-      ></SearchList>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <SearchList
+          sendList={typeList}
+          type={route.params.type}
+          address={KilpAddress}
+        ></SearchList>
+      </ScrollView>
     </View>
   )
 }
