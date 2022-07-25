@@ -138,13 +138,13 @@ const Enroll = () => {
     // 응모일때
     if (list.type === 'entry') {
       console.log(list.price[0].count * 5)
-      setDeposit(list.price[0].count * 5)
+      setDeposit(Math.floor(list.price[0].count * 5))
     } else {
       list.price.map((value, index) => {
         money += value.price * value.count
       })
       console.log(money * 0.05)
-      setDeposit(money * 0.05)
+      setDeposit(Math.floor(money * 0.05))
     }
   }
 
