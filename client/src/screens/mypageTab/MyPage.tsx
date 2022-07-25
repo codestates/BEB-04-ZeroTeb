@@ -5,6 +5,8 @@ import {
   Animated,
   TouchableOpacity,
   Text,
+  ScrollView,
+  RefreshControl,
 } from 'react-native'
 import { TabView } from 'react-native-tab-view'
 import MyPageHeader from '../../components/mypage/MyPageHeader'
@@ -19,6 +21,9 @@ import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
 
 const TABBAR_HEIGHT = 60
+const wait = (timeout: number) => {
+  return new Promise(resolve => setTimeout(resolve, timeout))
+}
 
 interface Props {
   route: {
@@ -83,6 +88,12 @@ const MyPage: React.FC<Props> = ({ route }) => {
     { key: 'screen2', title: 'Info' },
   ])
   const [tabIndex, setTabIndex] = useState(0)
+  const [refreshing, setRefreshing] = React.useState(false)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    wait(2000).then(() => setRefreshing(false))
+  }, [])
+
   const tabIndexRef = useRef(0)
   const isListGlidingRef = useRef(false)
   const listArrRef = useRef([])
