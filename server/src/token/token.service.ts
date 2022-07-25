@@ -213,7 +213,7 @@ export class TokenService {
   // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
   @Cron('0 */1 * * * *')
   async getHoldingData() {
-    console.log('address에 따른 토큰 정보 받기');
+    console.log('getHoldingData : address에 따른 토큰 정보 받기');
     // // 'selling'
     // const sellingEventStatus = await this.EventStatusModel.find({ status: 'selling' }).exec();
     // for (let i = 0; i < sellingEventStatus.length; i++) {
@@ -235,29 +235,35 @@ export class TokenService {
     //   }
     // }
     // 'applying'
+    console.log('응모자 조회 시작');
     const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
     for (let i = 0; i < applyingEventStatus.length; i++) {
       const eventId = applyingEventStatus[i].get('event_id');
       const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-      // console.log('eventParticipants :', eventParticipants);
+      if (eventParticipants.length) continue;
+      console.log('eventParticipants', eventId, ':', eventParticipants);
       const eventParticipantsCount = await this.ParticipantModel.find({
         event_id: eventId,
       })
         .count()
         .exec();
-      const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
+      const participantSchemas = eventParticipants.slice(eventParticipantsCount);
+      if (participantSchemas.length === 0) continue;
+      const participants = participantSchemas.map((address) => ({
         event_id: eventId,
         address,
       }));
       // console.log('participantSchemas :', participantSchemas);
-      if (participantSchemas.length === 0) return;
-      await this.ParticipantModel.create(participantSchemas);
+      await this.ParticipantModel.create(participants);
     }
+    console.log('응모자 조회 종료');
     // // 'end' - 이벤트 종료 후 토큰 거래
 
+    console.log('구매자 조회 시작');
     const getTokensData = await this.klaytnService.getTokens('');
     if (getTokensData.message || !getTokensData.items) throw new Error(getTokensData.message);
     const tokens = getTokensData.items;
+    console.log('token 개수 :', tokens.length);
     for (let i = 0; i < tokens.length; i++) {
       const tokenId = parseInt(tokens[i].tokenId, 16);
       const owner = tokens[i].owner.toLowerCase();
@@ -277,6 +283,8 @@ export class TokenService {
         ).exec();
       }
     }
+    console.log('구매자 조회 시작');
+
     console.log('getHoldingData 업데이트 완료!');
   }
 
