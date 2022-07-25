@@ -347,6 +347,10 @@ export class EventService {
     const nowDatePlusOneHour = Number((Date.now() + 1000 * 60 * 60).toString().substring(0, 10));
     try {
       // 이벤트 토큰 민팅
+      const mintingEvent = await this.EventModel.find({
+        status: 'minting',
+      }).exec();
+      if (mintingEvent.length > 0) return;
       const createdEvent = await this.EventModel.find({
         status: 'created',
         recruit_start_date: { $lt: nowDatePlusOneHour },
@@ -360,7 +364,7 @@ export class EventService {
         const eventData = await ipfsGetData(event.eventUri);
         console.log('eventData :', eventData);
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
-        // await createdEvent[i].updateOne({ $set: { status: 'minting' } });
+        await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
         await createdEvent[i].$set({ status: 'minted' }).save();
         await this.EventModel.updateOne(
