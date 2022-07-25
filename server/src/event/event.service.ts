@@ -91,7 +91,7 @@ export class EventService {
         address,
         location,
         sub_location,
-        category,
+        category: category.toLowerCase(),
         type,
         thumnail,
         token_image_url,
