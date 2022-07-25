@@ -6,7 +6,7 @@ export type UsernameDocument = Username & Document;
 export class Username {
   @Prop({ required: true })
   username: string;
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   index: number;
 }
 

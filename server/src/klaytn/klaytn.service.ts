@@ -2,19 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import Caver, { AbiItem, Contract, KeyringContainer } from 'caver-js';
 import { ipfsMetadataUpload } from 'lib/pinata';
-import { setMyInterval } from 'lib/timer';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
-import {
-  ContractEventDto,
-  ContracCreateEventkDto,
-  ContractEventClassType,
-  ContractBuyerType,
-} from './klaytn.entity';
+import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x33c76e6003c97270098D4fe54a634EBb057E1Fd5';
+  process.env.CONTRACT_ADDRESS || '0x264481CEC02C6bff01207695CE3b0E3DB5ED5d92';
 const GAS = '10000000';
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
@@ -99,16 +94,24 @@ export class KlaytnService {
       event.classPrices,
       event.classCounts,
       event.openTime,
-      event.startTime,
       event.closeTime,
+      event.startTime,
       event.endTime,
     ];
     let price = 0;
-    for (let i = 0; i < event.classPrices.length; i++) {
-      price += event.classPrices[i] * event.classCounts[i];
+    if (event.eventType === 0) {
+      for (let i = 0; i < event.classPrices.length; i++) {
+        price += event.classPrices[i] * event.classCounts[i];
+      }
+      price *= 0.05;
+    } else if (event.eventType === 1) {
+      for (let i = 0; i < event.classPrices.length; i++) {
+        price += 5 * event.classCounts[i];
+      }
+      price *= 0.05;
     }
-    price *= 0.05;
     price *= 10 ** 18;
+    // const user = await this.UserModel.findOne({ address: event.creator });
     const user = await this.UserModel.findOne({ test_address: event.creator });
     if (!this.caver.wallet.isExisted(user.test_address)) {
       this.singleKeyring(user.test_address, user.test_private_key);
@@ -132,10 +135,17 @@ export class KlaytnService {
     console.log(receipt);
   }
 
+  // Event 전체 개수
   async getEventLength(): Promise<number> {
     return await this.contract.methods.totalEvent().call();
   }
 
+  // Token 전체 개수
+  async getTokenLength(): Promise<number> {
+    return await this.contract.methods.totalToken().call();
+  }
+
+  // 이벤트 조회
   async getEvent(eventId: number): Promise<ContractEventDto> {
     const contractEventDto: ContractEventDto = new ContractEventDto();
     const event = await this.contract.methods.getEvent(eventId).call();
@@ -161,6 +171,7 @@ export class KlaytnService {
     return contractEventDto;
   }
 
+  // 이벤트 클래스 조회
   async getEventClass(eventId: number, eventClassId): Promise<ContractEventClassType> {
     const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
 
@@ -171,10 +182,12 @@ export class KlaytnService {
     };
   }
 
+  // 이벤트 클래스 개수 조회
   async getEventClassCount(eventId: number): Promise<number> {
     return await this.contract.methods.getEventClassCount(eventId).call();
   }
 
+  // 토큰 민팅
   async mintToken(eventId: number, tokenType: number, token_image_uri): Promise<void> {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
@@ -215,6 +228,7 @@ export class KlaytnService {
     }
   }
 
+  // 토큰 구매
   async buyToken(
     buyerAddress: string,
     eventId: number,
@@ -225,7 +239,8 @@ export class KlaytnService {
       const isSelect = number !== undefined;
       number = isSelect ? number : 0;
 
-      const user = await this.UserModel.findOne({ address: buyerAddress });
+      // const user = await this.UserModel.findOne({ address: buyerAddress });
+      const user = await this.UserModel.findOne({ test_address: buyerAddress });
       if (!user) throw new Error('user is undefined.');
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
@@ -253,7 +268,6 @@ export class KlaytnService {
           gas: GAS,
           value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
         });
-
       return false;
     } catch (err) {
       console.error(err);
@@ -261,7 +275,8 @@ export class KlaytnService {
     }
   }
 
-  async getTokenBuyers(eventId): Promise<ContractBuyerType[]> {
+  // 토큰 구매자 조회
+  async getTokenHolders(eventId: number): Promise<HoldingType[]> {
     const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
     // console.log(eventClassCount);
     const results = [];
@@ -271,9 +286,10 @@ export class KlaytnService {
         .call();
       for (let i = 0; i < _tokenIdArray.length; i++) {
         const buyers = {
-          id: i,
+          event_id: eventId,
+          token_id: Number(_tokenIdArray[i]),
           address: _onwerArray[i],
-          tokenId: Number(_tokenIdArray[i]),
+          number: i,
         };
         results.push(buyers);
       }
@@ -281,9 +297,11 @@ export class KlaytnService {
     return results;
   }
 
+  // 토큰 응모
   async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
     try {
-      const user = await this.UserModel.findOne({ address: applicantAddress });
+      // const user = await this.UserModel.findOne({ address: applicantAddress });
+      const user = await this.UserModel.findOne({ test_address: applicantAddress });
 
       if (!this.caver.wallet.isExisted(user.test_address)) {
         this.singleKeyring(user.test_address, user.test_private_key);
@@ -296,17 +314,19 @@ export class KlaytnService {
         value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
       });
 
-      return true;
+      return false;
     } catch (err) {
       console.error(err);
-      return false;
+      return true;
     }
   }
 
-  async getEventParticipants(eventId: number) {
+  // 응모자 조회
+  async getEventParticipants(eventId: number): Promise<string[]> {
     return await this.contract.methods.getEventParticipants(eventId).call();
   }
 
+  // 이벤트 응모 당첨 트리거
   async transferEventWinner(eventId: number) {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
@@ -323,7 +343,8 @@ export class KlaytnService {
     }
   }
 
-  async endEvent(eventId, eventEndStatus) {
+  // 이벤트 종료
+  async endEvent(eventId: number, eventEndStatus: number) {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
         this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
@@ -336,5 +357,9 @@ export class KlaytnService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async test() {
+    console.log(await this.getTokenHolders(2));
   }
 }

@@ -8,7 +8,7 @@ interface IZeroTEB {
     function createEvent(
         address _creator,
         string memory _eventName,
-        uint8 _eventType,
+        uint8 _eventType, // 0 - sale, 1 - entry
         string memory _eventUri,
         string[] memory _names,
         uint256[] memory _prices,

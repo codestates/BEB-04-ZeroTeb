@@ -14,6 +14,7 @@ import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
 import { ipfsGetData, ipfsMetadataUpload } from 'lib/pinata';
 import { EventStatus, EventStatusDocument } from './schemas/event-status.schema';
 import { EventStatusDto } from './dto/event-status.dto';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 @Injectable()
 export class EventService {
@@ -23,6 +24,7 @@ export class EventService {
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
     @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -106,7 +108,7 @@ export class EventService {
         modified_date,
         x: point.documents[0].x, //location 기반 좌표 lat
         y: point.documents[0].y, //location 기반 좌표 lon
-        status: '시작 전',
+        status: 'created',
         remaining: totalSeat,
         totalSeat,
       };
@@ -138,7 +140,7 @@ export class EventService {
       const eventStatus = new this.EventStatusModel(eventStatusDto);
       await eventStatus.save();
 
-      return saveResult;
+      return { message: 'success' };
     } catch (e) {
       console.log(e);
       return { message: 'Failed to create event' };
@@ -340,7 +342,7 @@ export class EventService {
   }
 
   // 이벤트 리스트 받아서 holdings에 업데이트
-  @Cron('* */1 * * * *') // 15분 마다 진행
+  @Cron('0 */1 * * * *') // 15분 마다 진행
   async mintTokens(): Promise<void> {
     try {
       // 이벤트 토큰 민팅
@@ -354,21 +356,223 @@ export class EventService {
         const eventData = await ipfsGetData(event.eventUri);
         console.log('eventData :', eventData);
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
-        await createdEvent[i].updateOne({ $set: { status: 'minting' } });
+        // await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
-        await createdEvent[i].updateOne({ $set: { status: 'minted' } });
+        await createdEvent[i].$set({ status: 'minted' }).save();
+        await this.EventModel.updateOne(
+          { event_id: eventId },
+          { $set: { status: 'minted' } },
+        ).exec();
       }
-      // 이벤트 구매자 디비 저장
-      // 이벤트 응모자 디비 저장
-      // 이벤트 종료
     } catch (error) {
       console.error(error);
     }
   }
 
+  @Cron('0 */1 * * * *')
+  async getTokens(): Promise<void> {
+    const nowTimestamp = Number(Date.now().toString().substring(0, 10));
+    console.log('상태 변경 :', new Date(nowTimestamp * 1000));
+    // 'selling' - 이벤트 구매 상태로 변경
+    const sellingEvents = await this.EventModel.find({
+      recruit_start_date: { $lte: nowTimestamp },
+      recruit_end_date: { $gte: nowTimestamp },
+      type: 'sale',
+      status: 'minted',
+    }).exec();
+    for (let i = 0; i < sellingEvents.length; i++) {
+      const eventId = sellingEvents[i].get('event_id');
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'selling',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        recruit_start_date: { $lte: nowTimestamp },
+        recruit_end_date: { $gte: nowTimestamp },
+        type: 'sale',
+        status: 'minted',
+      },
+      {
+        $set: {
+          status: 'selling',
+        },
+      },
+    ).exec();
+
+    // 'applying' - 이벤트 응모 상태로 변경
+    const applyingEvents = await this.EventModel.find({
+      recruit_start_date: { $lte: nowTimestamp },
+      recruit_end_date: { $gte: nowTimestamp },
+      type: 'entry',
+      status: 'minted',
+    }).exec();
+    for (let i = 0; i < applyingEvents.length; i++) {
+      const eventId = applyingEvents[i].get('event_id');
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'applying',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        recruit_start_date: { $lte: nowTimestamp },
+        recruit_end_date: { $gte: nowTimestamp },
+        type: 'entry',
+        status: 'minted',
+      },
+      {
+        $set: {
+          status: 'applying',
+        },
+      },
+    ).exec();
+
+    // 'preparing' - 이벤트 준비 중 ( 구매 )
+    const preparingEvents1 = await this.EventModel.find({
+      recruit_end_date: { $lt: nowTimestamp },
+      event_start_date: { $gt: nowTimestamp },
+      type: 'sale',
+      status: 'selling',
+    }).exec();
+    for (let i = 0; i < preparingEvents1.length; i++) {
+      const eventId = preparingEvents1[i].get('event_id');
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'preparing',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        recruit_end_date: { $lt: nowTimestamp },
+        event_start_date: { $gt: nowTimestamp },
+        type: 'sale',
+        status: 'selling',
+      },
+      {
+        $set: {
+          status: 'preparing',
+        },
+      },
+    ).exec();
+
+    // 'preparing' - 이벤트 준비 중 ( 응모 당첨자 발표 )
+    const preparingEvents2 = await this.EventModel.find({
+      recruit_end_date: { $lt: nowTimestamp },
+      event_start_date: { $gt: nowTimestamp },
+      type: 'entry',
+      status: 'applying',
+    }).exec();
+    for (let i = 0; i < preparingEvents2.length; i++) {
+      const eventId = preparingEvents2[i].get('event_id');
+      await this.klaytnService.transferEventWinner(eventId);
+      // 이벤트 당첨자 조회
+      const winners = this.klaytnService.getTokenHolders(eventId);
+      // 이벤트 당첨자 홀더로 디비 저장
+      const holders = new this.HoldingModel(winners);
+      await holders.save();
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'preparing',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        recruit_end_date: { $lt: nowTimestamp },
+        event_start_date: { $gt: nowTimestamp },
+        type: 'entry',
+        status: 'applying',
+      },
+      {
+        $set: {
+          status: 'preparing',
+        },
+      },
+    ).exec();
+
+    // 'progressing' - 이벤트 진행 중
+    const progressingEvents = await this.EventModel.find({
+      event_start_date: { $lte: nowTimestamp },
+      event_end_date: { $gt: nowTimestamp },
+      status: 'preparing',
+    }).exec();
+    for (let i = 0; i < progressingEvents.length; i++) {
+      const eventId = progressingEvents[i].get('event_id');
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'progressing',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        event_start_date: { $lte: nowTimestamp },
+        event_end_date: { $gt: nowTimestamp },
+        status: 'preparing',
+      },
+      {
+        $set: {
+          status: 'progressing',
+        },
+      },
+    ).exec();
+
+    // 이벤트 종료
+    const endEvents = await this.EventModel.find({
+      event_end_date: { $lt: nowTimestamp },
+      status: 'progressing',
+    }).exec();
+    for (let i = 0; i < endEvents.length; i++) {
+      const eventId = endEvents[i].get('event_id');
+      await this.klaytnService.endEvent(eventId, 1); // 이벤트 성공적F
+      await this.EventStatusModel.updateOne(
+        { event_id: eventId },
+        {
+          $set: {
+            status: 'end',
+          },
+        },
+      ).exec();
+    }
+    await this.EventModel.updateMany(
+      {
+        event_end_date: { $lt: nowTimestamp },
+        status: 'progressing',
+      },
+      {
+        $set: {
+          status: 'end',
+        },
+      },
+    ).exec();
+
+    // 이벤트 구매자 디비 저장
+
+    // 이벤트 응모자 디비 저장
+  }
+
   // @Cron('* * * * * *')
   // async test(): Promise<void> {
-  //   const eventStatus = await this.klaytnService.getEventLength();
-  //   console.log(eventStatus);
+  //   await this.klaytnService.test();
   // }
 }
