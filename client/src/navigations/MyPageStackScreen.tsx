@@ -11,6 +11,7 @@ import QRLoad from '../screens/mypageTab/QRLoad'
 import QRread from '../screens/mypageTab/QRRead'
 import MyList from '../screens/mypageTab/MyList'
 import Notice from '../screens/mypageTab/Notice'
+import EventDetail from '../screens/common/EventDetail'
 
 export default function MyPageStackScreen() {
   const MyPageStack = createNativeStackNavigator<MyPageStackParamList>()
@@ -21,7 +22,6 @@ export default function MyPageStackScreen() {
 
   return (
     <MyPageStack.Navigator>
-      
       {KilpAddress ? (
         <MyPageStack.Screen
           name="MyPage"
@@ -66,6 +66,11 @@ export default function MyPageStackScreen() {
       <MyPageStack.Screen
         name="Notice"
         component={Notice}
+        options={{ headerTitle: '' }}
+      />
+      <MyPageStack.Screen
+        name="EventDetail"
+        component={EventDetail}
         options={{ headerTitle: '' }}
       />
     </MyPageStack.Navigator>
