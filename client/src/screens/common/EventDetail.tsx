@@ -42,7 +42,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   const [loadingModalVisible, setLoadingModalVisible] =
     React.useState<boolean>(false)
   const [atModalVisible, setAtModalVisible] = React.useState<boolean>(false)
-
+  const [afterModalBoolean, setAfterModalBoolean] =
+    React.useState<boolean>(false)
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
@@ -70,14 +71,15 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     React.useState<RadioButtonProps[]>(radioButtonsData)
 
   // 라디오 버튼으로 선택한 가격
-  const [selectPrice, setSelectPrice] = React.useState<number>(
-    eventDetail.price[0].price,
+  const [selectValue, setSelectValue] = React.useState<RadioButtonProps>(
+    eventDetail.price,
   )
   function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
     const selectValue = radioButtonsArray.filter(
       button => button.selected === true,
     )
-    setSelectPrice(selectValue[0].value)
+    console.log(selectValue)
+    setSelectValue(...selectValue)
     setRadioButtons(radioButtonsArray)
   }
 
@@ -102,9 +104,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       console.log('sale')
       url = 'http://server.beeimp.com:18080/token/buy'
       data = {
-        // event_id: eventDetail.event_id,
-        // class_id: selectValue[0].id,
-        // number: 0,
+        event_id: eventDetail.event_id,
+        class_id: selectValue.id,
       }
     } else {
       console.log('entry')
@@ -129,6 +130,11 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         console.log('ok')
         setLoadingModalVisible(false)
         setAtModalVisible(true)
+        setAfterModalBoolean(true) // 성공시 true
+      } else {
+        setLoadingModalVisible(false)
+        setAtModalVisible(true)
+        setAfterModalBoolean(false) // 실패시 false
       }
     } catch (e) {
       console.log(e)
@@ -144,13 +150,13 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       <BeforeTransaction
         btModalVisible={btModalVisible}
         setBtModalVisible={setBtModalVisible}
-        body={selectPrice}
+        body={selectValue}
         getPayment={getPayment}
       />
       <AfterTransactionModal
         atModalVisible={atModalVisible}
         setAtModalVisible={setAtModalVisible}
-        body={undefined}
+        body={afterModalBoolean}
       />
       <View style={style.eventImgContainer}>
         <Image

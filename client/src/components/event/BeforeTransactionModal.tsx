@@ -3,13 +3,14 @@ import { Modal, View, Dimensions, Text } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { AntDesign } from '@expo/vector-icons'
 import InnerText from '../common/InnerText'
+import { RadioButtonProps } from 'react-native-radio-buttons-group'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 interface Props {
   btModalVisible: boolean
   setBtModalVisible: any
-  body: any
+  body: RadioButtonProps
   getPayment: any
 }
 const BeforeTransaction = (props: Props) => {
@@ -37,7 +38,7 @@ const BeforeTransaction = (props: Props) => {
           </View>
           <View>
             <InnerText
-              innerText={`이벤트 참가를 위해 ${props.body} Klay 결제가 필요합니다.`}
+              innerText={`이벤트 참가를 위해 ${props.body.value} Klay 결제가 필요합니다.`}
               size={15}
             />
             <InnerText innerText={'진행하시겠습니까?'} size={15} />
