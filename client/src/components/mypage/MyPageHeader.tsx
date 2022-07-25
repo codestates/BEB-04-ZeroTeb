@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react'
-import { View, StyleSheet, Text, Dimensions, Pressable } from 'react-native'
+import { View, Text, Dimensions, Pressable } from 'react-native'
 import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
 import { useNavigation } from '@react-navigation/native'
-import { firstLetter } from '../../utils/utils'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -24,7 +23,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
         <AvatarIcon
           size={moderateScale(65)}
           color={userInfo.profile_url}
-          title={firstLetter(userInfo.username)}
+          title={'TT'}
         />
         <Text style={styles.profileText}>{userInfo.username}</Text>
       </View>

@@ -6,6 +6,8 @@ import Unserbar from '../../components/common/Underbar'
 import Title from '../../components/common/Title'
 import MapLocation from '../../components/common/MapLocation'
 import SaleRefundPolicy from '../../components/event/SaleRefundPolicy'
+import InnerText from '../common/InnerText'
+import { getDate } from '../../utils/unixTime'
 
 interface saleBottomContentProps {
   eventDetail: EventType
@@ -16,6 +18,38 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
 }) => {
   return (
     <>
+      <View style={style.eventContentContainer}>
+        {getDate(eventDetail.event_start_date) ===
+        getDate(eventDetail.event_end_date) ? (
+          <InnerText
+            innerText={`이벤트 관람일 : ${getDate(
+              eventDetail.event_start_date,
+            )}`}
+            size={17}
+          />
+        ) : (
+          <>
+            <InnerText innerText={`이벤트 관람일 : `} size={17} />
+            <InnerText
+              innerText={`${getDate(eventDetail.event_start_date)} ~ ${getDate(
+                eventDetail.event_end_date,
+              )}`}
+              size={17}
+            />
+          </>
+        )}
+        <InnerText
+          innerText={`총 판매좌석 : ${eventDetail.remaining}석`}
+          size={17}
+        />
+        <InnerText innerText={`티켓 구매 가능 날짜 : `} size={17} />
+        <InnerText
+          innerText={`${getDate(eventDetail.recruit_start_date)} ~ ${getDate(
+            eventDetail.recruit_start_date,
+          )}`}
+          size={17}
+        />
+      </View>
       <Unserbar />
       <Text></Text>
       <Title title={'위치 및 장소'} size={20} />
