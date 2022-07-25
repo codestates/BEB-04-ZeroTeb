@@ -29,7 +29,6 @@ import LoadingModal from '../../components/common/LoadingModal'
 import EventImg from '../../components/common/EventImg'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
-const radioButtonsData: RadioButtonProps[] = [{}]
 interface eventDetailProps {
   eventDetail: EventType
 }
@@ -49,6 +48,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     (state: RootState) => state.signin.KilpAddress,
   )
   // 라디오 버튼에 가격항목 추가
+  const [radioButtons, setRadioButtons] = React.useState<RadioButtonProps[]>({})
   function mapRadio(prices: { class: string; price: number; count: number }[]) {
     const newArr: RadioButtonProps[] = []
     prices.map((el, index) => {
@@ -64,16 +64,20 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     newArr[0].selected = true
     setRadioButtons(newArr)
   }
-  React.useEffect(() => {
-    mapRadio(eventDetail.price)
-  }, [])
-  const [radioButtons, setRadioButtons] =
-    React.useState<RadioButtonProps[]>(radioButtonsData)
 
   // 라디오 버튼으로 선택한 값
-  const [selectValue, setSelectValue] = React.useState<RadioButtonProps>(
-    radioButtons[0],
-  )
+  const [selectValue, setSelectValue] = React.useState<RadioButtonProps>({
+    id: 0,
+    label:
+      eventDetail.price[0].class +
+      ' Class / ' +
+      eventDetail.price[0].price +
+      ' Klay',
+    value: eventDetail.price[0].price.toString(),
+    selected: false,
+    size: moderateScale(20),
+    labelStyle: style.RadioButtonText,
+  })
   function onPressRadioButton(radioButtonsArray: RadioButtonProps[]) {
     const selectValue = radioButtonsArray.filter(
       button => button.selected === true,
@@ -82,6 +86,9 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     setSelectValue(selectValue[0])
     setRadioButtons(radioButtonsArray)
   }
+  React.useEffect(() => {
+    mapRadio(eventDetail.price)
+  }, [])
 
   const pressButtonHendler = (event: GestureResponderEvent) => {
     if (KilpAddress === '') {
