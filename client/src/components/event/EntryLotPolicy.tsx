@@ -10,7 +10,7 @@ const EntryLotPolicy: React.FC<entryLotPolicyProps> = () => {
   return (
     <View style={style.entryLotPolicyContainer}>
       <Text></Text>
-      <Title title={'추첨 안내'} size={20} />
+      <Title title={'추첨 안내'} size={18} />
       <View style={style.eventContentContainer}>
         <InnerText innerText={'추첨은 랜덤 방식으로 진행됩니다.'} size={15} />
         <Text></Text>

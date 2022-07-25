@@ -10,7 +10,7 @@ const EntryRefundPolicy: React.FC<entryRefundPolicyProps> = () => {
   return (
     <View style={style.entryRefundPolicyContainer}>
       <Text></Text>
-      <Title title={'환불 규정'} size={20} />
+      <Title title={'환불 규정'} size={18} />
       <View style={style.eventContentContainer}>
         <InnerText
           innerText={

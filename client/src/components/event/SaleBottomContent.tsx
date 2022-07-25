@@ -21,13 +21,13 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
     <>
       <Unserbar />
       <Text></Text>
-      <Title title={'이벤트 내용'} size={20} />
+      <Title title={'이벤트 내용'} size={18} />
       <View style={style.eventContentContainer}>
         <InnerText innerText={eventDetail.contents} size={15} />
       </View>
       <Unserbar />
       <Text></Text>
-      <Title title={'이벤트 정보'} size={20} />
+      <Title title={'이벤트 정보'} size={18} />
       <View style={style.eventContentContainer}>
         {getDate(eventDetail.event_start_date) ===
         getDate(eventDetail.event_end_date) ? (
@@ -62,7 +62,7 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
       </View>
       <Unserbar />
       <Text></Text>
-      <Title title={'토큰 이미지'} size={20} />
+      <Title title={'토큰 이미지'} size={18} />
       <View style={style.eventContentContainer}>
         <EventImg
           imgUri={eventDetail.token_image_url}
@@ -72,7 +72,7 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
       </View>
       <Unserbar />
       <Text></Text>
-      <Title title={'위치 및 장소'} size={20} />
+      <Title title={'위치 및 장소'} size={18} />
       <View style={style.eventContentContainer}>
         <Text style={style.locationText}>
           {eventDetail.location}
