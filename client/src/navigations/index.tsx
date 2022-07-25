@@ -44,13 +44,15 @@ export default function TabNavigation() {
           headerShown: false,
         })}
       >
-        <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} />
+        <Tab.Screen name="HomeStackScreen" component={HomeStackScreen} unmountOnBlur={true} options={{unmountOnBlur: true}}/>
         <Tab.Screen
           name="CategoryStackScreen"
           component={CategoryStackScreen}
+          unmountOnBlur={true}
+          options={{unmountOnBlur: true}}
         />
-        <Tab.Screen name="SearchStackScreen" component={SearchStackScreen} />
-        <Tab.Screen name="MyPageStackScreen" component={MyPageStackScreen} />
+        <Tab.Screen name="SearchStackScreen" component={SearchStackScreen} unmountOnBlur={true} options={{unmountOnBlur: true}} />
+        <Tab.Screen name="MyPageStackScreen" component={MyPageStackScreen} unmountOnBlur={true} options={{unmountOnBlur: true}} />
       </Tab.Navigator>
     </NavigationContainer>
   )
