@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { getCookie } from 'cookies-next';
 import { decodeJwt } from '../../modules/utils';
 import { useRouter } from 'next/router';
-import AuthSignIn from '../../layouts/auth/signin';
+import AuthSignIn from '../../layouts/auth/sign-in';
 
 const AuthSignInPage: NextPage = () => {
   const accessToken = getCookie('access_token');
