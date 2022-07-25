@@ -136,6 +136,7 @@ const Enroll= () => {
       .then((res) => {
         return res.data.savedPath
       })
+      console.log('썸네일 주소:', thumRes)
       console.log('토큰 이미지 업로드 중~~~');
       const tokenImgRes = await axios
       .post(`http://server.beeimp.com:18080/file`, formData2, {
@@ -147,6 +148,7 @@ const Enroll= () => {
       .then((res) => {
         return res.data.savedPath
       })
+      console.log('토큰 주소:', tokenImgRes)
       setList({...list, thumnail: `http://server.beeimp.com:18080/${thumRes}`, token_image_url: `http://server.beeimp.com:18080/${tokenImgRes}`});
       console.log('이벤트 등록 중~~~');
        await axios
