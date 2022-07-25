@@ -240,7 +240,7 @@ export class TokenService {
     for (let i = 0; i < applyingEventStatus.length; i++) {
       const eventId = applyingEventStatus[i].get('event_id');
       const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-      if (eventParticipants.length) continue;
+      if (eventParticipants.length == 0) continue;
       console.log('eventParticipants', eventId, ':', eventParticipants);
       const eventParticipantsCount = await this.ParticipantModel.find({
         event_id: eventId,

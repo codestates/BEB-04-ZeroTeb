@@ -33,6 +33,10 @@ export class KlaytnModule {
             new Caver.providers.HttpProvider('https://node-api.klaytnapi.com/v1/klaytn', option),
           ),
         },
+        {
+          provide: 'GetKlaytn',
+          useValue: new Caver('https://api.baobab.klaytn.net:8651/'),
+        },
         KlaytnService,
       ],
       exports: [KlaytnService],

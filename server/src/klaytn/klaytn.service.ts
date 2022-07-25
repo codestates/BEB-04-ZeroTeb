@@ -22,9 +22,11 @@ const KAS_SECRET_ACCESS_KEY = process.env.KAS_SECRET_ACCESS_KEY ?? '';
 @Injectable()
 export class KlaytnService {
   private contract: Contract | null;
+  private get_contract: Contract | null;
 
   constructor(
     @Inject('Klaytn') private readonly caver: Caver,
+    @Inject('GetKlaytn') private readonly get_caver: Caver,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
   ) {
     if ([CONTRACT_ABI, CONTRACT_ADDRESS].every(Boolean)) {
@@ -33,8 +35,14 @@ export class KlaytnService {
         CONTRACT_ADDRESS,
       );
       this.contract = contractInstance;
+
+      const get_contractInstance = this.get_caver.contract.create(
+        CONTRACT_ABI as AbiItem[],
+        CONTRACT_ADDRESS,
+      );
+      this.get_contract = get_contractInstance;
     } else {
-      this.contract = null;
+      this.get_contract = null;
     }
   }
 
@@ -157,10 +165,12 @@ export class KlaytnService {
   // 이벤트 조회
   async getEvent(eventId: number): Promise<ContractEventDto> {
     const contractEventDto: ContractEventDto = new ContractEventDto();
-    const event = await this.contract.methods.getEvent(eventId).call();
+    // const event = await this.contract.methods.getEvent(eventId).call();
+    const event = await this.get_contract.methods.getEvent(eventId).call();
     const prices = [];
     for (let i = 0; i < Number(event._classCount); i++) {
-      const receipt = await this.contract.methods.getEventClass(eventId, i).call();
+      // const receipt = await this.contract.methods.getEventClass(eventId, i).call();
+      const receipt = await this.get_contract.methods.getEventClass(eventId, i).call();
       prices.push({
         class: receipt[0],
         price: Number(receipt[1]),
@@ -182,7 +192,8 @@ export class KlaytnService {
 
   // 이벤트 클래스 조회
   async getEventClass(eventId: number, eventClassId): Promise<ContractEventClassType> {
-    const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+    // const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+    const receipt = await this.get_contract.methods.getEventClass(eventId, eventClassId).call();
 
     return {
       class: receipt[0],
@@ -193,7 +204,8 @@ export class KlaytnService {
 
   // 이벤트 클래스 개수 조회
   async getEventClassCount(eventId: number): Promise<number> {
-    return await this.contract.methods.getEventClassCount(eventId).call();
+    // return await this.contract.methods.getEventClassCount(eventId).call();
+    return await this.get_contract.methods.getEventClassCount(eventId).call();
   }
 
   // 토큰 민팅
@@ -288,6 +300,7 @@ export class KlaytnService {
           gas: GAS,
           value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
         });
+      console.log('buyToken receipt:', receipt);
       return false;
     } catch (err) {
       console.error(err);
@@ -297,11 +310,15 @@ export class KlaytnService {
 
   // 토큰 구매자 조회
   async getTokenHolders(eventId: number): Promise<HoldingType[]> {
-    const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+    // const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+    const eventClassCount = await this.get_contract.methods.getEventClassCount(eventId).call();
     // console.log(eventClassCount);
     const results = [];
     for (let eventClassId = 0; eventClassId < eventClassCount; eventClassId++) {
-      const { _onwerArray, _tokenIdArray } = await this.contract.methods
+      // const { _onwerArray, _tokenIdArray } = await this.contract.methods
+      //   .getTokenBuyers(eventId, eventClassId)
+      //   .call();
+      const { _onwerArray, _tokenIdArray } = await this.get_contract.methods
         .getTokenBuyers(eventId, eventClassId)
         .call();
       for (let i = 0; i < _tokenIdArray.length; i++) {
@@ -343,7 +360,8 @@ export class KlaytnService {
 
   // 응모자 조회
   async getEventParticipants(eventId: number): Promise<string[]> {
-    const participants = await this.contract.methods.getEventParticipants(eventId).call();
+    // const participants = await this.contract.methods.getEventParticipants(eventId).call();
+    const participants = await this.get_contract.methods.getEventParticipants(eventId).call();
     return participants.map((participant) => participant.toLowerCase());
   }
 
@@ -411,6 +429,8 @@ export class KlaytnService {
   }
 
   async test() {
-    console.log(await this.getTokens(''));
+    // this.get_contract.once('CreateEvent', { filter: { _eventId: 0 } }, (err, event) => {
+    //   console.log(event);
+    // });
   }
 }
