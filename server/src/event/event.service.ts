@@ -69,7 +69,7 @@ export class EventService {
       //남은 좌석
       let totalSeat = 0;
       for (const i of price) {
-        totalSeat += i.count;
+        totalSeat += Number(i.count);
       }
       // location의 데이터를 분리해서 도, 시 까지만 사용
       // const sliceLocation = sub_location.split(' ');
