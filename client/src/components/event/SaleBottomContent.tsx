@@ -8,6 +8,7 @@ import MapLocation from '../../components/common/MapLocation'
 import SaleRefundPolicy from '../../components/event/SaleRefundPolicy'
 import InnerText from '../common/InnerText'
 import { getDate } from '../../utils/unixTime'
+import EventImg from '../common/EventImg'
 
 interface saleBottomContentProps {
   eventDetail: EventType
@@ -18,18 +19,27 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
 }) => {
   return (
     <>
+      <Unserbar />
+      <Text></Text>
+      <Title title={'이벤트 내용'} size={20} />
+      <View style={style.eventContentContainer}>
+        <InnerText innerText={eventDetail.contents} size={15} />
+      </View>
+      <Unserbar />
+      <Text></Text>
+      <Title title={'이벤트 정보'} size={20} />
       <View style={style.eventContentContainer}>
         {getDate(eventDetail.event_start_date) ===
         getDate(eventDetail.event_end_date) ? (
           <InnerText
-            innerText={`이벤트 관람일 : ${getDate(
+            innerText={`- 이벤트 관람일 : ${getDate(
               eventDetail.event_start_date,
             )}`}
             size={17}
           />
         ) : (
           <>
-            <InnerText innerText={`이벤트 관람일 : `} size={17} />
+            <InnerText innerText={`- 이벤트 관람일 : `} size={17} />
             <InnerText
               innerText={`${getDate(eventDetail.event_start_date)} ~ ${getDate(
                 eventDetail.event_end_date,
@@ -39,15 +49,25 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
           </>
         )}
         <InnerText
-          innerText={`총 판매좌석 : ${eventDetail.remaining}석`}
+          innerText={`- 총 판매좌석 : ${eventDetail.remaining}석`}
           size={17}
         />
-        <InnerText innerText={`티켓 구매 가능 날짜 : `} size={17} />
+        <InnerText innerText={`- 티켓 구매 가능 날짜 : `} size={17} />
         <InnerText
           innerText={`${getDate(eventDetail.recruit_start_date)} ~ ${getDate(
             eventDetail.recruit_start_date,
           )}`}
           size={17}
+        />
+      </View>
+      <Unserbar />
+      <Text></Text>
+      <Title title={'토큰 이미지'} size={20} />
+      <View style={style.eventContentContainer}>
+        <EventImg
+          imgUri={eventDetail.token_image_url}
+          width={200}
+          height={200}
         />
       </View>
       <Unserbar />
