@@ -255,8 +255,29 @@ export class TokenService {
     // }
     // // 'end' - 이벤트 종료 후 토큰 거래
 
-    const tokens = await this.klaytnService.getTokens('');
-    if (tokens.message || !tokens.items) throw new Error(tokens.message);
+    const getTokensData = await this.klaytnService.getTokens('');
+    if (getTokensData.message || !getTokensData.items) throw new Error(getTokensData.message);
+    const tokens = getTokensData.items;
+    for (let i = 0; i < tokens.length; i++) {
+      const tokenId = parseInt(tokens[i].tokenId, 16);
+      const owner = tokens[i].owner.toLowerCase();
+      const holding = await this.HoldingModel.find({ token_id: tokenId }).exec();
+      if (!holding) {
+        const eventId = await this.klaytnService.eventOf(tokenId);
+        const holdingData = new this.HoldingModel({
+          event_id: eventId,
+          token_id: tokenId,
+          address: owner,
+        });
+        await holdingData.save();
+      } else {
+        await this.HoldingModel.updateOne(
+          { token_id: tokenId },
+          { $set: { address: owner } },
+        ).exec();
+      }
+    }
+    console.log('getHoldingData 업데이트 완료!');
   }
 
   // @Cron('*/5 * * * * *')

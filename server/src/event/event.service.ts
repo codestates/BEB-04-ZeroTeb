@@ -344,10 +344,14 @@ export class EventService {
   // 이벤트 리스트 받아서 holdings에 업데이트
   @Cron('0 */1 * * * *') // 15분 마다 진행
   async mintTokens(): Promise<void> {
+    const nowDatePlusOneHour = Number((Date.now() + 1000 * 60 * 60).toString().substring(0, 10));
     try {
       // 이벤트 토큰 민팅
-      const createdEvent = await this.EventStatusModel.find({ status: 'created' }).exec();
-      if (!createdEvent) throw new Error('CreateEvent가 없습니다.');
+      const createdEvent = await this.EventModel.find({
+        status: 'created',
+        recruit_start_date: { $lt: nowDatePlusOneHour },
+      }).exec();
+      if (!createdEvent) return;
       for (let i = 0; i < createdEvent.length; i++) {
         const eventId = createdEvent[i].get('event_id');
         console.log('eventId :', eventId);

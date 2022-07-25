@@ -89,6 +89,10 @@ export class KlaytnService {
     return this.caver.utils.klayUnit;
   }
 
+  async eventOf(tokenId: number): Promise<number> {
+    return await this.contract.methods.eventOf(tokenId).call();
+  }
+
   async createEvent(event: ContracCreateEventkDto): Promise<void> {
     const inputData = [
       event.creator,
