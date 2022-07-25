@@ -25,7 +25,7 @@ const LoadingModal = (props: Props) => {
         >
           <Image
             source={{
-              uri: 'https://i.ibb.co/zVwGBTY/Spin-1s-200px.gif',
+              uri: 'https://i.ibb.co/5vP1d8X/Spin-1s-200px-without-Background.gif',
             }}
             style={{
               width: moderateScale(100),
