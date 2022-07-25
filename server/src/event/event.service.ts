@@ -39,13 +39,13 @@ export class EventService {
 
       // 최신 event_id 가져와서 다음 evnet_id 생성
       // 기존 데이터 없으면 오류 발생해서 next_evnet_id는 0으로 사용
-      let next_event_id = 0;
-      try {
-        const lastEvent = await this.EventModel.find().sort({ event_id: -1 }).limit(1);
-        lastEvent[0].event_id >= 0 ? (next_event_id = lastEvent[0].event_id + 1) : null;
-      } catch (e) {
-        console.log('아무 데이터 없음');
-      }
+      // let next_event_id = 0;
+      // try {
+      //   const lastEvent = await this.EventModel.find().sort({ event_id: -1 }).limit(1);
+      //   lastEvent[0].event_id >= 0 ? (next_event_id = lastEvent[0].event_id + 1) : null;
+      // } catch (e) {
+      //   console.log('아무 데이터 없음');
+      // }
       const {
         title,
         promoter,
@@ -573,6 +573,9 @@ export class EventService {
 
   // @Cron('* * * * * *')
   // async test(): Promise<void> {
+<<<<<<< Updated upstream
   //   await this.klaytnService.test();
+=======
+>>>>>>> Stashed changes
   // }
 }
