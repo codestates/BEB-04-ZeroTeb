@@ -29,10 +29,10 @@ const ConcertTypesModal = (props: any) => {
       <TouchableOpacity onPress={onStart}>
         <View style={style.enrollInput}>
           {props.list.category === '' ? (
-            <View style={{ left: moderateScale(10) }}>
+            <View style={{ alignItems: 'center' }}>
               <AntDesign
                 name="pluscircle"
-                size={moderateScale(18)}
+                size={moderateScale(22)}
                 color="black"
               />
             </View>
