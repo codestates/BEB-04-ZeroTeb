@@ -215,12 +215,15 @@ export class TokenService {
     const sellingEventStatus = await this.EventStatusModel.find({ status: 'selling' }).exec();
     for (let i = 0; i < sellingEventStatus.length; i++) {
       const eventId = sellingEventStatus[i].get('event_id');
+      // console.log('eventId :', eventId);
       const eventTokenBuyers = await this.klaytnService.getTokenHolders(eventId);
       for (let j = 0; j < eventTokenBuyers.length; j++) {
+        if (eventTokenBuyers[j].address === '0x0000000000000000000000000000000000000000') continue;
         const holder = await this.HoldingModel.findOne({
           token_id: eventTokenBuyers[j].token_id,
         }).exec();
-        if (holder === null) {
+        // console.log(!holder);
+        if (!holder) {
           const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
           await newHolder.save();
         } else {
@@ -249,4 +252,16 @@ export class TokenService {
     }
     // 'end' - 이벤트 종료 후 토큰 거래
   }
+
+  // @Cron('* * * * * *')
+  // async test(): Promise<void> {
+  //   // await this.klaytnService.test();
+  //   console.log('start');
+  //   const data = await this.ParticipantModel.find().exec();
+  //   for (let i = 0; i < data.length; i++) {
+  //     console.log(i);
+  //     await data[i].$set({ address: data[i].get('address').toLowerCase() }).save();
+  //   }
+  //   console.log('end');
+  // }
 }

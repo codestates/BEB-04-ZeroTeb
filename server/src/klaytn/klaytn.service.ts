@@ -160,7 +160,7 @@ export class KlaytnService {
     }
     contractEventDto.name = event._name;
     contractEventDto.eventUri = event._eventUri;
-    contractEventDto.creator = event._creator;
+    contractEventDto.creator = event._creator.toLowerCase();
     contractEventDto.classCount = Number(event._classCount);
     contractEventDto.prices = prices;
     contractEventDto.openTime = Number(event._openTime);
@@ -239,6 +239,17 @@ export class KlaytnService {
       const isSelect = number !== undefined;
       number = isSelect ? number : 0;
 
+      console.log('=== klaytn.service.ts ===');
+      console.log(
+        'buyerAddress :',
+        buyerAddress,
+        'eventId :',
+        eventId,
+        'classId :',
+        classId,
+        'number :',
+        number,
+      );
       // const user = await this.UserModel.findOne({ address: buyerAddress });
       const user = await this.UserModel.findOne({ test_address: buyerAddress });
       if (!user) throw new Error('user is undefined.');
@@ -288,7 +299,7 @@ export class KlaytnService {
         const buyers = {
           event_id: eventId,
           token_id: Number(_tokenIdArray[i]),
-          address: _onwerArray[i],
+          address: _onwerArray[i].toLowerCase(),
           number: i,
         };
         results.push(buyers);
@@ -323,7 +334,8 @@ export class KlaytnService {
 
   // 응모자 조회
   async getEventParticipants(eventId: number): Promise<string[]> {
-    return await this.contract.methods.getEventParticipants(eventId).call();
+    const participants = await this.contract.methods.getEventParticipants(eventId).call();
+    return participants.map((participant) => participant.toLowerCase());
   }
 
   // 이벤트 응모 당첨 트리거
@@ -360,6 +372,6 @@ export class KlaytnService {
   }
 
   async test() {
-    console.log(await this.getTokenHolders(2));
+    // console.log(await this.getTokenHolders(2));
   }
 }
