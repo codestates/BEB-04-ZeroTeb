@@ -209,45 +209,60 @@ export class TokenService {
   }
 
   // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  // @Cron('0,30 * * * * *')
-  // async getHoldingData() {
-  //   console.log('address에 따른 토큰 정보 받기');
-  //   // 'selling'
-  //   const sellingEventStatus = await this.EventStatusModel.find({ status: 'selling' }).exec();
-  //   for (let i = 0; i < sellingEventStatus.length; i++) {
-  //     const eventId = sellingEventStatus[i].get('event_id');
-  //     const eventTokenBuyers = await this.klaytnService.getTokenHolders(eventId);
-  //     for (let j = 0; j < eventTokenBuyers.length; j++) {
-  //       const holder = await this.HoldingModel.findOne({
-  //         token_id: eventTokenBuyers[j].token_id,
-  //       }).exec();
-  //       if (holder === null) {
-  //         const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
-  //         await newHolder.save();
-  //       } else {
-  //         await holder.$set('address', eventTokenBuyers[j].address).save();
-  //       }
-  //     }
+  @Cron('0,30 * * * * *')
+  async getHoldingData() {
+    console.log('address에 따른 토큰 정보 받기');
+    // 'selling'
+    const sellingEventStatus = await this.EventStatusModel.find({ status: 'selling' }).exec();
+    for (let i = 0; i < sellingEventStatus.length; i++) {
+      const eventId = sellingEventStatus[i].get('event_id');
+      // console.log('eventId :', eventId);
+      const eventTokenBuyers = await this.klaytnService.getTokenHolders(eventId);
+      for (let j = 0; j < eventTokenBuyers.length; j++) {
+        if (eventTokenBuyers[j].address === '0x0000000000000000000000000000000000000000') continue;
+        const holder = await this.HoldingModel.findOne({
+          token_id: eventTokenBuyers[j].token_id,
+        }).exec();
+        // console.log(!holder);
+        if (!holder) {
+          const newHolder = new this.HoldingModel(eventTokenBuyers[j]);
+          await newHolder.save();
+        } else {
+          await holder.$set('address', eventTokenBuyers[j].address).save();
+        }
+      }
+    }
+    // 'applying'
+    const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
+    for (let i = 0; i < applyingEventStatus.length; i++) {
+      const eventId = applyingEventStatus[i].get('event_id');
+      const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
+      // console.log('eventParticipants :', eventParticipants);
+      const eventParticipantsCount = await this.ParticipantModel.find({
+        event_id: eventId,
+      })
+        .count()
+        .exec();
+      const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
+        event_id: eventId,
+        address,
+      }));
+      // console.log('participantSchemas :', participantSchemas);
+      if (participantSchemas.length === 0) return;
+      await this.ParticipantModel.create(participantSchemas);
+    }
+    // 'end' - 이벤트 종료 후 토큰 거래
+  }
+
+  // @Cron('* * * * * *')
+  // async test(): Promise<void> {
+  //   // await this.klaytnService.test();
+  //   console.log('start');
+  //   const data = await this.ParticipantModel.find().exec();
+  //   for (let i = 0; i < data.length; i++) {
+  //     console.log(i);
+  //     await data[i].$set({ address: data[i].get('address').toLowerCase() }).save();
   //   }
-  //   // 'applying'
-  //   const applyingEventStatus = await this.EventStatusModel.find({ status: 'applying' }).exec();
-  //   for (let i = 0; i < applyingEventStatus.length; i++) {
-  //     const eventId = applyingEventStatus[i].get('event_id');
-  //     const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-  //     // console.log('eventParticipants :', eventParticipants);
-  //     const eventParticipantsCount = await this.ParticipantModel.find({
-  //       event_id: eventId,
-  //     })
-  //       .count()
-  //       .exec();
-  //     const participantSchemas = eventParticipants.slice(eventParticipantsCount).map((address) => ({
-  //       event_id: eventId,
-  //       address,
-  //     }));
-  //     // console.log('participantSchemas :', participantSchemas);
-  //     if (participantSchemas.length === 0) return;
-  //     await this.ParticipantModel.create(participantSchemas);
-  //   }
-  //   // 'end' - 이벤트 종료 후 토큰 거래
+  //   console.log('end');
   // }
 }
