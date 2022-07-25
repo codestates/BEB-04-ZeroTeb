@@ -3683,11 +3683,6 @@
     "@expo/config-plugins" "^4.0.14"
     "expo-image-loader" "~3.2.0"
 
-"expo-blur@^11.1.0":
-  "integrity" "sha512-7ClB+fIYoFXaTyY4jAMBmJmgs3Dz0EWNbpgFCC4v/sSxldg5jSbMUXLXUttnRhKRmIzPB2gufcgoOWfNwA3q7g=="
-  "resolved" "https://registry.npmjs.org/expo-blur/-/expo-blur-11.1.0.tgz"
-  "version" "11.1.0"
-
 "expo-clipboard@~3.0.1":
   "integrity" "sha512-y3gooHxfXpdlslS8GLTrXdWKGCr5hXLI+Y49PolbjUqBVh819+Z/T8bdskUf5YNxu/Bb0HG1yuHpHPe8XyvxSA=="
   "resolved" "https://registry.npmjs.org/expo-clipboard/-/expo-clipboard-3.0.1.tgz"

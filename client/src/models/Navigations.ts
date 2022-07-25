@@ -39,6 +39,7 @@ export type MyPageStackParamList = {
   Enroll: undefined
   MyList: { type: string }
   Notice: undefined
+  EventDetail: { event: EventType }
 }
 
 export interface RootStackParamList
