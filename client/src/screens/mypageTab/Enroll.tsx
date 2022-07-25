@@ -14,6 +14,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Modal,
+  RefreshControl,
 } from 'react-native'
 import * as ImagePicker from 'expo-image-picker'
 import { EnrollType } from '../../models/Event'
@@ -36,6 +37,9 @@ const inputTextSize = 14
 const inputLeft = 10
 // 하루를 초로 나타낼 시
 const oneDay = 86400
+const wait = (timeout: number) => {
+  return new Promise(resolve => setTimeout(resolve, timeout))
+}
 
 const Enroll = () => {
   const navigation = useNavigation()
@@ -53,8 +57,8 @@ const Enroll = () => {
   const mode = ['date', 'time']
   // 모달창 켜기 끄기
   const [modalVisible, setModalVisible] = useState(false)
-  // 등록할 이벤트 데이터
-  const [list, setList] = useState<EnrollType>({
+  // 등록할 이벤트 데이터 초기값
+  const initData = {
     title: '',
     promoter: userName,
     address: KilpAddress,
@@ -73,8 +77,16 @@ const Enroll = () => {
     event_end_date: Math.floor(Number(new Date()) / 1000 + oneDay * 3),
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
-  })
-  const [deposit, setDeposit] = useState<Number>(0)
+  }
+  // 등록할 이벤트 데이터
+  const [list, setList] = useState<EnrollType>(initData)
+  const [deposit, setDeposit] = useState<Number>(0) // 보증금 useState
+  const [refreshing, setRefreshing] = React.useState(false)
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true)
+    setList(initData)
+    wait(1000).then(() => setRefreshing(false))
+  }, [])
 
   //썸네일, 토큰 이미지 선택
   const pickImage = async (e: string) => {
@@ -176,15 +188,18 @@ const Enroll = () => {
       setModalVisible(false)
     }
   }
-
+  // 등록버튼 활성화 / 비활성화
+  // 전체 list 요소들 다 검사하는
   const onCheckList = () => {
     let key: string
-    let priceKey: string
+    let priceKey: string | number
     let check: boolean = true
-    for (key in list) {
+    const listComponent = Object(list)
+    for (key in listComponent) {
       if (key === 'price') {
-        list[key].map((value, index) => {
+        listComponent[key].map((value: any, index: number) => {
           for (priceKey in value) {
+            // class , price , count
             if (value[priceKey] === '') {
               check = false
             }
@@ -194,10 +209,10 @@ const Enroll = () => {
           }
         })
       }
-      if (list[key] === '') {
+      if (listComponent[key] === '') {
         check = false
       }
-      if (list[key] === ' ') {
+      if (listComponent[key] === ' ') {
         check = false
       }
     }
@@ -210,7 +225,12 @@ const Enroll = () => {
 
   return (
     <View style={style.enrollContainer}>
-      <ScrollView decelerationRate="fast">
+      <ScrollView
+        decelerationRate="fast"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={style.enrollTitle}>
           <Text style={style.enrollTitleText}>이벤트 등록</Text>
         </View>
@@ -542,7 +562,7 @@ const style = ScaledSheet.create({
   enrollContainer: {
     flex: 1,
     backgroundColor: 'white',
-    padding: '20@msr',
+    paddingHorizontal: '20@msr',
   },
   enrollTitle: {
     alignItems: 'center',
@@ -604,7 +624,7 @@ const style = ScaledSheet.create({
     justifyContent: 'space-between',
   },
   enrollSubmmitButtonContainer: {
-    marginTop: '20@msr',
+    marginVertical: '10@msr',
     justifyContent: 'center',
     alignItems: 'center',
     height: '30@msr',
@@ -612,7 +632,7 @@ const style = ScaledSheet.create({
     backgroundColor: '#3AACFF',
   },
   enrollSubmmitButtonContainerDisable: {
-    marginTop: '20@msr',
+    marginVertical: '10@msr',
     justifyContent: 'center',
     alignItems: 'center',
     height: '30@msr',

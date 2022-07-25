@@ -10,7 +10,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface Props {
   atModalVisible: boolean
   setAtModalVisible: any
-  body: any
+  body: boolean
 }
 const AfterTransactionModal = (props: Props) => {
   const navigation = useNavigation()
@@ -28,17 +28,49 @@ const AfterTransactionModal = (props: Props) => {
         <View
           style={styles.constentSpace} // 모달 안
         >
-          <View style={styles.constentHeaderSpace}>
-            <InnerText innerText={'결제 완료'} size={20} />
-            <View
-              onTouchEnd={() => props.setAtModalVisible(false)} // 닫기 버튼
-            >
-              <AntDesign name="close" size={moderateScale(24)} color="black" />
+          {props.body ? (
+            <View>
+              <View style={styles.constentHeaderSpace}>
+                <InnerText innerText={'결제 완료'} size={20} />
+                <View
+                  onTouchEnd={() => props.setAtModalVisible(false)} // 닫기 버튼
+                >
+                  <AntDesign
+                    name="close"
+                    size={moderateScale(24)}
+                    color="black"
+                  />
+                </View>
+              </View>
+
+              <View>
+                <InnerText
+                  innerText={`이벤트 참가가 완료되었습니다.`}
+                  size={15}
+                />
+              </View>
             </View>
-          </View>
-          <View>
-            <InnerText innerText={`이벤트 참가가 완료되었습니다.`} size={15} />
-          </View>
+          ) : (
+            <View>
+              <View style={styles.constentHeaderSpace}>
+                <InnerText innerText={'결제 실패'} size={20} />
+                <View
+                  onTouchEnd={() => props.setAtModalVisible(false)} // 닫기 버튼
+                >
+                  <AntDesign
+                    name="close"
+                    size={moderateScale(24)}
+                    color="black"
+                  />
+                </View>
+              </View>
+
+              <View>
+                <InnerText innerText={`결제가 실패되었습니다.`} size={15} />
+              </View>
+            </View>
+          )}
+
           <View
             style={styles.eventButton}
             onTouchEnd={() => {

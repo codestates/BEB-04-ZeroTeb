@@ -42,7 +42,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   const [loadingModalVisible, setLoadingModalVisible] =
     React.useState<boolean>(false)
   const [atModalVisible, setAtModalVisible] = React.useState<boolean>(false)
-
+  const [afterModalBoolean, setAfterModalBoolean] =
+    React.useState<boolean>(false)
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
@@ -129,6 +130,11 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
         console.log('ok')
         setLoadingModalVisible(false)
         setAtModalVisible(true)
+        setAfterModalBoolean(true) // 성공시 true
+      } else {
+        setLoadingModalVisible(false)
+        setAtModalVisible(true)
+        setAfterModalBoolean(false) // 실패시 false
       }
     } catch (e) {
       console.log(e)
@@ -150,7 +156,7 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
       <AfterTransactionModal
         atModalVisible={atModalVisible}
         setAtModalVisible={setAtModalVisible}
-        body={undefined}
+        body={afterModalBoolean}
       />
       <View style={style.eventImgContainer}>
         <Image

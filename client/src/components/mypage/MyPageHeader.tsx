@@ -4,6 +4,7 @@ import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
 import { useNavigation } from '@react-navigation/native'
+import { firstLetter } from '../../utils/utils'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -105,7 +106,6 @@ const styles = ScaledSheet.create({
   },
   infoIconInnerContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
   },
   infoIconContainer: {
@@ -113,10 +113,10 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
-    padding: '10@msr',
+    paddingBottom: '15@msr',
 
     width: SCREEN_WIDTH * 0.28,
-    height: SCREEN_HEIGHT * 0.14,
+    height: SCREEN_HEIGHT * 0.16,
   },
   infoText: {
     fontSize: '18@msr',

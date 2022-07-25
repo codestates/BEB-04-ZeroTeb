@@ -16,12 +16,17 @@ import SearchBar from '../../components/search/Searchbar'
 import EventList from '../../components/event/EventList'
 import axios, { AxiosRequestConfig } from 'axios'
 import { EventType } from '../../models/Event'
-import { useNavigation, StackActions, CommonActions } from '@react-navigation/native'
+import {
+  useNavigation,
+  StackActions,
+  CommonActions,
+} from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { moderateScale } from 'react-native-size-matters'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
+const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms))
 
 export default function Home() {
   const navigation = useNavigation()
@@ -30,7 +35,22 @@ export default function Home() {
   const [list, setList] = useState<EventType[]>([])
   const [load, setLoad] = useState<boolean>(false)
   const [page, setPage] = useState(1)
+  const [isFetching, setIsFetching] = React.useState(false)
+  const onRefresh = async () => {
+    setIsFetching(true)
+    setLoad(true)
+    setPage(1)
+    setList([])
+    setBannerList([])
 
+    getBannerList()
+    getEventList().then(() => {
+      setLoad(false)
+    })
+
+    await sleep(1000)
+    setIsFetching(false)
+  }
   // 배너 데이터 호출
   const getBannerList = async () => {
     try {
@@ -115,6 +135,8 @@ export default function Home() {
         data={['0']}
         onEndReached={endReached}
         onEndReachedThreshold={0.5}
+        onRefresh={onRefresh}
+        refreshing={isFetching}
         renderItem={() => (
           <>
             <View>
