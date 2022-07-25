@@ -21,13 +21,15 @@ export class TokenService {
   // 주소에 따른 token 목록 반환 함수
   async findTokenList(_address: string) {
     console.log('findTokenList');
+    console.log('add', _address);
     //주소가 보유하고 있는 token List를 DB에서 호출
     try {
-      const address = Object.values(_address)[0];
-      const tokenList = await this.HoldingModel.find({ address: address });
+      const tokenList = await this.HoldingModel.find({ address: _address });
+      console.log('res:', tokenList);
       if (tokenList.length <= 0) {
         return { message: 'no data' };
       }
+      console.log('result', tokenList);
       return tokenList;
     } catch (e) {
       console.log(e);

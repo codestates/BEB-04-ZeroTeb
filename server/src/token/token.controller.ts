@@ -10,7 +10,7 @@ export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
   @Get('list')
-  findTokenList(@Query() address: string): object {
+  findTokenList(@Query('address') address: string): object {
     return this.tokenService.findTokenList(address);
   }
   @Get('qrcode')
