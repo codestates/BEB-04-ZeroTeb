@@ -571,8 +571,8 @@ export class EventService {
     // 이벤트 응모자 디비 저장
   }
 
-  @Cron('* * * * * *')
-  async test(): Promise<void> {
-    await this.klaytnService.test();
-  }
+  // @Cron('* * * * * *')
+  // async test(): Promise<void> {
+  //   await this.klaytnService.test();
+  // }
 }
