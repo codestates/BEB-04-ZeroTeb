@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { FC, useState, useEffect } from 'react'
 import {
   Image,
   View,
@@ -29,26 +29,26 @@ import LoadingModal from '../../components/common/LoadingModal'
 import EventImg from '../../components/common/EventImg'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const radioButtonsData: RadioButtonProps[] = [{ id: '0' }]
 interface eventDetailProps {
   eventDetail: EventType
 }
 
-const EventDetail: React.FC<eventDetailProps> = ({}) => {
+const EventDetail: FC<eventDetailProps> = ({}) => {
   const route = useRoute()
   const eventDetail = route.params?.event
 
-  const [btModalVisible, setBtModalVisible] = React.useState<boolean>(false)
-  const [loadingModalVisible, setLoadingModalVisible] =
-    React.useState<boolean>(false)
-  const [atModalVisible, setAtModalVisible] = React.useState<boolean>(false)
-  const [afterModalBoolean, setAfterModalBoolean] =
-    React.useState<boolean>(false)
+  const [btModalVisible, setBtModalVisible] = useState<boolean>(false)
+  const [loadingModalVisible, setLoadingModalVisible] = useState<boolean>(false)
+  const [atModalVisible, setAtModalVisible] = useState<boolean>(false)
+  const [afterModalBoolean, setAfterModalBoolean] = useState<boolean>(false)
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
   // 라디오 버튼에 가격항목 추가
-  const [radioButtons, setRadioButtons] = React.useState<RadioButtonProps[]>({})
+  const [radioButtons, setRadioButtons] =
+    useState<RadioButtonProps[]>(radioButtonsData)
   function mapRadio(prices: { class: string; price: number; count: number }[]) {
     const newArr: RadioButtonProps[] = []
     prices.map((el, index) => {
@@ -66,8 +66,8 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
   }
 
   // 라디오 버튼으로 선택한 값
-  const [selectValue, setSelectValue] = React.useState<RadioButtonProps>({
-    id: 0,
+  const [selectValue, setSelectValue] = useState<RadioButtonProps>({
+    id: '0',
     label:
       eventDetail.price[0].class +
       ' Class / ' +
@@ -86,10 +86,10 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     setSelectValue(selectValue[0])
     setRadioButtons(radioButtonsArray)
   }
-  React.useEffect(() => {
+  useEffect(() => {
     mapRadio(eventDetail.price)
+    console.log(selectValue)
   }, [])
-
   const pressButtonHendler = (event: GestureResponderEvent) => {
     if (KilpAddress === '') {
       navigation.navigate('SignIn', { gotoMyPage: false })
@@ -107,6 +107,12 @@ const EventDetail: React.FC<eventDetailProps> = ({}) => {
     // 구매 , 응모에 따라 다른 데이터를 보내줘야 한다.
     let url = ''
     let data = {}
+    console.log(
+      'eventDetail.event_id',
+      eventDetail.event_id,
+      'selectValue.id',
+      selectValue.id,
+    )
     if (eventDetail.type === 'sale') {
       console.log('sale')
       url = 'http://server.beeimp.com:18080/token/buy'
