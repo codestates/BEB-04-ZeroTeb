@@ -10,7 +10,7 @@ const EntryPrecaution: React.FC<entryPrecautionProps> = () => {
   return (
     <View style={style.entryPrecautionContainer}>
       <Text></Text>
-      <Title title={'기타 안내 사항'} size={20} />
+      <Title title={'기타 안내 사항'} size={18} />
       <View style={style.eventContentContainer}>
         <InnerText
           innerText={

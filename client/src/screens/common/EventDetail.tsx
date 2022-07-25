@@ -13,8 +13,6 @@ import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import InnerText from '../../components/common/InnerText'
 import Unserbar from '../../components/common/Underbar'
 import AvatarIcon from '../../components/common/AvatarIcon'
-import Title from '../../components/common/Title'
-import BeforeTransaction from '../../components/event/BeforeTransactionModal'
 import EntryBottomContent from '../../components/event/EntryBottomContent'
 import SaleBottomContent from '../../components/event/SaleBottomContent'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
@@ -24,9 +22,9 @@ import { profile_url } from '../../utils/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import BeforeTransaction from '../../components/event/BeforeTransactionModal'
 import AfterTransactionModal from '../../components/event/AfterTransactionModal'
 import LoadingModal from '../../components/common/LoadingModal'
-import EventImg from '../../components/common/EventImg'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 const radioButtonsData: RadioButtonProps[] = [{ id: '0' }]
@@ -228,21 +226,7 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
         />
         <InnerText innerText={eventDetail.promoter} size={20} />
       </View>
-      <Unserbar />
-      <Text></Text>
-      <Title title={'이벤트 내용'} size={20} />
-      <View style={style.eventContentContainer}>
-        <InnerText innerText={eventDetail.contents} size={15} />
-      </View>
-      <Title title={'토큰 이미지'} size={20} />
-      <View style={style.eventContentContainer}>
-        <EventImg
-          imgUri={eventDetail.token_image_url}
-          width={200}
-          height={200}
-        />
-      </View>
-      <View style={style.eventContentContainer}></View>
+
       {eventDetail.type === 'sale' ? (
         <SaleBottomContent eventDetail={eventDetail} />
       ) : (
