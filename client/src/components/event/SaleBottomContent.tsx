@@ -35,29 +35,27 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
             innerText={`- 이벤트 관람일 : ${getDate(
               eventDetail.event_start_date,
             )}`}
-            size={17}
+            size={15}
           />
         ) : (
           <>
-            <InnerText innerText={`- 이벤트 관람일 : `} size={17} />
             <InnerText
-              innerText={`${getDate(eventDetail.event_start_date)} ~ ${getDate(
-                eventDetail.event_end_date,
-              )}`}
-              size={17}
+              innerText={`- 이벤트 관람일 \n: ${getDate(
+                eventDetail.event_start_date,
+              )} ~ ${getDate(eventDetail.event_end_date)}`}
+              size={15}
             />
           </>
         )}
         <InnerText
           innerText={`- 총 판매좌석 : ${eventDetail.remaining}석`}
-          size={17}
+          size={15}
         />
-        <InnerText innerText={`- 티켓 구매 가능 날짜 : `} size={17} />
         <InnerText
-          innerText={`${getDate(eventDetail.recruit_start_date)} ~ ${getDate(
+          innerText={`- 티켓 구매 가능 날짜 \n: ${getDate(
             eventDetail.recruit_start_date,
-          )}`}
-          size={17}
+          )} ~ ${getDate(eventDetail.recruit_start_date)}`}
+          size={15}
         />
       </View>
       <Unserbar />

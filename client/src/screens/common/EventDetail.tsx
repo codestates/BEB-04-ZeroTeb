@@ -189,9 +189,8 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
           />
         ) : (
           <View>
-            <InnerText innerText={'응모기간 : '} size={15} />
             <InnerText
-              innerText={`${getDateAndTime(
+              innerText={`응모기간 \n: ${getDateAndTime(
                 eventDetail.recruit_start_date,
               )} ~ ${getDateAndTime(eventDetail.recruit_end_date)}`}
               size={15}
@@ -199,7 +198,6 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
           </View>
         )}
         <Text></Text>
-
         <View style={style.eventDateandButtonContainer}>
           <RadioGroup
             radioButtons={radioButtons}
@@ -279,7 +277,7 @@ const style = ScaledSheet.create({
     borderColor: '#5D8BF4',
     borderWidth: 1,
   },
-  eventText: { color: '#ffffff', ontSize: '12@msr' },
+  eventText: { color: '#ffffff', fontSize: '12@msr' },
   RadioButtonText: { fontSize: '15@msr' },
   promoterContainer: {
     flex: 1,
