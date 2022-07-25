@@ -85,7 +85,7 @@ const AvatarIcon: React.FC<avatarProps> = ({ size, color, title }) => {
           backgroundColor: color || 'skyblue',
         }}
       >
-        <TextStroke stroke={0.1} color={'#ffffff'}>
+        <TextStroke stroke={0.5} color={'#ffffff'}>
           <Text
             style={{
               fontSize: moderateScale(size / 2 || 64),
