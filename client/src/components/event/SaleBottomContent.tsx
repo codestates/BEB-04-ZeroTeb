@@ -75,8 +75,7 @@ const SaleBottomContent: React.FC<saleBottomContentProps> = ({
       <Title title={'위치 및 장소'} size={18} />
       <View style={style.eventContentContainer}>
         <Text style={style.locationText}>
-          {eventDetail.location}
-          {eventDetail?.sub_location}
+          {`${eventDetail.location} ${eventDetail?.sub_location}`}
         </Text>
         <MapLocation x={eventDetail.x} y={eventDetail.y} />
       </View>
