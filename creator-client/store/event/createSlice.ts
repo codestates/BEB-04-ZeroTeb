@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CreateEventType, EventClassType } from '../../types/event';
+import { CreateEventType, EventCategory, EventClassType } from '../../types/event';
 
 // Define a type for the slice state
 interface CreateState extends CreateEventType {}
@@ -11,11 +11,17 @@ const initialState: CreateState = {
   promoter: '',
   location: '',
   sub_location: '',
-  category: '',
-  type: 'entry',
+  category: 'concert',
+  type: 'sale',
   thumnail: '',
   token_image_url: '',
-  price: [],
+  price: [
+    {
+      class: 0,
+      price: 0,
+      count: 1,
+    },
+  ],
   contents: '',
   option: [],
   recruit_start_date: 0,
@@ -45,7 +51,7 @@ export const createEventSlice = createSlice({
     set_sub_location: (state, action: PayloadAction<string>) => {
       state.sub_location = action.payload;
     },
-    set_category: (state, action: PayloadAction<string>) => {
+    set_category: (state, action: PayloadAction<EventCategory>) => {
       state.category = action.payload;
     },
     set_type: (state, action: PayloadAction<'entry' | 'sale'>) => {

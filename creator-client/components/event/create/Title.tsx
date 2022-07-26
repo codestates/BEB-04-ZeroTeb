@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { ChangeEventHandler, FunctionComponent } from 'react';
 import { useDispatch } from 'react-redux';
-import { createEventActions } from '../../../store/event/create';
+import { createEventActions } from '../../../store/event/createSlice';
 
 interface EventCreateTitleProps {}
 
@@ -23,7 +23,7 @@ const EventCreateTitle: FunctionComponent<EventCreateTitleProps> = () => {
     padding: 0.3em;
     background: none;
     &::placeholder {
-      color: #e2e2e2;
+      color: rgba(200, 200, 200, 0.8);
     }
   `;
 
@@ -35,7 +35,7 @@ const EventCreateTitle: FunctionComponent<EventCreateTitleProps> = () => {
         type="text"
         name="title"
         onChange={titleHandler}
-        placeholder="제목.."
+        placeholder="제목 입력.."
       ></input>
     </div>
   );

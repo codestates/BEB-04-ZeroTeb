@@ -4,8 +4,8 @@ interface CreateEventType {
   promoter: string;
   location: string;
   sub_location: string;
-  category: string;
-  type: 'entry' | 'sale';
+  category: EventCategory;
+  type: EventType;
   thumnail: string;
   token_image_url: string;
   price: EventClassType[];
@@ -20,9 +20,12 @@ interface CreateEventType {
 }
 
 interface EventClassType {
-  class: string;
+  class: number;
   price: number;
   count: number;
 }
 
-export type { CreateEventType, EventClassType };
+type EventType = 'entry' | 'sale';
+type EventCategory = 'concert' | 'theater' | 'kid' | 'musical' | 'exhibition' | 'leisure sport';
+
+export type { CreateEventType, EventClassType, EventType, EventCategory };

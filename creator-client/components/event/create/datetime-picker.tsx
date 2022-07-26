@@ -5,6 +5,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
+import { css } from '@emotion/react';
+import EventCreateItemWrapper from './item-wrapper';
 
 interface EventDateTimePickerPickerProps {
   title?: string;
@@ -25,9 +27,13 @@ const EventDateTimePicker: FunctionComponent<EventDateTimePickerPickerProps> = (
     return Number(date.getTime().toString().substring(0, 10));
   };
 
+  const waveStyle = css`
+    padding: 1em;
+  `;
+
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <div>
+      <EventCreateItemWrapper title={title + ' 기간'}>
         <DateTimePicker
           renderInput={(props) => <TextField {...props} />}
           label={`${title} 시작 시간`}
@@ -41,7 +47,7 @@ const EventDateTimePicker: FunctionComponent<EventDateTimePickerPickerProps> = (
             dispatch(startDateActions(timestamp));
           }}
         />
-        <span>~</span>
+        <span css={waveStyle}>~</span>
         <DateTimePicker
           renderInput={(props) => <TextField {...props} />}
           label={`${title} 종료 시간`}
@@ -54,7 +60,7 @@ const EventDateTimePicker: FunctionComponent<EventDateTimePickerPickerProps> = (
             dispatch(endDateActions(timestamp));
           }}
         />
-      </div>
+      </EventCreateItemWrapper>
     </LocalizationProvider>
   );
 };
