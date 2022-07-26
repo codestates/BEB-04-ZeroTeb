@@ -58,6 +58,15 @@ export class EventController {
     return this.eventService.findByKeyword(keyword);
   }
 
+  // 인기 검색어
+  @Get('hashtag')
+  hashtag() {
+    // 구현 예정
+    return {
+      hashtag: ['아이유', 'TT', 'ZeroTEB', 'CodeStates', 'BEB'],
+    };
+  }
+
   @Get('location')
   findLocation(@Query('lon') lon: number, @Query('lat') lat: number) {
     return this.eventService.findAroundEvent(lon, lat);
