@@ -13,6 +13,8 @@ import { HoldingType } from './schemas/holding.schema';
 import { Participant, ParticipantDocument } from './schemas/participant.schema';
 import { BalanceDto } from './dto/balance.dto';
 
+const OWNER_ADDRESS = process.env.OWNER_ADDRESS.toLowerCase();
+
 @Injectable()
 export class TokenService {
   constructor(
@@ -257,7 +259,7 @@ export class TokenService {
     for (let i = 0; i < applyingEventStatus.length; i++) {
       const eventId = applyingEventStatus[i].get('event_id');
       const eventParticipants = await this.klaytnService.getEventParticipants(eventId);
-      if (eventParticipants.length == 0) continue;
+      if (eventParticipants.length === 0) continue;
       console.log('eventParticipants', eventId, ':', eventParticipants);
       const eventParticipantsCount = await this.ParticipantModel.find({
         event_id: eventId,
@@ -279,9 +281,7 @@ export class TokenService {
     console.log('구매자 조회 시작');
     const getTokensData = await this.klaytnService.getTokens('');
     if (getTokensData.message || !getTokensData.items) throw new Error(getTokensData.message);
-    const tokens = getTokensData.items.filter(
-      (item) => item.owner !== process.env.OWNER_ADDRESS.toLowerCase() ?? '',
-    );
+    const tokens = getTokensData.items.filter((item) => item.owner !== OWNER_ADDRESS);
     console.log('token 개수 :', tokens.length);
     for (let i = 0; i < tokens.length; i++) {
       const tokenId = parseInt(tokens[i].tokenId, 16);
@@ -303,6 +303,8 @@ export class TokenService {
       }
     }
     console.log('구매자 조회 시작');
+
+    await this.HoldingModel.deleteMany({ address: OWNER_ADDRESS }).exec();
 
     console.log('getHoldingData 업데이트 완료!');
   }

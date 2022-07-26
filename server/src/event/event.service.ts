@@ -436,7 +436,7 @@ export class EventService {
     }
   }
 
-  @Cron('0 0,15,30,45 * * * *')
+  @Cron('30 */1 * * * *')
   async getTokens(): Promise<void> {
     const nowTimestamp = Number(Date.now().toString().substring(0, 10));
     console.log('상태 변경 :', new Date(nowTimestamp * 1000));
@@ -636,6 +636,8 @@ export class EventService {
     // 이벤트 구매자 디비 저장
 
     // 이벤트 응모자 디비 저장
+
+    console.log('상태 변경 종료');
   }
 
   // @Cron('* * * * * *')
