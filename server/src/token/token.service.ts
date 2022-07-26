@@ -12,6 +12,7 @@ import { EventStatus, EventStatusDocument } from 'src/event/schemas/event-status
 import { HoldingType } from './schemas/holding.schema';
 import { Participant, ParticipantDocument } from './schemas/participant.schema';
 import { BalanceDto } from './dto/balance.dto';
+import { Event } from '../event/schemas/event.schema';
 
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS.toLowerCase();
 
@@ -20,6 +21,7 @@ export class TokenService {
   constructor(
     @InjectModel('Nonce') private readonly NonceModel: Model<Nonce>,
     @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
+    @InjectModel('Event') private readonly EventModel: Model<Event>,
     @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
     @InjectModel(Participant.name) private readonly ParticipantModel: Model<ParticipantDocument>,
     private readonly klaytnService: KlaytnService,
@@ -189,6 +191,10 @@ export class TokenService {
     try {
       const err = await this.klaytnService.buyToken(user.address, eventId, eventClassId, number);
       if (err) throw new Error('구매를 실패했습니다.');
+      await this.EventModel.updateOne(
+        { event_id: buyTokenDto.event_id },
+        { $inc: { remaining: -1 } },
+      );
       return '정상적으로 구매되었습니다.';
     } catch (error) {
       console.error(error);
