@@ -3,8 +3,9 @@ import dynamic from 'next/dynamic';
 import React, { FunctionComponent } from 'react';
 import 'react-quill/dist/quill.snow.css';
 import { useDispatch } from 'react-redux';
-import { createEventActions } from '../../../store/event/create';
+import { createEventActions } from '../../../store/event/createSlice';
 import Progress from '../../Progress';
+import EventCreateItemWrapper from './item-wrapper';
 
 const QuillWrapper = dynamic(() => import('react-quill'), {
   ssr: false,
@@ -67,14 +68,16 @@ const EventCreateEditor: FunctionComponent<EventCreateEditorProps> = () => {
   `;
 
   return (
-    <QuillWrapper
-      css={style}
-      theme="snow"
-      modules={modules}
-      formats={formats}
-      placeholder="글쓰기..."
-      onChange={(event) => ContentsHandler(event)}
-    />
+    <EventCreateItemWrapper title="이벤트 내용">
+      <QuillWrapper
+        css={style}
+        theme="snow"
+        modules={modules}
+        formats={formats}
+        placeholder="글쓰기..."
+        onChange={(event) => ContentsHandler(event)}
+      />
+    </EventCreateItemWrapper>
   );
 };
 
