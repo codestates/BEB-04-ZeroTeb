@@ -1,6 +1,7 @@
+import axios, { AxiosRequestConfig } from 'axios'
 import * as React from 'react'
-import { useState } from 'react'
-import { Text, View, Pressable } from 'react-native'
+import { useEffect, useState } from 'react'
+import { Text, View, Pressable, ScrollView } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import Title from '../common/Title'
 
@@ -10,21 +11,51 @@ type HashtagContent = {
 }
 
 const Hashtag: React.FC<HashtagContent> = ({ hashtags, onPress }) => {
-  const [hashtag, setHashtag] = useState<string[]>(hashtags)
+  const [hashtag, setHashtag] = useState<string[]>([])
+
+  const getHashtag = async () => {
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/event/hashtag`,
+        withCredentials: true,
+      }
+      const res = await axios(config)
+      if (res.data.message) {
+        alert(res.data.message)
+      } else {
+        console.log('hash', typeof res.data)
+        setHashtag(res.data.hashtag)
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  useEffect(() => {
+    getHashtag()
+  }, [])
 
   return (
     <View style={style.hashtagOuterContainer}>
       <Title title={'인기검색어'} size={17} />
       <View style={style.hashtagInnerContainer}>
-        {hashtag.map((keyword, index) => {
-          return (
-            <Pressable key={index} onPress={() => onPress(keyword)}>
-              <View style={style.hashtagButton}>
-                <Text style={style.hashtagText}>{keyword}</Text>
-              </View>
-            </Pressable>
-          )
-        })}
+        <ScrollView
+          decelerationRate="fast"
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          indicatorStyle={'white'}
+        >
+          {hashtag.map((keyword, index) => {
+            return (
+              <Pressable key={index} onPress={() => onPress(keyword)}>
+                <View style={style.hashtagButton}>
+                  <Text style={style.hashtagText}>{keyword}</Text>
+                </View>
+              </Pressable>
+            )
+          })}
+        </ScrollView>
       </View>
     </View>
   )

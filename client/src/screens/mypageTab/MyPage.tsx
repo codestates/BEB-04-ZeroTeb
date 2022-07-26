@@ -19,7 +19,6 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
-import { SafeAreaView } from 'react-native-safe-area-context'
 
 const TABBAR_HEIGHT = 60
 const wait = (timeout: number) => {

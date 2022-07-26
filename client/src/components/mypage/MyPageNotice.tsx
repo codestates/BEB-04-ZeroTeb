@@ -76,6 +76,7 @@ const MyPageNotice: React.FC<tutoProps> = () => {
           decelerationRate="fast"
           horizontal
           pagingEnabled
+          showsHorizontalScrollIndicator={false}
           indicatorStyle={'black'}
         >
           {whatTT.map((event: any, index: React.Key) => {
@@ -100,6 +101,7 @@ const MyPageNotice: React.FC<tutoProps> = () => {
           decelerationRate="fast"
           horizontal
           pagingEnabled
+          showsHorizontalScrollIndicator={false}
           indicatorStyle={'black'}
         >
           {tutorialList.map((event: any, index: React.Key) => {
