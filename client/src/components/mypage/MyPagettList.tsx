@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import { UserType } from '../../models/User'
 import { RootState } from '../../store/Index'
 
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 interface ttListProps {

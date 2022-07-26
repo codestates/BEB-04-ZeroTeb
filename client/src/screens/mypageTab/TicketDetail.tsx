@@ -12,6 +12,7 @@ import { SvgXml } from 'react-native-svg'
 import { useNavigation } from '@react-navigation/native'
 import { ScaledSheet } from 'react-native-size-matters'
 import { getDateAndTime } from '../../utils/unixTime' 
+import LoadingImg from '../../components/common/LoadingImg'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 //props: UserType
@@ -19,7 +20,8 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const TicketDetail = ({ route }) => {
   const navigation = useNavigation()
   const [qrSVG, setQrSVG] = useState('qr 생성 중~')
-  const [tokenData, setTokenData] = useState({title: '', location: '', sub_location: '', event_start_date: 0, event_end_date: 0})
+  const [tokenData, setTokenData] = useState({title: '', location: '', sub_location: '', event_start_date: undefined, event_end_date: undefined})
+  const [loading, setLoading] = useState(false);
 
   const pressHandler = () => {
     if (qrSVG !== 'qr 생성 중~') {
@@ -75,43 +77,52 @@ const TicketDetail = ({ route }) => {
 
   // qr 받아오기
   useEffect(() => {
+    setLoading(true)
     getEventDataByToken()
-    getQRcode() //아직 미완성
+    .then(()=>{
+      setLoading(false)
+    })
+    getQRcode()//아직 미완성
   }, [])
-
+  
   return (
-    <View style={styles.detailContainer}>
-      <InnerText innerText={'티켓은 TT에서!'} size={12} />
-      <View style={styles.imgContainer}>
-        <ImageBackground
-          source={{ uri: route.params.token_image_url }}
-          resizeMode="cover"
-          style={styles.imgContent}
-        />
-      </View>
-      <View style={styles.titleContainer}>
-        <InnerText
-          innerText={`${tokenData.title}`}
-          size={20}
-        ></InnerText>
-      </View>
-      <InnerText innerText={`${tokenData.location} ${tokenData.sub_location}`} size={14}></InnerText>
-      <InnerText innerText={`${getDateAndTime(tokenData.event_start_date)} ~ ${getDateAndTime(tokenData.event_end_date)}`} size={14}></InnerText>
-      <View style={styles.qrContainer}>
-        <View style={styles.qrSide}>
-          {qrSVG === 'qr 생성 중~' ? (
-            <Text>{qrSVG}</Text>
-          ) : (
-            <SvgXml xml={qrSVG} width="50" height="50" />
-          )}
+    <>
+      {loading ? <LoadingImg/> :
+      <View style={styles.detailContainer}>        
+        <InnerText innerText={'티켓은 TT에서!'} size={12} />
+        <View style={styles.imgContainer}>
+          <ImageBackground
+            source={{ uri: route.params.token_image_url }}
+            resizeMode="cover"
+            style={styles.imgContent}
+          />
         </View>
-        <View style={styles.textSide}>
-          <Pressable onPress={pressHandler}>
-            <InnerText innerText={'확대하기'} size={22}></InnerText>
-          </Pressable>
+        <View style={styles.titleContainer}>
+          <InnerText
+            innerText={`${tokenData.title}`}
+            size={20}
+          ></InnerText>
+        </View>
+        <InnerText innerText={`${tokenData.location} ${tokenData.sub_location}`} size={14}></InnerText>
+        { typeof tokenData.event_start_date === 'undefined' ? null : <InnerText innerText={`${getDateAndTime(tokenData.event_start_date)} ~ ${getDateAndTime(tokenData.event_end_date)}`} size={14}></InnerText>}
+        <View style={styles.qrContainer}>
+          <View style={styles.qrSide}>
+            {qrSVG === 'qr 생성 중~' ? (
+              <Text>{qrSVG}</Text>
+            ) : (
+              <SvgXml xml={qrSVG} width="50" height="50" />
+            )}
+          </View>
+          <View style={styles.textSide}>
+            <Pressable onPress={pressHandler}>
+              <InnerText innerText={'확대하기'} size={22}></InnerText>
+            </Pressable>
+          </View>
         </View>
       </View>
-    </View>
+      }
+    </>
+  
   )
 }
 
