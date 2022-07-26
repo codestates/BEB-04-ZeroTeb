@@ -26,6 +26,8 @@ import SetDateAndTime from '../../components/enroll/SetDateAndTime'
 import DetailPrice from '../../components/enroll/DetailPrice'
 import ConcertTypes from '../../components/enroll/ConcertTypesModal'
 import PlaceModalSelect from '../../components/enroll/PlaceModal'
+import LoadingModal from '../../components/common/LoadingModal'
+import AfterTransactionModal from '../../components/event/AfterTransactionModal'
 import FormData from 'form-data'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -78,10 +80,15 @@ const Enroll = () => {
     created_date: Math.floor(Number(new Date()) / 1000),
     modified_date: Math.floor(Number(new Date()) / 1000),
   }
-  
+  // 이벤트 등록 성공 실패 모달 변수
+  const [loadingModalVisible, setLoadingModalVisible] = useState<boolean>(false)
+  const [atModalVisible, setAtModalVisible] = useState<boolean>(false)
+  const [afterModalBoolean, setAfterModalBoolean] = useState<boolean>(false)
+  const afterModalMessage: string = '등록'
   // 등록할 이벤트 데이터
   const [list, setList] = useState<EnrollType>(initData)
   const [deposit, setDeposit] = useState<Number>(0) // 보증금 useState
+  // 새로고침 함수, 변수
   const [refreshing, setRefreshing] = React.useState(false)
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
@@ -99,7 +106,6 @@ const Enroll = () => {
       aspect: [4, 3],
       quality: 1,
     })
-    
 
     if (!result.cancelled) {
       const filename = result.uri.split('/').pop()
@@ -110,28 +116,34 @@ const Enroll = () => {
         type: 'image/jpg',
       })
       const resultPath = await axios
-          .post(`http://server.beeimp.com:18080/file`, formData, {
-            headers: {
-              'content-type': 'multipart/form-data',
-            },
-            withCredentials: true,
-          })
-          .then(res => {
-            return res.data.savedPath
-          })
+        .post(`http://server.beeimp.com:18080/file`, formData, {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+          withCredentials: true,
+        })
+        .then(res => {
+          return res.data.savedPath
+        })
 
-      if (name === 'token_image_url'){
-        console.log('토큰 이미지 업로드!')        
-        setList({ ...list, token_image_url: `http://server.beeimp.com:18080/file?fn=${resultPath}` })
-      }
-      else {
+      if (name === 'token_image_url') {
+        console.log('토큰 이미지 업로드!')
+        setList({
+          ...list,
+          token_image_url: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
+        })
+      } else {
         console.log('썸네일 이미지 업로드!')
-        setList({ ...list, thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`})
+        setList({
+          ...list,
+          thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
+        })
       }
     }
   }
   // 등록 이벤트
   const onStart = () => {
+    setLoadingModalVisible(true)
     setModalVisible(true)
     console.log('onstart')
     let money = 0 // 보증금
@@ -150,32 +162,40 @@ const Enroll = () => {
 
   // 서버에 이벤트 등록 요청
   const onCheckEnroll = async () => {
-
-
-
-    if(list.thumnail === ' ' || list.token_image_url === ' '){
+    setLoadingModalVisible(true)
+    if (list.thumnail === ' ' || list.token_image_url === ' ') {
       alert('이미지 업로드 중~ 기다리세요!')
-    }else{
-    try{
-      console.log('이벤트 등록 중~~~')
-      await axios
-        .post(ENROLL_URL, list, {
-          headers: {
-            Cookie: AccessToken,
-          },
-        })
-        .then(res => {
-          console.log('res:', res)
-        })
+    } else {
       setModalVisible(false)
-      navigation.goBack() //마이 페이지로 돌아감
-    } catch (e) {
-      console.log('이벤트 등록 중 에러 발생')
-      console.log(e)
-      alert('에러 발생')
-      setModalVisible(false)
+      try {
+        console.log('이벤트 등록 중~~~')
+        await axios
+          .post(ENROLL_URL, list, {
+            headers: {
+              Cookie: AccessToken,
+            },
+          })
+          .then(res => {
+            console.log('res', res)
+            console.log('res.data', res.data)
+            if (res.data.message === 'success') {
+              console.log('ok')
+              setLoadingModalVisible(false)
+              setAtModalVisible(true)
+              setAfterModalBoolean(true) // 성공시 true
+            } else {
+              setLoadingModalVisible(false)
+              setAtModalVisible(true)
+              setAfterModalBoolean(false) // 실패시 false
+            }
+          })
+      } catch (e) {
+        console.log('이벤트 등록 중 에러 발생')
+        console.log(e)
+        alert('에러 발생')
+        setModalVisible(false)
+      }
     }
-  }
   }
   // 등록버튼 활성화 / 비활성화
   // 전체 list 요소들 다 검사하는
@@ -220,6 +240,16 @@ const Enroll = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
+        <LoadingModal
+          loadingModalVisible={loadingModalVisible}
+          setLoadingModalVisible={setLoadingModalVisible}
+        />
+        <AfterTransactionModal
+          atModalVisible={atModalVisible}
+          setAtModalVisible={setAtModalVisible}
+          message={afterModalMessage}
+          body={afterModalBoolean}
+        />
         <View style={style.enrollTitle}>
           <Text style={style.enrollTitleText}>이벤트 등록</Text>
         </View>
