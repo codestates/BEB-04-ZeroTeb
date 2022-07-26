@@ -20,8 +20,9 @@ const QRread = ({route}) =>{
 
     setScanned(true);
     const value = data.split(' ')
-    console.log(value);
-    const params = { nonce: value[2], event_id: route.params.event_id};
+    console.log('value:',value);
+    const params = { nonce: value[0], event_id: Number(value[1])};
+    console.log('params:',params)
 
     try {
       const config: AxiosRequestConfig = {

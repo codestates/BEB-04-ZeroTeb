@@ -72,9 +72,61 @@ export default function MyList({ route }) {
       alert(err)
     }
   }
+
+  // holdings에서 address 맞는 데이터 받아와서 해당 이벤트 아이디를 가진 이벤트를 events에서 가져온다
+  const getMySaleList = async () =>{
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/event/mysale?address=${KilpAddress}`,
+        withCredentials: true,
+      }
+      const res = await axios(config)
+      // console.log(res.data);
+      if (res.data.message) {
+        console.log(res.data.message)
+      } else {
+        setTypeList(res.data)
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  //participans 데이터 가져와서 events에서 해당 아이디 세부 정보 가져와서 뿌리기
+  const getMyEntryList = async () =>{
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/event/myentry?address=${KilpAddress}`,
+        withCredentials: true,
+      }
+      const res = await axios(config)
+      // console.log(res.data);
+      if (res.data.message) {
+        console.log('entry fail:',res.data.message)
+      } else {
+        console.log('entry result:',res.data)
+        setTypeList(res.data)
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
   //페이지를 시작할 때, 데이터 검색
   useEffect(() => {
-    getTypeListHandler()
+    
+    if(route.params.type === 'created'){
+      console.log('created 호출')
+      getTypeListHandler()
+    }
+    else if(route.params.type === 'sale'){
+      console.log('sale 호출')
+      getMySaleList()
+    }else if(route.params.type === 'entry'){
+      console.log('entry 호출')
+      getMyEntryList() 
+    }
   }, [])
 
   return (
