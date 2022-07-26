@@ -114,58 +114,58 @@ export class KlaytnService {
   }
 
   async createEvent(event: ContracCreateEventkDto): Promise<void> {
-    const inputData = [
-      event.creator,
-      event.eventName,
-      event.eventType,
-      event.eventUri,
-      event.classNames,
-      event.classPrices,
-      event.classCounts,
-      event.openTime,
-      event.closeTime,
-      event.startTime,
-      event.endTime,
-    ];
-    let price = 0;
-    if (event.eventType === 0) {
-      for (let i = 0; i < event.classPrices.length; i++) {
-        price += event.classPrices[i] * event.classCounts[i];
-      }
-      price *= 0.05;
-    } else if (event.eventType === 1) {
-      for (let i = 0; i < event.classPrices.length; i++) {
-        price += 5 * event.classCounts[i];
-      }
-      price *= 0.05;
-    }
-    price *= 10 ** 18;
-    // const user = await this.UserModel.findOne({ address: event.creator });
-    const user = await this.UserModel.findOne({ test_address: event.creator });
-    if (!this.caver.wallet.isExisted(user.test_address)) {
-      this.singleKeyring(user.test_address, user.test_private_key);
-    }
-    console.log('address :', user.test_address);
-    console.log(
-      'balance :',
-      this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
-      'KLAY',
-    );
-    console.log(
-      'Send :',
-      this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
-      'KLAY',
-    );
-
     try {
+      const inputData = [
+        event.creator,
+        event.eventName,
+        event.eventType,
+        event.eventUri,
+        event.classNames,
+        event.classPrices,
+        event.classCounts,
+        event.openTime,
+        event.closeTime,
+        event.startTime,
+        event.endTime,
+      ];
+      let price = 0;
+      if (event.eventType === 0) {
+        for (let i = 0; i < event.classPrices.length; i++) {
+          price += event.classPrices[i] * event.classCounts[i];
+        }
+        price *= 0.05;
+      } else if (event.eventType === 1) {
+        for (let i = 0; i < event.classPrices.length; i++) {
+          price += 5 * event.classCounts[i];
+        }
+        price *= 0.05;
+      }
+      price *= 10 ** 18;
+      // const user = await this.UserModel.findOne({ address: event.creator });
+      const user = await this.UserModel.findOne({ test_address: event.creator });
+      if (!this.caver.wallet.isExisted(user.test_address)) {
+        this.singleKeyring(user.test_address, user.test_private_key);
+      }
+      console.log('address :', user.test_address);
+      console.log(
+        'balance :',
+        this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
+        'KLAY',
+      );
+      console.log(
+        'Send :',
+        this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
+        'KLAY',
+      );
+
       const receipt = await this.contract.methods.createEvent(...inputData).send({
         from: user.test_address,
         gas: GAS,
         value: this.caver.utils.convertToPeb(String(price), 'peb'),
       });
-      console.log(receipt);
+      console.log('receipt :', receipt);
     } catch (error) {
-      console.error(error);
+      console.error('error :', error);
     }
   }
 
@@ -449,6 +449,6 @@ export class KlaytnService {
   }
 
   async test() {
-    // console.log(await this.balanceOf('0x5952c76885ecac960417f198c500f68e2102df02'));
+    console.log(await this.getEvent(1));
   }
 }
