@@ -156,12 +156,17 @@ export class KlaytnService {
       this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
       'KLAY',
     );
-    const receipt = await this.contract.methods.createEvent(...inputData).send({
-      from: user.test_address,
-      gas: GAS,
-      value: this.caver.utils.convertToPeb(String(price), 'peb'),
-    });
-    console.log(receipt);
+
+    try {
+      const receipt = await this.contract.methods.createEvent(...inputData).send({
+        from: user.test_address,
+        gas: GAS,
+        value: this.caver.utils.convertToPeb(String(price), 'peb'),
+      });
+      console.log(receipt);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // Event 전체 개수
