@@ -72,10 +72,11 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                 <View style={style.SearchListTextContainer}>
                   <View style={style.textWrapper}>
                     <Text style={style.SearchListTitle}>{event.title}</Text>
-                    {event.type === 'sale' ? (
+                    {event.type === 'sale'? (
                       <Text style={style.SearchListSeat}>
                         남은 좌석 : {event.remaining} / {event.totalSeat}
                       </Text>
+                  
                     ) : (
                       <Text style={style.SearchListSeat}>
                         응모 인원 : {event.price[0].count}
@@ -102,7 +103,17 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                           <Text>당첨 확인</Text>
                         </View>
                       </Pressable>
-                    ) : null}
+                    ) : (type === 'created' ?
+                    <Pressable
+                        onPress={() => {
+                          navigation.navigate('QRread', {event_id: event.event_id})
+                        }}
+                      >
+                        <View style={style.checkBtn}>
+                          <Text>QR 확인</Text>
+                        </View>
+                      </Pressable>
+                    :null)}
                   </View>
                 </View>
               </View>
