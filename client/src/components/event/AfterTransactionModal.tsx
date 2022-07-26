@@ -14,6 +14,7 @@ interface Props {
   message: string
 }
 const AfterTransactionModal = (props: Props) => {
+  console.log(props.message)
   const navigation = useNavigation()
   return (
     <Modal
@@ -45,12 +46,17 @@ const AfterTransactionModal = (props: Props) => {
               </View>
 
               <View>
-                <InnerText
-                  innerText={
-                    '이벤트 ' + props.message + '(이/가) 완료되었습니다.'
-                  }
-                  size={15}
-                />
+                {props.message === '결제' ? (
+                  <InnerText
+                    innerText={'이벤트 ' + props.message + '가 완료되었습니다.'}
+                    size={15}
+                  />
+                ) : (
+                  <InnerText
+                    innerText={'이벤트 ' + props.message + '이 완료되었습니다.'}
+                    size={15}
+                  />
+                )}
               </View>
             </View>
           ) : (
@@ -69,12 +75,17 @@ const AfterTransactionModal = (props: Props) => {
               </View>
 
               <View>
-                <InnerText
-                  innerText={
-                    '이벤트 ' + props.message + '(이/가) 실패되었습니다.'
-                  }
-                  size={15}
-                />
+                {props.message === '결제' ? (
+                  <InnerText
+                    innerText={'이벤트 ' + props.message + '가 실패되었습니다.'}
+                    size={15}
+                  />
+                ) : (
+                  <InnerText
+                    innerText={'이벤트 ' + props.message + '이 실패되었습니다.'}
+                    size={15}
+                  />
+                )}
               </View>
             </View>
           )}
