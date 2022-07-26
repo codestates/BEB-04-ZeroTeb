@@ -64,7 +64,8 @@ export class TokenService {
       }).exec();
 
       const now = new Date(); // 현재 날짜
-      const ex = now.setMinutes(5); //유효기한 5분
+      const ex = Math.round(Number(now.setMinutes(5) / 1000)); //유효기한 5분
+      console.log('exddddd', ex);
       //만약 한 번도 nonce 발행 기록이 없다면 새로 발행
       if (noncedata === null) {
         console.log('nonce 새로 발행');
@@ -137,7 +138,7 @@ export class TokenService {
         return new Error('해당하는 nonce 데이터가 없습니다.');
       }
       //해당 nonce의 유효기한이 남았는지 확인
-      const valResult = this.checkEx(validationNonce[0].date);
+      const valResult = this.checkEx(Number(validationNonce[0].date));
 
       let message: string;
       valResult ? (message = '유효한 QR') : (message = '유효하지 않은 QR');
@@ -153,7 +154,7 @@ export class TokenService {
   }
 
   // nonce의 유효기한이 남았는지 검사
-  checkEx(date: string): boolean {
+  checkEx(date: number): boolean {
     try {
       const now = new Date(); // 현재 날짜
       const now_min = now.setMinutes(0);
