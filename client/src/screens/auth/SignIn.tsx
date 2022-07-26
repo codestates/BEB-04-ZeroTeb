@@ -7,7 +7,7 @@ import KilpIcon from '../../../assets/kilpImg/kilp_icon.png'
 import * as KlipAPI from '../../components/kilps/modal/WalletInfo'
 import { useDispatch } from 'react-redux'
 import { signinActions } from '../../store/signinSlice'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
@@ -36,7 +36,7 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
 
   //지갑 연동하는 함수 실행
   const getUserData = async () => {
-    if(lockBtn){
+    if (lockBtn) {
       setLockBtn(false)
       await KlipAPI.getAddress(
         async (address: string) => {
@@ -47,7 +47,6 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
           setLockBtn(true)
         },
       )
-      
     }
   }
 
@@ -79,7 +78,7 @@ const SignIn: React.FC<SignInProps> = ({ route }) => {
       <TouchableOpacity style={styles.checkIcon}>
         <Ionicons
           name="checkmark-circle-outline"
-          size={25}
+          size={moderateScale(23)}
           color={isChecked ? '#FFCC00' : 'gray'}
           onPress={() => {
             setisChecked(!isChecked)
