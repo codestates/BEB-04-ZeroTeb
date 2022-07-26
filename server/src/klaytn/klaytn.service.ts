@@ -10,7 +10,7 @@ import { HoldingType } from 'src/token/schemas/holding.schema';
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
 import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x44163C4Fae147f5041250fd81020e3F94D13C807';
+  process.env.CONTRACT_ADDRESS || '0xE1DE902be06Ac4ADa72405a7938E48296ca49Aca';
 const GAS = '10000000';
 
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
