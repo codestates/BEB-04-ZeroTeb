@@ -35,7 +35,16 @@ export default function MyList({ route }) {
   const onRefresh = React.useCallback(() => {
     setRefreshing(true)
     setTypeList([])
-    getTypeListHandler()
+    if (route.params.type === 'created') {
+      console.log('created 호출')
+      getTypeListHandler()
+    } else if (route.params.type === 'sale') {
+      console.log('sale 호출')
+      getMySaleList()
+    } else if (route.params.type === 'entry') {
+      console.log('entry 호출')
+      getMyEntryList()
+    }
     wait(1000).then(() => setRefreshing(false))
   }, [])
 
@@ -74,7 +83,7 @@ export default function MyList({ route }) {
   }
 
   // holdings에서 address 맞는 데이터 받아와서 해당 이벤트 아이디를 가진 이벤트를 events에서 가져온다
-  const getMySaleList = async () =>{
+  const getMySaleList = async () => {
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
@@ -94,7 +103,7 @@ export default function MyList({ route }) {
   }
 
   //participans 데이터 가져와서 events에서 해당 아이디 세부 정보 가져와서 뿌리기
-  const getMyEntryList = async () =>{
+  const getMyEntryList = async () => {
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
@@ -104,9 +113,9 @@ export default function MyList({ route }) {
       const res = await axios(config)
       // console.log(res.data);
       if (res.data.message) {
-        console.log('entry fail:',res.data.message)
+        console.log('entry fail:', res.data.message)
       } else {
-        console.log('entry result:',res.data)
+        console.log('entry result:', res.data)
         setTypeList(res.data)
       }
     } catch (err) {
@@ -115,17 +124,15 @@ export default function MyList({ route }) {
   }
   //페이지를 시작할 때, 데이터 검색
   useEffect(() => {
-    
-    if(route.params.type === 'created'){
+    if (route.params.type === 'created') {
       console.log('created 호출')
       getTypeListHandler()
-    }
-    else if(route.params.type === 'sale'){
+    } else if (route.params.type === 'sale') {
       console.log('sale 호출')
       getMySaleList()
-    }else if(route.params.type === 'entry'){
+    } else if (route.params.type === 'entry') {
       console.log('entry 호출')
-      getMyEntryList() 
+      getMyEntryList()
     }
   }, [])
 

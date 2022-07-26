@@ -87,6 +87,7 @@ export default function Home() {
           setPage(0)
         } else {
           console.log('검색됨==============')
+
           setPage(page + 1)
           setList([...list, ...res.data])
         }
@@ -105,8 +106,9 @@ export default function Home() {
   useEffect(() => {
     console.log('지역 변경')
     setLoad(true)
-    setList([])
     setPage(1)
+    setList([])
+
     getEventList().then(() => {
       setLoad(false)
     })
