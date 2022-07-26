@@ -8,12 +8,14 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from 'src/auth/auth.module';
 import { EventStatus, EventStatusSchema } from 'src/event/schemas/event-status.schema';
 import { Participant, ParticipantSchema } from './schemas/participant.schema';
+import { EventSchema } from 'src/event/schemas/event.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: 'Nonce', schema: NonceSchema },
       { name: 'Holding', schema: HoldingSchema },
+      { name: 'Event', schema: EventSchema },
       { name: EventStatus.name, schema: EventStatusSchema },
       { name: Participant.name, schema: ParticipantSchema },
     ]),

@@ -35,7 +35,11 @@ export class KlaytnModule {
         },
         {
           provide: 'GetKlaytn',
-          useValue: new Caver('https://api.baobab.klaytn.net:8651/'),
+          useValue: new Caver(
+            new Caver.providers.WebsocketProvider('wss://api.baobab.klaytn.net:8652/', {
+              // reconnect: {  auto: true },
+            }),
+          ),
         },
         KlaytnService,
       ],
