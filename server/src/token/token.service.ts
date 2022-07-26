@@ -11,6 +11,7 @@ import { EntryTokenDto } from './dto/entry-token.dto';
 import { EventStatus, EventStatusDocument } from 'src/event/schemas/event-status.schema';
 import { HoldingType } from './schemas/holding.schema';
 import { Participant, ParticipantDocument } from './schemas/participant.schema';
+import { BalanceDto } from './dto/balance.dto';
 
 @Injectable()
 export class TokenService {
@@ -208,6 +209,17 @@ export class TokenService {
       console.error(error);
       return '응모에 실패했습니다.';
     }
+  }
+
+  // 잔액 조회
+  async getBalance(address: string): Promise<BalanceDto> {
+    const balanceDto: BalanceDto = new BalanceDto();
+    const balance = await this.klaytnService.balanceOf(address);
+
+    balanceDto.setAddress(address);
+    balanceDto.setBalance(balance);
+
+    return balanceDto;
   }
 
   // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행

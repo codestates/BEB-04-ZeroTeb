@@ -97,6 +97,17 @@ export class KlaytnService {
     return this.caver.utils.klayUnit;
   }
 
+  async balanceOf(address: string): Promise<number> {
+    try {
+      if (!this.isAddress(address)) throw new Error('주소가 올바르지 않습니다.');
+      const getBalancePeb = await this.get_caver.klay.getBalance(address);
+      const getBalanceKlay = this.get_caver.utils.fromPeb(getBalancePeb, 'KLAY');
+      return Number(Number(getBalanceKlay).toFixed(4));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   async eventOf(tokenId: number): Promise<number> {
     // return await this.contract.methods.eventOf(tokenId).call();
     return await this.get_contract.methods.eventOf(tokenId).call();
@@ -433,8 +444,6 @@ export class KlaytnService {
   }
 
   async test() {
-    // this.get_contract.once('CreateEvent', { filter: { _eventId: 0 } }, (err, event) => {
-    //   console.log(event);
-    // });
+    // console.log(await this.balanceOf('0x5952c76885ecac960417f198c500f68e2102df02'));
   }
 }

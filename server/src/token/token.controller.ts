@@ -41,6 +41,12 @@ export class TokenController {
     return { message };
   }
 
+  @UseGuards(AuthGuard)
+  @Get('/balance')
+  async getBalance(@Query('address') address: string) {
+    return await this.tokenService.getBalance(address);
+  }
+
   // @Post()
   // create(@Body() createTokenDto: CreateTokenDto) {
   //   return this.tokenService.create(createTokenDto);
