@@ -408,6 +408,7 @@ export class EventService {
       const mintingEvent = await this.EventModel.find({
         status: 'minting',
       }).exec();
+      console.log('minting :', mintingEvent);
       if (mintingEvent.length > 0) return;
       const createdEvent = await this.EventModel.find({
         status: 'created',

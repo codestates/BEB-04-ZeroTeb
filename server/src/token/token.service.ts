@@ -280,7 +280,7 @@ export class TokenService {
     const getTokensData = await this.klaytnService.getTokens('');
     if (getTokensData.message || !getTokensData.items) throw new Error(getTokensData.message);
     const tokens = getTokensData.items.filter(
-      (item) => item.owner !== process.env.OWNER_ADDRESS ?? '',
+      (item) => item.owner !== process.env.OWNER_ADDRESS.toLowerCase() ?? '',
     );
     console.log('token 개수 :', tokens.length);
     for (let i = 0; i < tokens.length; i++) {
