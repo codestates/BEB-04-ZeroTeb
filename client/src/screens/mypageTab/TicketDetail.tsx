@@ -11,6 +11,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { SvgXml } from 'react-native-svg'
 import { useNavigation } from '@react-navigation/native'
 import { ScaledSheet } from 'react-native-size-matters'
+import { getDateAndTime } from '../../utils/unixTime' 
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 //props: UserType
@@ -18,10 +19,33 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 const TicketDetail = ({ route }) => {
   const navigation = useNavigation()
   const [qrSVG, setQrSVG] = useState('qr 생성 중~')
+  const [tokenData, setTokenData] = useState({title: '', location: '', sub_location: '', event_start_date: 0, event_end_date: 0})
 
   const pressHandler = () => {
     if (qrSVG !== 'qr 생성 중~') {
       navigation.navigate('QRLoad', { qrcodeXML: qrSVG })
+    }
+  }
+
+  const getEventDataByToken = async () => {
+    console.log('토큰 데이터 요청')
+    console.log(route.params.address, route.params.token_id)
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/event/token?token_id=${route.params.token_id}`,
+        withCredentials: true,
+      }
+
+      const res = await axios(config)
+      if (res.data.message) {
+        console.log(res.data.message)        
+      } else {
+        console.log(res.data)
+        setTokenData(res.data[0])
+      }
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -33,7 +57,7 @@ const TicketDetail = ({ route }) => {
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
-        url: `http://server.beeimp.com:18080/token/qrcode?address=${route.params.address}&token_id=${route.params.token_id}&event_id=${195}`,
+        url: `http://server.beeimp.com:18080/token/qrcode?address=${route.params.address}&token_id=${route.params.token_id}`,
         withCredentials: true,
       }
 
@@ -51,12 +75,13 @@ const TicketDetail = ({ route }) => {
 
   // qr 받아오기
   useEffect(() => {
+    getEventDataByToken()
     getQRcode() //아직 미완성
   }, [])
 
   return (
     <View style={styles.detailContainer}>
-      <InnerText innerText={'티켓은 TT에서!'} size={15} />
+      <InnerText innerText={'티켓은 TT에서!'} size={12} />
       <View style={styles.imgContainer}>
         <ImageBackground
           source={{ uri: route.params.token_image_url }}
@@ -66,11 +91,12 @@ const TicketDetail = ({ route }) => {
       </View>
       <View style={styles.titleContainer}>
         <InnerText
-          innerText={'2022. 07. 07 한국 최곡 가수 김영현 콘서트 S석 2층 T열 11'}
-          size={22}
+          innerText={`${tokenData.title}`}
+          size={20}
         ></InnerText>
       </View>
-      <InnerText innerText={'양산 문화 예술 회관'} size={14}></InnerText>
+      <InnerText innerText={`${tokenData.location} ${tokenData.sub_location}`} size={14}></InnerText>
+      <InnerText innerText={`${getDateAndTime(tokenData.event_start_date)} ~ ${getDateAndTime(tokenData.event_end_date)}`} size={14}></InnerText>
       <View style={styles.qrContainer}>
         <View style={styles.qrSide}>
           {qrSVG === 'qr 생성 중~' ? (
@@ -81,7 +107,7 @@ const TicketDetail = ({ route }) => {
         </View>
         <View style={styles.textSide}>
           <Pressable onPress={pressHandler}>
-            <InnerText innerText={'확대하기'} size={25}></InnerText>
+            <InnerText innerText={'확대하기'} size={22}></InnerText>
           </Pressable>
         </View>
       </View>
@@ -109,14 +135,14 @@ const styles = ScaledSheet.create({
   imgContent: {
     justifyContent: 'center',
     width: SCREEN_WIDTH * 0.75,
-    height: SCREEN_HEIGHT * 0.52,
+    height: SCREEN_HEIGHT * 0.48,
     overflow: 'hidden',
   },
   titleContainer: {
-    margin: '10@msr',
+    margin: '8@msr',
   },
   qrContainer: {
-    marginTop: '8@msr',
+    marginTop: '6@msr',
     flexDirection: 'row',
     borderColor: 'black',
     borderRadius: '8@msr',
