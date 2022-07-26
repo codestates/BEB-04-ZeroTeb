@@ -4,7 +4,6 @@ import AvatarIcon from '../common/AvatarIcon'
 import { Entypo } from '@expo/vector-icons'
 import { UserType } from '../../models/User'
 import { useNavigation } from '@react-navigation/native'
-import { firstLetter } from '../../utils/utils'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -92,11 +91,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     margin: '10@msr',
   },
-  profileText: { fontSize: '20@msr', paddingLeft: '10@msr' },
-  headerText: {
-    fontSize: '25@msr',
-    color: '#FFD800',
-  },
+  profileText: { fontSize: '23@msr', paddingLeft: '10@msr' },
   infoContainer: {
     flex: 1,
     flexDirection: 'row',
