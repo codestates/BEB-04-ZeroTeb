@@ -28,7 +28,14 @@ interface ttListProps {
 }
 
 const MyPagettList: React.FC<ttListProps> = props => {
-  const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo, token_data } = props
+  const {
+    headerHeight,
+    tabRoute,
+    listArrRef,
+    isTabFocused,
+    userInfo,
+    token_data,
+  } = props
   const navigation = useNavigation()
   // test address 주소
   const KilpAddress = useSelector(
@@ -66,7 +73,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
   //     }
   //   } catch (e) {
   //     console.log(e)
-      
+
   //   }
   // }
 
@@ -84,6 +91,7 @@ const MyPagettList: React.FC<ttListProps> = props => {
           </>
         ) : (
           <Pressable
+            style={{ borderColor: 'white', borderWidth: 1 }}
             onPress={() => {
               navigation.navigate('TicketDetail', {
                 address: KilpAddress,
