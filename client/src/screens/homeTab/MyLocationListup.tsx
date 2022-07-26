@@ -72,6 +72,7 @@ function MyLocationListup() {
             uri: 'https://i.ibb.co/5vP1d8X/Spin-1s-200px-without-Background.gif',
           }}
           style={{
+            marginTop: moderateScale(200),
             width: moderateScale(100),
             height: moderateScale(100),
             alignSelf: 'center',
