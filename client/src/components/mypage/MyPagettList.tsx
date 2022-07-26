@@ -24,10 +24,11 @@ interface ttListProps {
   isTabFocused: boolean
   scrollY: number
   userInfo: UserType
+  token_data: any
 }
 
 const MyPagettList: React.FC<ttListProps> = props => {
-  const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo } = props
+  const { headerHeight, tabRoute, listArrRef, isTabFocused, userInfo, token_data } = props
   const navigation = useNavigation()
   // test address 주소
   const KilpAddress = useSelector(
@@ -41,42 +42,37 @@ const MyPagettList: React.FC<ttListProps> = props => {
         token_image_url?: string
       },
     ]
-  >([
-    {
-      token_id: '1',
-      token_image_url:
-        'https://images.unsplash.com/photo-1600114180229-67ab44fd85e9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=735&q=80',
-    },
-  ])
+  >(token_data)
 
-  const getMyTT = async() =>{
-    let url = `http://server.beeimp.com:18080//token/list?address=${KilpAddress}`
-    try {
-      const config: AxiosRequestConfig = {
-        method: 'get',
-        url: url,
-        withCredentials: true,
-      }
+  // const getMyTT = async() =>{
+  //   console.log('TT 데이터 호출!')
+  //   let url = `http://server.beeimp.com:18080/token/list?address=${KilpAddress}`
+  //   try {
+  //     const config: AxiosRequestConfig = {
+  //       method: 'get',
+  //       url: url,
+  //       withCredentials: true,
+  //     }
 
-      const res = await axios(config)
+  //     const res = await axios(config)
 
-      console.log(res.data)
-      if (res.data.message) {
-        console.log(res.data.message);
-        alert('TT 로딩 실패')
-      }else{
-        console.log(res.data)
-        setTokens(res.data)
-      }
-    } catch (e) {
-      console.log(e)
+  //     console.log(res.data)
+  //     if (res.data.message) {
+  //       console.log(res.data.message);
+  //       alert('TT 로딩 실패')
+  //     }else{
+  //       console.log(res.data)
+  //       setTokens(res.data)
+  //     }
+  //   } catch (e) {
+  //     console.log(e)
       
-    }
-  }
+  //   }
+  // }
 
-  useEffect(()=>{
-    getMyTT()
-  }, [])
+  // useEffect(()=>{
+  //   getMyTT()
+  // }, [])
 
   const renderItem = useCallback(({ item, index }) => {
     console.log(item, index)

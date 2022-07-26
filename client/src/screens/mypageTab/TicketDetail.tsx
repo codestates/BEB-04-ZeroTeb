@@ -29,16 +29,17 @@ const TicketDetail = ({ route }) => {
   //useEffect는 async를 사용 못함
   const getQRcode = async () => {
     console.log('qr 생성하기 요청')
+    console.log(route.params.address, route.params.token_id)
     try {
       const config: AxiosRequestConfig = {
         method: 'get',
-        url: `http://server.beeimp.com:18080/token/qrcode?address=${route.params.address}&token_id=${route.params.token_id}`,
+        url: `http://server.beeimp.com:18080/token/qrcode?address=${route.params.address}&token_id=${route.params.token_id}&event_id=${195}`,
         withCredentials: true,
       }
 
       const res = await axios(config)
       if (res.data.message) {
-        console.log(res.data.message)
+        console.log(res.data.message)        
       } else {
         // console.log(res.data)
         setQrSVG(res.data)

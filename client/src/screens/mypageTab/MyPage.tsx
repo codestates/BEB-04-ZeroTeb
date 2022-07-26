@@ -241,6 +241,7 @@ const MyPage: React.FC<Props> = ({ route }) => {
           tabRoute={route}
           listArrRef={listArrRef}
           isTabFocused={isFocused}
+          token_data={myState.tokens}
         />
       ) : (
         <MyPageInfo
