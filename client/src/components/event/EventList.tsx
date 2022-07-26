@@ -55,7 +55,6 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                       size={10}
                     />
                   )}
-
                   {event.type === 'sale' ? (
                     <InnerText
                       innerText={`공연 기간 : ${getDate(
@@ -99,8 +98,8 @@ const style = ScaledSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     width: SCREEN_WIDTH * 0.42,
-    maxHeight: SCREEN_HEIGHT * 0.37,
-    minHeight: SCREEN_HEIGHT * 0.37,
+    maxHeight: SCREEN_HEIGHT * 0.35,
+    minHeight: SCREEN_HEIGHT * 0.35,
     borderRadius: '10@msr',
   },
   eventImgContainer: {
@@ -116,17 +115,14 @@ const style = ScaledSheet.create({
     borderRadius: '4@msr',
   },
   eventTitleContainer: {
-    marginTop: '10@msr',
     flex: 1,
     alignItems: 'flex-start',
     marginHorizontal: '10@msr',
-    marginVertical: '5@msr',
   },
   eventTitleText: { fontSize: '14@msr', color: '#333333', flex: 1 },
   eventContentContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
-
     flex: 2,
     marginTop: '5@msr',
   },
