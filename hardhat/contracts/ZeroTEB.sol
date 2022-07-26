@@ -12,7 +12,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     Counters.Counter private _eventIds;
     Counters.Counter private _tokenIds;
 
-    event CreateEvent(uint256 _eventId, uint256 _deposit);
+    event CreateEvent(uint256 indexed _eventId, uint256 indexed _deposit);
     event BuyToken(
         uint256 _eventId,
         uint256 _classId,
@@ -20,8 +20,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         address _buyer,
         uint256 _tokenId
     );
-    event ApplyToken(uint256 _eventId, address[] _participants);
-    event EndEvent(uint256 _eventId, uint8 _eventEndStatus);
+    event ApplyToken(uint256 indexed _eventId, address[] indexed _participants);
+    event EndEvent(uint256 indexed _eventId, uint8 indexed _eventEndStatus);
 
     // 이벤트 클래스 구조체
     struct EventClass {
