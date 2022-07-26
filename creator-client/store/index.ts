@@ -1,6 +1,7 @@
 import { configureStore, createSerializableStateInvariantMiddleware } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { createEventSlice } from './event/create';
+import { commonSlice } from './commonSlice';
+import { createEventSlice } from './event/createSlice';
 import { klipSlice } from './klipSlice';
 import { userSlice } from './user';
 
@@ -13,6 +14,7 @@ const store = configureStore({
     createEvent: createEventSlice.reducer,
     user: userSlice.reducer,
     klip: klipSlice.reducer,
+    common: commonSlice.reducer,
   },
   middleware: [serializableMiddleware],
   devTools: process.env.NODE_ENV !== 'production',
