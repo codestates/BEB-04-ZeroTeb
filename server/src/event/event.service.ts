@@ -350,15 +350,15 @@ export class EventService {
       // console.log(mySaleTokenList);
       let filedList = [];
       mySaleTokenList.forEach((ele) => {
-        if (!filedList.includes(ele.event_id)) {
-          filedList = [...filedList, ele.event_id];
+        if (!filedList.includes(ele)) {
+          filedList = [...filedList, ele];
         }
       });
       console.log(filedList);
       let result = [];
       for (const i of filedList) {
         // console.log(i);
-        const value = await this.EventModel.find({ event_id: i });
+        const value = await this.EventModel.find({ event_id: i.event_id });
         result = [...result, ...value];
       }
 
