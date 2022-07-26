@@ -69,7 +69,7 @@ export class EventController {
 
   @Get('location')
   findLocation(@Query('lon') lon: number, @Query('lat') lat: number) {
-    return this.eventService.findAroundEvent(lon, lat);
+    return this.eventService.findAroundEvent(lat, lon);
   }
 
   @Get('banner')
@@ -85,5 +85,10 @@ export class EventController {
   @Get('myentry')
   findMyEntry(@Query('address') address: string) {
     return this.eventService.getMyEntryList(address);
+  }
+
+  @Get('token')
+  findTokenDetail(@Query('token_id') token_id: number) {
+    return this.eventService.getTokenDetail(token_id);
   }
 }

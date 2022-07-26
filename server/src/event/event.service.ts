@@ -108,8 +108,8 @@ export class EventService {
         event_end_date,
         created_date,
         modified_date,
-        x: point.documents[0].x, //location 기반 좌표 lat
-        y: point.documents[0].y, //location 기반 좌표 lon
+        x: point.documents[0].y, //location 기반 좌표 lat
+        y: point.documents[0].x, //location 기반 좌표 lon
         status: 'created',
         remaining: totalSeat,
         totalSeat,
@@ -368,7 +368,7 @@ export class EventService {
       return { message: 'Fail get your sale evnetList' };
     }
   }
-  // 내 구매 목록 반환 API
+  // 내 응모 목록 반환 API
   async getMyEntryList(address: string) {
     try {
       console.log('address:', address);
@@ -382,6 +382,18 @@ export class EventService {
       }
 
       return result;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your entry evnetList' };
+    }
+  }
+  // token detail
+  async getTokenDetail(token_id: number) {
+    try {
+      const tokenData = await this.HoldingModel.find({ token_id: token_id });
+      const eventData = await this.EventModel.find({ event_id: tokenData[0].event_id });
+
+      return eventData;
     } catch (e) {
       console.log(e);
       return { message: 'Fail get your entry evnetList' };
