@@ -41,20 +41,27 @@ const MyPageInfo: React.FC<infoProps> = props => {
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
   )
+  const balance = useSelector((state: RootState) => state.signin.balance)
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(KilpAddress)
   }
 
   const createTwoButtonAlert = () =>
-    Alert.alert(`${userInfo.username}님의 지갑주소`, KilpAddress, [
-      {
-        text: 'Copy',
-        onPress: () => copyToClipboard(),
-        style: 'cancel',
-      },
-      { text: 'OK' },
-    ])
+    Alert.alert(
+      `${userInfo.username}님의 지갑`,
+      '지갑주소: ' + KilpAddress + '\n\nKlay: ' + String(balance),
+      [
+        {
+          text: '지갑 주소 복사',
+          onPress: () => {
+            copyToClipboard()
+          },
+          style: 'cancel',
+        },
+        { text: 'OK' },
+      ],
+    )
 
   const PressHandler = (index: number) => {
     switch (index) {

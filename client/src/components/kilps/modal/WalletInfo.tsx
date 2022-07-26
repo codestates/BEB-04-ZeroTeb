@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { Linking } from 'react-native'
-import { Buffer } from "buffer";
+import { Buffer } from 'buffer'
 
 const A2P_API_PREPARE_URL = 'https://a2a-api.klipwallet.com/v2/a2a/prepare' //prepare url
-const APP_NAME = 'ZeroTEB'
+const APP_NAME = 'TT'
 
 let timeid: any = null
 let getAccessToken: any = null
@@ -21,14 +21,13 @@ const stopGetAccessToken = () => {
 
 const decodePayload = (tokenData: string) => {
   var token = tokenData
-  var base64Payload = token.split('.')[1];
-  const payload = Buffer.from(base64Payload, "base64").toString('utf8');
-  return payload.slice(12, 42+12);
+  var base64Payload = token.split('.')[1]
+  const payload = Buffer.from(base64Payload, 'base64').toString('utf8')
+  return payload.slice(12, 42 + 12)
 }
 
-
 //지갑 주소 수집
-export const getAddress = (callback: any,tokenback: any) => {
+export const getAddress = (callback: any, tokenback: any) => {
   axios
     .post(A2P_API_PREPARE_URL, {
       //prepare [request_key 받아오기]
@@ -73,7 +72,7 @@ export const getAddress = (callback: any,tokenback: any) => {
           .post(`http://server.beeimp.com:18080/auth/signin`, params, {
             withCredentials: true,
           })
-          .then(async (res) => {
+          .then(async res => {
             const data = res.data
             if (data.status === 'completed') {
               const accessToken = res.headers['set-cookie'][0]
@@ -84,7 +83,7 @@ export const getAddress = (callback: any,tokenback: any) => {
               console.log('accessToken:', accessToken)
               callback(payload)
               tokenback(accessToken)
-              stopGetAccessToken()              
+              stopGetAccessToken()
             } else {
               console.log(data.status)
             }

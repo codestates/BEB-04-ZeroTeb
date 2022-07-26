@@ -80,9 +80,31 @@ const MyPage: React.FC<Props> = ({ route }) => {
     }
   }
 
+  const getUserBalance = async () => {
+    console.log('balance')
+    try {
+      const config: AxiosRequestConfig = {
+        method: 'get',
+        url: `http://server.beeimp.com:18080/token/balance?address=${KilpAddress}`,
+        withCredentials: true,
+      }
+
+      const res = await axios(config)
+
+      if (res.data.message) {
+        alert(res.data.message)
+      } else {
+        dispatch(signinActions.setbalance(res.data.balance))
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
   // 페이지 로딩 시 사용자 정보 받아오기 호출
   useEffect(() => {
     getUserInfo()
+    getUserBalance()
   }, [])
 
   const [headerHeight, setHeaderHeight] = useState(0)

@@ -40,6 +40,7 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
   const [loadingModalVisible, setLoadingModalVisible] = useState<boolean>(false)
   const [atModalVisible, setAtModalVisible] = useState<boolean>(false)
   const [afterModalBoolean, setAfterModalBoolean] = useState<boolean>(false)
+  const afterModalMessage: string = '결제'
   const navigation = useNavigation()
   const KilpAddress = useSelector(
     (state: RootState) => state.signin.KilpAddress,
@@ -170,6 +171,7 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
       <AfterTransactionModal
         atModalVisible={atModalVisible}
         setAtModalVisible={setAtModalVisible}
+        message={afterModalMessage}
         body={afterModalBoolean}
       />
       <View style={style.eventImgContainer}>

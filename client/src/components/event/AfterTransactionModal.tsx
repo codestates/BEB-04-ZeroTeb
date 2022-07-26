@@ -11,6 +11,7 @@ interface Props {
   atModalVisible: boolean
   setAtModalVisible: any
   body: boolean
+  message: string
 }
 const AfterTransactionModal = (props: Props) => {
   const navigation = useNavigation()
@@ -31,7 +32,7 @@ const AfterTransactionModal = (props: Props) => {
           {props.body ? (
             <View>
               <View style={styles.constentHeaderSpace}>
-                <InnerText innerText={'결제 완료'} size={20} />
+                <InnerText innerText={props.message + ' 완료'} size={20} />
                 <View
                   onTouchEnd={() => props.setAtModalVisible(false)} // 닫기 버튼
                 >
@@ -45,7 +46,9 @@ const AfterTransactionModal = (props: Props) => {
 
               <View>
                 <InnerText
-                  innerText={`이벤트 참가가 완료되었습니다.`}
+                  innerText={
+                    '이벤트 ' + props.message + '(이/가) 완료되었습니다.'
+                  }
                   size={15}
                 />
               </View>
@@ -53,7 +56,7 @@ const AfterTransactionModal = (props: Props) => {
           ) : (
             <View>
               <View style={styles.constentHeaderSpace}>
-                <InnerText innerText={'결제 실패'} size={20} />
+                <InnerText innerText={props.message + ' 실패'} size={20} />
                 <View
                   onTouchEnd={() => props.setAtModalVisible(false)} // 닫기 버튼
                 >
@@ -66,7 +69,12 @@ const AfterTransactionModal = (props: Props) => {
               </View>
 
               <View>
-                <InnerText innerText={`결제가 실패되었습니다.`} size={15} />
+                <InnerText
+                  innerText={
+                    '이벤트 ' + props.message + '(이/가) 실패되었습니다.'
+                  }
+                  size={15}
+                />
               </View>
             </View>
           )}
