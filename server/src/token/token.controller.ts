@@ -14,12 +14,8 @@ export class TokenController {
     return this.tokenService.findTokenList(address);
   }
   @Get('qrcode')
-  createTokenQR(
-    @Query('address') address: string,
-    @Query('token_id') token_id: number,
-    @Query('event_id') event_id: number,
-  ): any {
-    return this.tokenService.createTokenQR(address, token_id, event_id);
+  createTokenQR(@Query('address') address: string, @Query('token_id') token_id: number): any {
+    return this.tokenService.createTokenQR(address, token_id);
   }
 
   @Post('qrcode/validation')
