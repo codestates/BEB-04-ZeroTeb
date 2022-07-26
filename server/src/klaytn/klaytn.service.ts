@@ -98,7 +98,8 @@ export class KlaytnService {
   }
 
   async eventOf(tokenId: number): Promise<number> {
-    return await this.contract.methods.eventOf(tokenId).call();
+    // return await this.contract.methods.eventOf(tokenId).call();
+    return await this.get_contract.methods.eventOf(tokenId).call();
   }
 
   async createEvent(event: ContracCreateEventkDto): Promise<void> {
@@ -154,12 +155,14 @@ export class KlaytnService {
 
   // Event 전체 개수
   async getEventLength(): Promise<number> {
-    return await this.contract.methods.totalEvent().call();
+    // return await this.contract.methods.totalEvent().call();
+    return await this.get_contract.methods.totalEvent().call();
   }
 
   // Token 전체 개수
   async getTokenLength(): Promise<number> {
-    return await this.contract.methods.totalToken().call();
+    // return await this.contract.methods.totalToken().call();
+    return await this.get_contract.methods.totalToken().call();
   }
 
   // 이벤트 조회
@@ -220,7 +223,8 @@ export class KlaytnService {
         const price = event.prices[classId];
         for (let number = 0; number < price.count; number++) {
           // 민팅되었는지 확인
-          const isMint = await this.contract.methods.isMint(eventId, classId, number).call();
+          // const isMint = await this.contract.methods.isMint(eventId, classId, number).call();
+          const isMint = await this.get_contract.methods.isMint(eventId, classId, number).call();
           if (isMint) continue;
 
           const metaData = {
