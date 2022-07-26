@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import SearchList from '../../components/search/SearchList'
 import { EventType } from '../../models/Event'
 import axios, { AxiosRequestConfig } from 'axios'
@@ -49,19 +49,21 @@ const SearchListup: React.FC<searchListProps> = ({ route }) => {
   }, [])
 
   return (
-    <View style={styles.searchListupContainer}>
+    <ScrollView style={styles.searchListupContainer}>
       {loading ? (
         <LoadingImg />
       ) : (
         <>
           {noResult ? (
-            <Text style={styles.msg}>검색 결과가 없습니다.</Text>
+            <View style={styles.msgContainer}>
+              <Text style={styles.msg}>검색 결과가 없습니다.</Text>
+            </View>
           ) : (
             <SearchList sendList={sendList} type={''} address={''} />
           )}
         </>
       )}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -69,8 +71,8 @@ const styles = ScaledSheet.create({
   searchListupContainer: {
     flex: 1,
     backgroundColor: 'white',
-    paddingTop: '20@msr',
   },
+  msgContainer: { paddingTop: '10@msr' },
   msg: { fontSize: '20@msr', paddingHorizontal: '20@msr' },
 })
 

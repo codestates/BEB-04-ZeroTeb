@@ -78,19 +78,18 @@ export default function MyList({ route }) {
   }, [])
 
   return (
-    <View style={styles.container}>
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <SearchList
-          sendList={typeList}
-          type={route.params.type}
-          address={KilpAddress}
-        ></SearchList>
-      </ScrollView>
-    </View>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <SearchList
+        sendList={typeList}
+        type={route.params.type}
+        address={KilpAddress}
+      ></SearchList>
+    </ScrollView>
   )
 }
 
