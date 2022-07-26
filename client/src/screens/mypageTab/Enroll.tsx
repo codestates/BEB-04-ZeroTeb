@@ -31,7 +31,6 @@ import AfterTransactionModal from '../../components/event/AfterTransactionModal'
 import FormData from 'form-data'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
-const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const ENROLL_URL = 'http://server.beeimp.com:18080/event/create' //prepare url
 const titleTextSize = 20
 const inputBoxHeight = 30
@@ -106,9 +105,14 @@ const Enroll = () => {
       aspect: [4, 3],
       quality: 1,
     })
-
     if (!result.cancelled) {
-      const filename = result.uri.split('/').pop()
+      let filename: string | undefined = ''
+      if (Platform.OS) {
+        filename = result.uri.replace('file:///var', 'private/var')
+        console.log(filename)
+      } else {
+        filename = result.uri.split('/').pop()
+      }
       const formData = new FormData()
       formData.append('file', {
         uri: result.uri,
@@ -125,7 +129,6 @@ const Enroll = () => {
         .then(res => {
           return res.data.savedPath
         })
-
       if (name === 'token_image_url') {
         console.log('토큰 이미지 업로드!')
         setList({
@@ -171,9 +174,7 @@ const Enroll = () => {
         console.log('이벤트 등록 중~~~')
         await axios
           .post(ENROLL_URL, list, {
-            headers: {
-              Cookie: AccessToken,
-            },
+            withCredentials: true,
           })
           .then(res => {
             console.log('res', res)
