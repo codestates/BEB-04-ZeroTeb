@@ -157,15 +157,8 @@ export class TokenService {
   checkEx(date: number): boolean {
     try {
       const now = new Date(); // 현재 날짜
-      const now_min = now.setMinutes(0);
-      console.log(
-        'date:',
-        date,
-        'now:',
-        now_min,
-        '유효기한(양수: 유효기한 남음):',
-        Number(date) - now_min,
-      );
+      const now_min = Math.round(now.setMinutes(0) / 1000);
+      console.log('date:', date, 'now:', now_min, '유효기한(양수: 유효기한 남음):', date - now_min);
       if (Number(date) > now_min) {
         return true; // 유효기한 남음
       } else {
@@ -176,7 +169,6 @@ export class TokenService {
       return false;
     }
   }
-
   // 토큰 구매
   async buyToken(buyTokenDto: BuyTokenDto, user): Promise<string> {
     const eventId = buyTokenDto.event_id;
