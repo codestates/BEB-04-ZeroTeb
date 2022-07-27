@@ -380,10 +380,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventParticipants[_eventId];
     }
 
-    function _eventWinners(uint256 _eventId, uint8 _eventClassId) private {
+    function _eventWinners(uint256 _eventId) private {
         uint256 _randNum = 0;
         address _temp;
-        for (uint256 j = 0; j < 10; j++) {
+        for (uint256 j = 0; j < _eventParticipants[_eventId].length; j++) {
             _randNum =
                 uint256(
                     keccak256(
@@ -425,7 +425,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             "Already selected the winners."
         );
         address _owner = owner();
-        _eventWinners(_eventId, _eventClassId);
+        _eventWinners(_eventId);
 
         for (uint256 i = 0; i < _eventParticipants[_eventId].length; i++) {
             _transfer(
