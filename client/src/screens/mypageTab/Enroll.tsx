@@ -108,9 +108,7 @@ const Enroll = () => {
       if (!result.cancelled) {
         let filename: string | undefined = ''
         if (Platform.OS === 'ios') {
-          console.log('ios')
           filename = result.uri.replace('file:///var', 'private/var')
-          console.log(filename)
         } else {
           console.log('and')
           filename = result.uri.split('/').pop()
@@ -121,29 +119,47 @@ const Enroll = () => {
           name: filename,
           type: 'image/jpg',
         })
-        console.log('test', formData)
-        const resultPath = await axios
-          .post(`http://server.beeimp.com:18080/file`, formData, {
-            headers: {
-              'content-type': 'multipart/form-data',
-            },
-            withCredentials: true,
+        if (!result.cancelled) {
+          let filename: string | undefined = ''
+          if (Platform.OS === 'ios') {
+            console.log('ios')
+            filename = result.uri.replace('file:///var', 'private/var')
+            console.log(filename)
+          } else {
+            console.log('and')
+            filename = result.uri.split('/').pop()
+          }
+          const formData = new FormData()
+          formData.append('file', {
+            uri: result.uri,
+            name: filename,
+            type: 'image/jpg',
           })
-          .then(res => {
-            return res.data.savedPath
-          })
+          console.log('test', formData)
+          const resultPath = await axios
+            .post(`http://server.beeimp.com:18080/file`, formData, {
+              headers: {
+                'content-type': 'multipart/form-data',
+              },
+              withCredentials: true,
+            })
+            .then(res => {
+              return res.data.savedPath
+            })
 
-        console.log('썸네일 이미지 업로드!')
-        setList({
-          ...list,
-          thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
-        })
+          console.log('썸네일 이미지 업로드!')
+          setList({
+            ...list,
+            thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
+          })
+        }
       }
     } catch (e) {
       alert('이미지 업로드 실패')
       console.log(e)
     }
   }
+
   const pickImage2 = async (e: string) => {
     try {
       console.log('이미지 선택')
