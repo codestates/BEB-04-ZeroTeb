@@ -59,7 +59,7 @@ export class EventController {
   }
 
   @Get('location')
-  findLocation(@Query('lon') lon: number, @Query('lat') lat: number) {
+  findLocation(@Query('lat') lat: number, @Query('lon') lon: number) {
     return this.eventService.findAroundEvent(lat, lon);
   }
 
