@@ -16,7 +16,6 @@ const PlaceModal = (props: any) => {
   const setList = props.setList
 
   const location = [
-    '전국',
     '서울',
     '부산',
     '인천',
@@ -32,6 +31,7 @@ const PlaceModal = (props: any) => {
     '전남',
     '경북',
     '경남',
+    '제주',
   ]
 
   const [modalVisible, setModalVisible] = useState(false) // 모달창 켜기 끄기
@@ -136,12 +136,14 @@ const style = ScaledSheet.create({
     width: SCREEN_WIDTH / 4,
     height: SCREEN_HEIGHT * 0.055,
     backgroundColor: '#3AACFF',
-    borderRadius: '10@msr',
+    borderRadius: '15@msr',
     margin: '5@msr',
     padding: '10@msr',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   modalText: {
-    fontSize: '14@msr',
+    fontSize: '18@msr',
     color: 'white',
     textAlign: 'center',
   },

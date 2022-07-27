@@ -107,9 +107,7 @@ const Enroll = () => {
     if (!result.cancelled) {
       let filename: string | undefined = ''
       if (Platform.OS === 'ios') {
-        console.log('ios')
         filename = result.uri.replace('file:///var', 'private/var')
-        console.log(filename)
       } else {
         console.log('and')
         filename = result.uri.split('/').pop()
