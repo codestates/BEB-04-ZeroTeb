@@ -13,7 +13,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { ScaledSheet } from 'react-native-size-matters'
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window')
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 
 interface searchListProps {
   sendList: EventType[]
@@ -50,7 +50,10 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
 
   return (
     <View style={style.SearchListOuterContainer}>
-      <Text style={style.listTitle}>{type ==='created'? '등록':(type === 'sale' ? '구매' : '응모')}한 이벤트 목록</Text>
+      <Text style={style.listTitle}>
+        {type === 'created' ? '등록' : type === 'sale' ? '구매' : '응모'}한
+        이벤트 목록
+      </Text>
       <View style={style.SearchListInnerContainer}>
         {sendList.map((event: EventType, index: number) => {
           return (
@@ -144,7 +147,7 @@ const style = ScaledSheet.create({
   ContentWrapper: {
     flexDirection: 'row',
     padding: '10@msr',
-    height: SCREEN_WIDTH * 0.3,
+    height: SCREEN_WIDTH * 0.38,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
   ImageWrapper: {
@@ -156,6 +159,7 @@ const style = ScaledSheet.create({
     borderColor: 'lightgray',
     borderWidth: 1,
     marginRight: '10@msr',
+    alignSelf: 'center',
   },
   consertImage: {
     width: SCREEN_WIDTH * 0.4,

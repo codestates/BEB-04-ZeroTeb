@@ -106,10 +106,12 @@ const Enroll = () => {
     })
     if (!result.cancelled) {
       let filename: string | undefined = ''
-      if (Platform.OS) {
+      if (Platform.OS === 'ios') {
+        console.log('ios')
         filename = result.uri.replace('file:///var', 'private/var')
         console.log(filename)
       } else {
+        console.log('and')
         filename = result.uri.split('/').pop()
       }
       const formData = new FormData()
@@ -118,6 +120,7 @@ const Enroll = () => {
         name: filename,
         type: 'image/jpg',
       })
+      console.log('test', formData)
       const resultPath = await axios
         .post(`http://server.beeimp.com:18080/file`, formData, {
           headers: {
