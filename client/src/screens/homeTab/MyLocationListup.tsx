@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { StyleSheet, ScrollView, Alert, Image } from 'react-native'
+import { StyleSheet, ScrollView, Alert, Image, Text } from 'react-native'
 import EventList from '../../components/event/EventList'
 import * as Location from 'expo-location'
 import axios from 'axios'
@@ -78,6 +78,10 @@ function MyLocationListup() {
             alignSelf: 'center',
           }}
         />
+      ) : listData !== [] && listData.length <= 0 ? (
+        <Text style={{ fontSize: moderateScale(15), margin: moderateScale(5) }}>
+          검색된 데이터가 없습니다.
+        </Text>
       ) : (
         <EventList eventList={listData} />
       )}
