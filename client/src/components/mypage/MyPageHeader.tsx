@@ -20,11 +20,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
   return (
     <View style={styles.rootContainer}>
       <View style={styles.profileContainer}>
-        <AvatarIcon
-          size={moderateScale(65)}
-          color={userInfo.profile_url}
-          title={'TT'}
-        />
+        <AvatarIcon size={65} color={userInfo.profile_url} title={'TT'} />
         <Text style={styles.profileText}>{userInfo.username}</Text>
       </View>
       <View style={styles.infoContainer}>
@@ -43,7 +39,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'created' })}
           >
             <AvatarIcon
-              size={moderateScale(50)}
+              size={50}
               color={'#cccccc'}
               title={userInfo.history.created}
             />
@@ -55,7 +51,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'entry' })}
           >
             <AvatarIcon
-              size={moderateScale(50)}
+              size={50}
               color={'#cccccc'}
               title={userInfo.history.entry}
             />
@@ -67,7 +63,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             onPress={() => navigation.navigate('MyList', { type: 'sale' })}
           >
             <AvatarIcon
-              size={moderateScale(50)}
+              size={50}
               color={'#cccccc'}
               title={userInfo.history.sale}
             />
@@ -104,29 +100,29 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   infoIconContainer: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
     borderRightWidth: 0,
     paddingBottom: '15@msr',
     width: SCREEN_WIDTH * 0.28,
-    height: SCREEN_HEIGHT * 0.16,
+    height: SCREEN_HEIGHT * 0.14,
     borderBottomLeftRadius: '20@msr',
     borderTopLeftRadius: '20@msr',
   },
   infoIconContainermiddle: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
     borderRightWidth: 0,
     paddingBottom: '15@msr',
     width: SCREEN_WIDTH * 0.28,
-    height: SCREEN_HEIGHT * 0.16,
+    height: SCREEN_HEIGHT * 0.14,
   },
   infoIconContainerend: {
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 1,
@@ -134,7 +130,7 @@ const styles = ScaledSheet.create({
     borderBottomRightRadius: '20@msr',
     borderTopRightRadius: '20@msr',
     width: SCREEN_WIDTH * 0.28,
-    height: SCREEN_HEIGHT * 0.16,
+    height: SCREEN_HEIGHT * 0.14,
   },
   infoText: {
     fontSize: '18@msr',

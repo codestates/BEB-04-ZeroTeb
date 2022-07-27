@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   categoryContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'flex-start',
     backgroundColor: 'white',
     marginTop: STATUSBAR_HEIGHT,
   },
