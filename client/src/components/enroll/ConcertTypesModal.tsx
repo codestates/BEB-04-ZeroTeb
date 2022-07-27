@@ -92,7 +92,7 @@ const style = ScaledSheet.create({
   },
   modalSelectBody: {
     width: SCREEN_WIDTH * 0.7,
-    height: SCREEN_HEIGHT * 0.6,
+    height: SCREEN_HEIGHT * 0.5,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
