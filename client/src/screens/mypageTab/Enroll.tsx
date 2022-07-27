@@ -109,6 +109,7 @@ const Enroll = () => {
       if (Platform.OS === 'ios') {
         filename = result.uri.replace('file:///var', 'private/var')
       } else {
+        console.log('and')
         filename = result.uri.split('/').pop()
       }
       const formData = new FormData()
@@ -117,6 +118,7 @@ const Enroll = () => {
         name: filename,
         type: 'image/jpg',
       })
+      console.log('test', formData)
       const resultPath = await axios
         .post(`http://server.beeimp.com:18080/file`, formData, {
           headers: {
