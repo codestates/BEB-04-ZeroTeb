@@ -1,13 +1,5 @@
 import * as React from 'react'
-import {
-  View,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Modal,
-  Dimensions,
-} from 'react-native'
-import { AntDesign } from '@expo/vector-icons'
+import { View, Text, TouchableOpacity, Modal, Dimensions } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
@@ -111,10 +103,10 @@ const style = ScaledSheet.create({
     backgroundColor: '#000000',
     opacity: 0.5,
   },
-  sellTitle:{
-    flexDirection:'row',
-    alignItems: 'center'
-  }
+  sellTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 })
 
 export default SetSellTypeModal
