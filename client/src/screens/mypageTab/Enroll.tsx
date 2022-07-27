@@ -132,19 +132,61 @@ const Enroll = () => {
           .then(res => {
             return res.data.savedPath
           })
-        if (name === 'token_image_url') {
-          console.log('토큰 이미지 업로드!')
-          setList({
-            ...list,
-            token_image_url: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
-          })
+
+        console.log('썸네일 이미지 업로드!')
+        setList({
+          ...list,
+          thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
+        })
+      }
+    } catch (e) {
+      alert('이미지 업로드 실패')
+      console.log(e)
+    }
+  }
+  const pickImage2 = async (e: string) => {
+    try {
+      console.log('이미지 선택')
+      const name = e
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      })
+      if (!result.cancelled) {
+        let filename: string | undefined = ''
+        if (Platform.OS === 'ios') {
+          console.log('ios')
+          filename = result.uri.replace('file:///var', 'private/var')
+          console.log(filename)
         } else {
-          console.log('썸네일 이미지 업로드!')
-          setList({
-            ...list,
-            thumnail: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
-          })
+          console.log('and')
+          filename = result.uri.split('/').pop()
         }
+        const formData = new FormData()
+        formData.append('file', {
+          uri: result.uri,
+          name: filename,
+          type: 'image/jpg',
+        })
+        console.log('test', formData)
+        const resultPath = await axios
+          .post(`http://server.beeimp.com:18080/file`, formData, {
+            headers: {
+              'content-type': 'multipart/form-data',
+            },
+            withCredentials: true,
+          })
+          .then(res => {
+            return res.data.savedPath
+          })
+
+        console.log('토큰 이미지 업로드!')
+        setList({
+          ...list,
+          token_image_url: `http://server.beeimp.com:18080/file?fn=${resultPath}`,
+        })
       }
     } catch (e) {
       alert('이미지 업로드 실패')
@@ -519,7 +561,7 @@ const Enroll = () => {
           {/* 토큰 이미지  */}
           <View>
             <Text style={style.enrollContentText}>토큰 이미지</Text>
-            <TouchableOpacity onPress={() => pickImage('token_image_url')}>
+            <TouchableOpacity onPress={() => pickImage2('token_image_url')}>
               <View style={style.enrollInputLarge}>
                 {list.token_image_url === ' ' ? (
                   <View
