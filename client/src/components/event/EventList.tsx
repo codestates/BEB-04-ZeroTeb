@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { Image, View, Text, Dimensions, Pressable } from 'react-native'
-import InnerText from '../common/InnerText'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet, moderateScale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
-import Title from '../common/Title'
-
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface eventListProps {
@@ -40,18 +37,28 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                   </Text>
                 </View>
                 <View style={style.eventContentContainer}>
-                  <Text style={{fontSize: moderateScale(10)}}>{`기획자 : ${event.promoter}`}</Text>
+                  <Text
+                    style={{ fontSize: moderateScale(10) }}
+                  >{`기획자 : ${event.promoter}`}</Text>
                   {event.type === 'sale' ? (
-                    <Text style={{fontSize: moderateScale(10)}}>{`남은 좌석 : ${event.remaining}`}</Text>
+                    <Text
+                      style={{ fontSize: moderateScale(10) }}
+                    >{`남은 좌석 : ${event.remaining}`}</Text>
                   ) : (
-                    <Text style={{fontSize: moderateScale(10)}}>{`추첨 인원 : ${event.price[0].count}`}</Text>
+                    <Text
+                      style={{ fontSize: moderateScale(10) }}
+                    >{`추첨 인원 : ${event.price[0].count}`}</Text>
                   )}
                   {event.type === 'sale' ? (
-                    <Text style={{fontSize: moderateScale(10)}}>{`공연 기간 : \n${getDate(
+                    <Text
+                      style={{ fontSize: moderateScale(10) }}
+                    >{`공연 기간 : \n${getDate(
                       event.event_start_date,
                     )} - ${getDate(event.event_end_date)}`}</Text>
                   ) : (
-                    <Text style={{fontSize: moderateScale(10)}}>{`응모 기간 : \n${getDate(
+                    <Text
+                      style={{ fontSize: moderateScale(10) }}
+                    >{`응모 기간 : \n${getDate(
                       event.recruit_start_date,
                     )} - ${getDate(event.recruit_end_date)}`}</Text>
                   )}
@@ -91,7 +98,7 @@ const style = ScaledSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     marginHorizontal: SCREEN_WIDTH * 0.01,
-    height:SCREEN_HEIGHT * 0.15,
+    height: SCREEN_HEIGHT * 0.15,
   },
   eventImg: {
     width: SCREEN_WIDTH * 0.38,
@@ -100,7 +107,7 @@ const style = ScaledSheet.create({
     borderRadius: '4@msr',
   },
   eventTitleContainer: {
-    height:SCREEN_HEIGHT * 0.06,
+    height: SCREEN_HEIGHT * 0.06,
     marginVertical: '5@msr',
     alignItems: 'flex-start',
     marginHorizontal: '10@msr',
