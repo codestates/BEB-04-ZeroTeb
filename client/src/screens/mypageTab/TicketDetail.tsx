@@ -57,8 +57,6 @@ const TicketDetail = ({ route }) => {
     }
   }
 
-  //`http://server.beeimp.com:18080/token/qrcode?address=${props.address}&token_id=${props.token_id}`
-  //useEffect는 async를 사용 못함
   const getQRcode = async () => {
     console.log('qr 생성하기 요청')
     console.log(route.params.address, route.params.token_id)
@@ -186,53 +184,5 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
   },
 })
-
-// const styles = StyleSheet.create({
-//     detailContainer:{
-//         padding: 20,
-//         backgroundColor: 'white',
-//         flexDirection:'column',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         height: '100%',
-//         width: '100%',
-//     },
-//     imgContainer:{
-//         marginTop: 2,
-//         borderWidth: 3,
-//         borderColor: 'black',
-//         borderRadius: 10,
-//         overflow: 'hidden'
-//     },
-//     imgContent:{
-//         justifyContent: 'center',
-//         width: SCREEN_WIDTH * 0.75,
-//         height: SCREEN_HEIGHT * 0.52,
-//         overflow: 'hidden'
-//     },
-//     titleContainer:{
-//         margin: 10
-//     },
-//     qrContainer:{
-//         marginTop: 8,
-//         flexDirection: 'row',
-//         borderColor: 'black',
-//         borderRadius: 8,
-//         borderWidth: 1,
-//         width: '70%',
-//         height: SCREEN_HEIGHT * 0.1
-//     },
-//     qrSide:{
-//         width: '50%',
-//         borderRightWidth: 1,
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//     },
-//     textSide:{
-//         width: '50%',
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//     }
-// })
 
 export default TicketDetail

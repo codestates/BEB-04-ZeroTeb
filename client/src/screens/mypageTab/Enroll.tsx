@@ -436,15 +436,7 @@ const Enroll = () => {
             )}
           </View>
 
-          {/* 보증금 */}
-          {/* <View style={{ flex: 1 }}>
-            <Text style={style.enrollContentText}>보증금(Klay)</Text>
-            <View style={style.enrollInput}>
-              <Text style={{ left: 20, fontSize: 20 }}>{list.deposit * 5}</Text>
-            </View>
-          </View> */}
-
-          {/* 내용 (!TextInput 칸 넓이 증가) */}
+          {/* 내용 */}
           <View>
             <Text style={style.enrollContentText}>내용</Text>
             <View style={style.enrollInputLarge}>
@@ -461,6 +453,7 @@ const Enroll = () => {
               ></TextInput>
             </View>
           </View>
+
           {/* 썸네일 이미지 */}
           <View>
             <Text style={style.enrollContentText}>이벤트 썸네일</Text>

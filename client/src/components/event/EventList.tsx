@@ -5,7 +5,6 @@ import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
-import Title from '../common/Title'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface eventListProps {
@@ -121,7 +120,6 @@ const style = ScaledSheet.create({
     marginHorizontal: '10@msr',
   },
   eventTitleText: {
-    // marginTop: '10@msr',
     fontSize: '14@msr',
     color: '#333333',
     flex: 1,
