@@ -8,6 +8,7 @@ import {
   Pressable,
   FlatList,
   Image,
+  Text
 } from 'react-native'
 import Banner from '../../components/home/Banner'
 import LocationButton from '../../components/location/LocationButton'
@@ -29,6 +30,7 @@ const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms))
 
 export default function Home() {
+  const [noSearch, setNoSearch] = useState(false);
   const navigation = useNavigation()
   const region = useSelector((state: RootState) => state.region.region)
   const [bannerList, setBannerList] = useState<EventType[]>([])
@@ -125,7 +127,14 @@ export default function Home() {
       })
     }
   }
-
+  useEffect(()=>{
+    if(list.length === 0){
+      setNoSearch(true);
+    }
+    else{
+      setNoSearch(false);
+    }
+  }, [list])
   //
   const setListHendler = (list: []) => {
     setList(list)
@@ -155,7 +164,8 @@ export default function Home() {
             </View>
             <View>
               <Title title={'다가오는 공연'} size={17} />
-              <EventList eventList={list} />
+              {noSearch && !load ? <Text style={{fontSize: 15, marginLeft: 22, marginTop:10}}>검색된 데이터가 없습니다.</Text>: null}
+              <EventList eventList={list} /> 
             </View>
             {load ? (
               <Image
