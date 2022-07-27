@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { View, Text, Dimensions, ScrollView, Image } from 'react-native'
 import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import Tutorial_1 from '../../../assets/notice/tutorial/tutorial_1.png'
@@ -134,7 +134,6 @@ const style = ScaledSheet.create({
     marginVertical: '20@msr',
   },
   noticeBody: {
-    // padding: '20@msr',
     width: SCREEN_WIDTH,
     alignItems: 'center',
     overflow: 'scroll',

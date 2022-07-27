@@ -2,7 +2,6 @@ import * as React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import { useState } from 'react'
-import DateTimePicker from '@react-native-community/datetimepicker'
 import { getDate, getTime } from '../../utils/unixTime'
 import RNDateTimePicker from '@react-native-community/datetimepicker'
 
