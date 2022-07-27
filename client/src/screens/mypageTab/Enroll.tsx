@@ -7,7 +7,6 @@ import {
   View,
   Text,
   TextInput,
-  StatusBar,
   Platform,
   ScrollView,
   Image,
@@ -555,20 +554,24 @@ const Enroll = () => {
           <View style={style.modalSelectBody}>
             <Text
               style={{
-                width: SCREEN_WIDTH / 2,
-                fontSize: moderateScale(24),
+                padding: 10,
+                fontSize: moderateScale(20),
                 marginBottom: moderateScale(20),
               }}
             >
-              현재 보증금은 {deposit} Klay 입니다. {'\n'} 보증금을 확인하시고
+              현재 보증금은 {deposit} Klay 입니다. {'\n\n'}보증금을 확인하시고
               진행해주세요.
             </Text>
-            <View style={{}}>
+            <View style={{ flexDirection: 'row' }}>
               <TouchableOpacity onPress={onCheckEnroll}>
-                <Text style={style.modalSubmmit}>확인</Text>
+                <View style={style.modalSubmmit}>
+                  <Text style={style.modalText}>확인</Text>
+                </View>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Text style={style.modalSubmmit}>취소</Text>
+                <View style={style.modalSubmmit}>
+                  <Text style={style.modalText}>취소</Text>
+                </View>
               </TouchableOpacity>
             </View>
           </View>
@@ -678,25 +681,26 @@ const style = ScaledSheet.create({
   },
   modalSelectBody: {
     overflow: 'scroll',
-    width: SCREEN_WIDTH * (2 / 3),
-    height: SCREEN_HEIGHT / 2,
+    width: SCREEN_WIDTH * 0.85,
+    height: SCREEN_HEIGHT * 0.3,
     backgroundColor: 'white',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: '10@msr',
   },
   modalSubmmit: {
-    width: SCREEN_WIDTH / 2,
-    height: '30@msr',
-    marginTop: '15@msr',
-    marginBottom: '15@msr',
-    textAlign: 'center',
-    borderRadius: '10@msr',
-    fontSize: '20@msr',
-    fontWeight: 'bold',
-    color: 'white',
-    backgroundColor: '#3AACFF',
+    width: SCREEN_WIDTH * 0.3,
+    marginHorizontal: '10@msr',
+    paddingHorizontal: '15@msr',
+    paddingVertical: '10@msr',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFCC00',
+    borderRadius: '15@msr',
+    borderColor: '#FEE396',
+    borderWidth: 1,
   },
+  modalText: { color: '#666666', fontSize: '12@msr' },
 })
 
 export default Enroll

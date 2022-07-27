@@ -45,7 +45,7 @@ const AfterTransactionModal = (props: Props) => {
                 </View>
               </View>
 
-              <View>
+              <View style={styles.textContainer}>
                 {props.message === '결제' ? (
                   <InnerText
                     innerText={'이벤트 ' + props.message + '가 완료되었습니다.'}
@@ -74,7 +74,7 @@ const AfterTransactionModal = (props: Props) => {
                 </View>
               </View>
 
-              <View>
+              <View style={styles.textContainer}>
                 {props.message === '결제' ? (
                   <InnerText
                     innerText={'이벤트 ' + props.message + '가 실패되었습니다.'}
@@ -131,6 +131,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  textContainer: { paddingTop: SCREEN_HEIGHT * 0.08 },
   eventButton: {
     margin: '5@msr',
     paddingHorizontal: '15@msr',
