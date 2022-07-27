@@ -32,10 +32,15 @@ const sleep = (ms: any) => new Promise(resolve => setTimeout(resolve, ms))
 export default function Home() {
   const [noSearch, setNoSearch] = useState(false);
   const navigation = useNavigation()
+  // 지역 데이터 redux
   const region = useSelector((state: RootState) => state.region.region)
+  // 베너 데이터
   const [bannerList, setBannerList] = useState<EventType[]>([])
+  // 이벤트 목록 데이터
   const [list, setList] = useState<EventType[]>([])
+  // 로딩 유무 데이터
   const [load, setLoad] = useState<boolean>(false)
+  // 무한 스크롤 페이지 데이터
   const [page, setPage] = useState(1)
   const [isFetching, setIsFetching] = React.useState(false)
   const onRefresh = async () => {
@@ -100,7 +105,6 @@ export default function Home() {
   }
   //페이지 로딩시 배너 호출
   useEffect(() => {
-    // getEventList()
     getBannerList()
   }, [])
 
@@ -110,7 +114,6 @@ export default function Home() {
     setLoad(true)
     setPage(1)
     setList([])
-
     getEventList().then(() => {
       setLoad(false)
     })
