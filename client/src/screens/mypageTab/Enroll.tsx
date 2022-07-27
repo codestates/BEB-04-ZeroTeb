@@ -193,7 +193,27 @@ const Enroll = () => {
         console.log('이벤트 등록 중 에러 발생')
         console.log(e)
         alert('에러 발생')
-        setModalVisible(false)
+        await axios
+          .post(ENROLL_URL, list, {
+            headers: {
+              Cookie: AccessToken,
+            },
+            withCredentials: true,
+          })
+          .then(res => {
+            console.log('res', res)
+            console.log('res.data', res.data)
+            if (res.data.message === 'success') {
+              console.log('ok')
+              setLoadingModalVisible(false)
+              setAtModalVisible(true)
+              setAfterModalBoolean(true) // 성공시 true
+            } else {
+              setLoadingModalVisible(false)
+              setAtModalVisible(true)
+              setAfterModalBoolean(false) // 실패시 false
+            }
+          })
       }
     }
   }
