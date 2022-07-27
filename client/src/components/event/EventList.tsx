@@ -5,6 +5,7 @@ import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
+import Title from '../common/Title'
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface eventListProps {
@@ -51,7 +52,7 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                     />
                   ) : (
                     <InnerText
-                      innerText={`응모 인원 : ${event.price[0].count}`}
+                      innerText={`추첨 인원 : ${event.price[0].count}`}
                       size={10}
                     />
                   )}
@@ -115,11 +116,12 @@ const style = ScaledSheet.create({
     borderRadius: '4@msr',
   },
   eventTitleContainer: {
-    flex: 1,
+    flex: 2,
     alignItems: 'flex-start',
     marginHorizontal: '10@msr',
   },
   eventTitleText: {
+    // marginTop: '10@msr',
     fontSize: '14@msr',
     color: '#333333',
     flex: 1,
@@ -129,7 +131,7 @@ const style = ScaledSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     flex: 2,
-    marginTop: '5@msr',
+    marginTop: '2@msr',
   },
 })
 

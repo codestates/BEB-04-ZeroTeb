@@ -61,7 +61,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
             />
           </Pressable>
         </View>
-        <View style={styles.infoIconContainer}>
+        <View style={styles.infoIconContainerend}>
           <Text style={styles.infoText}>구매</Text>
           <Pressable
             onPress={() => navigation.navigate('MyList', { type: 'sale' })}
@@ -104,6 +104,17 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   infoIconContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    paddingBottom: '15@msr',
+
+    width: SCREEN_WIDTH * 0.28,
+    height: SCREEN_HEIGHT * 0.16,
+  },
+  infoIconContainerend: {
     justifyContent: 'center',
     alignItems: 'center',
     borderColor: 'black',

@@ -21,7 +21,7 @@ const QRread = ({route}) =>{
     setScanned(true);
     const value = data.split(' ')
     console.log('value:',value);
-    const params = { nonce: value[0], event_id: Number(value[1])};
+    const params = { nonce: value[0], event_id: Number(route.params.event_id)};
     console.log('params:',params)
 
     try {
@@ -36,6 +36,7 @@ const QRread = ({route}) =>{
       alert(res.data.message)
     } catch (e) {
       console.log(e)
+      alert('에러 발생')
     }
   }
 
