@@ -22,12 +22,12 @@ export default function RegionButton(prop: Props) {
 }
 const styles = ScaledSheet.create({
   buttonContainer: {
-    marginHorizontal: '16@msr',
-    marginVertical: '10@msr',
+    marginHorizontal: '10@msr',
+    marginVertical: '5@msr',
     justifyContent: 'center',
     alignItems: 'center',
     width: '90@msr',
-    height: '40@vs',
+    height: '35@vs',
     borderWidth: 1,
     borderRadius: 10,
     color: '#5D8BF4',
