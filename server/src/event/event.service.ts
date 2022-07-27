@@ -276,10 +276,10 @@ export class EventService {
     }
   }
 
-  async findAroundEvent(lon: number, lat: number) {
+  async findAroundEvent(lat: number, lon: number) {
     console.log('findAroundEvent');
     try {
-      const threshold = 50; // 내 주변 탐색 범위 (단위 km)
+      // const threshold = 50; // 내 주변 탐색 범위 (단위 km)
       // API 사용을 위한 key를 헤더에 셋팅
       const header = { Authorization: process.env.KAKAO_API };
       // 사용자의 좌표 받아서 사용자가 있는 장소(행정구역) 구하기
@@ -300,10 +300,10 @@ export class EventService {
       });
       console.log(`${region}지역 이벤트:`, regionEventList);
       // 호출된 이벤트와 사용자의 좌표의 거리가 threshold 이하인 데이터만 추출
-      const aroundEvent = regionEventList.filter(
-        (ele) => this.getDistance(lon, lat, ele.x, ele.y) < threshold,
-      );
-      return aroundEvent;
+      // const aroundEvent = regionEventList.filter(
+      //   (ele) => this.getDistance(lon, lat, ele.x, ele.y) < threshold,
+      // );
+      return regionEventList;
     } catch (e) {
       console.log(e);
       return { message: 'Failed to find around event' };
