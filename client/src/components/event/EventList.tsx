@@ -119,7 +119,12 @@ const style = ScaledSheet.create({
     alignItems: 'flex-start',
     marginHorizontal: '10@msr',
   },
-  eventTitleText: { fontSize: '14@msr', color: '#333333', flex: 1 },
+  eventTitleText: {
+    fontSize: '14@msr',
+    color: '#333333',
+    flex: 1,
+    fontWeight: 'bold',
+  },
   eventContentContainer: {
     alignItems: 'flex-start',
     justifyContent: 'flex-end',

@@ -185,10 +185,20 @@ const EventDetail: FC<eventDetailProps> = ({}) => {
         <Text></Text>
         <InnerText innerText={eventDetail.title} size={30} />
         {eventDetail.type === 'sale' ? (
-          <InnerText
-            innerText={`관람일 :  ${getDate(eventDetail.event_start_date)} `}
-            size={15}
-          />
+          <>
+            <InnerText
+              innerText={`관람일 :  ${getDateAndTime(
+                eventDetail.event_start_date,
+              )} `}
+              size={15}
+            />
+            <InnerText
+              innerText={`구매 가능 기간 \n: ${getDateAndTime(
+                eventDetail.recruit_start_date,
+              )} ~ ${getDateAndTime(eventDetail.recruit_end_date)}`}
+              size={15}
+            />
+          </>
         ) : (
           <View>
             <InnerText
