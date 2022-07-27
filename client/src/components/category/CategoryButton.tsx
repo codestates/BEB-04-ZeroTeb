@@ -42,7 +42,7 @@ const style = ScaledSheet.create({
   categoryButtonOuterContainer: {
     flex: 1,
     alignItems: 'flex-start',
-    margin: '20@msr',
+    margin: '10@msr',
     elevation: 4, //갤럭시 boxshodow
     shadowColor: 'black', // ios boxshodow
     shadowOffset: { width: 0, height: 2 },
@@ -55,7 +55,7 @@ const style = ScaledSheet.create({
   Pressed: { opacity: 0.5 },
   categoryImg: {
     width: SCREEN_WIDTH * 0.9,
-    height: (SCREEN_HEIGHT * 0.65) / 6,
+    height: (SCREEN_HEIGHT * 0.6) / 6,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '5@msr',
