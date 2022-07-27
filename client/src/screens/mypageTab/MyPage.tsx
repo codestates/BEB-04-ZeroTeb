@@ -96,7 +96,8 @@ const MyPage: React.FC<Props> = ({ route }) => {
         dispatch(signinActions.setbalance(res.data.balance))
       }
     } catch (err) {
-      alert(err)
+      console.log(err)
+      // alert(err)
     }
   }
 

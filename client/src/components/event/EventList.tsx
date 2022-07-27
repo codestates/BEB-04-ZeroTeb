@@ -3,9 +3,10 @@ import { Image, View, Text, Dimensions, Pressable } from 'react-native'
 import InnerText from '../common/InnerText'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
-import { ScaledSheet } from 'react-native-size-matters'
+import { ScaledSheet, moderateScale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
 import Title from '../common/Title'
+
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
 interface eventListProps {
@@ -34,42 +35,25 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                   ></Image>
                 </View>
                 <View style={style.eventTitleContainer}>
-                  <Text></Text>
                   <Text ellipsizeMode={'tail'} style={style.eventTitleText}>
                     {event.title}
                   </Text>
                 </View>
                 <View style={style.eventContentContainer}>
-                  <Text></Text>
-                  <InnerText
-                    innerText={`기획자 : ${event.promoter}`}
-                    size={10}
-                  />
+                  <Text style={{fontSize: moderateScale(10)}}>{`기획자 : ${event.promoter}`}</Text>
                   {event.type === 'sale' ? (
-                    <InnerText
-                      innerText={`남은 좌석 : ${event.remaining}`}
-                      size={10}
-                    />
+                    <Text style={{fontSize: moderateScale(10)}}>{`남은 좌석 : ${event.remaining}`}</Text>
                   ) : (
-                    <InnerText
-                      innerText={`추첨 인원 : ${event.price[0].count}`}
-                      size={10}
-                    />
+                    <Text style={{fontSize: moderateScale(10)}}>{`추첨 인원 : ${event.price[0].count}`}</Text>
                   )}
                   {event.type === 'sale' ? (
-                    <InnerText
-                      innerText={`공연 기간 : ${getDate(
-                        event.event_start_date,
-                      )} - ${getDate(event.event_end_date)}`}
-                      size={10}
-                    />
+                    <Text style={{fontSize: moderateScale(10)}}>{`공연 기간 : \n${getDate(
+                      event.event_start_date,
+                    )} - ${getDate(event.event_end_date)}`}</Text>
                   ) : (
-                    <InnerText
-                      innerText={`응모 기간 : ${getDate(
-                        event.recruit_start_date,
-                      )} - ${getDate(event.recruit_end_date)}`}
-                      size={10}
-                    />
+                    <Text style={{fontSize: moderateScale(10)}}>{`응모 기간 : \n${getDate(
+                      event.recruit_start_date,
+                    )} - ${getDate(event.recruit_end_date)}`}</Text>
                   )}
                 </View>
               </View>
@@ -93,21 +77,21 @@ const style = ScaledSheet.create({
     width: SCREEN_WIDTH * 0.95,
   },
   eventInnerContainer: {
-    marginHorizontal: SCREEN_WIDTH * 0.025,
+    marginHorizontal: SCREEN_WIDTH * 0.015,
     marginTop: '10@msr',
     paddingVertical: '10@msr',
     borderColor: 'lightgray',
     borderWidth: 1,
-    width: SCREEN_WIDTH * 0.42,
-    maxHeight: SCREEN_HEIGHT * 0.35,
-    minHeight: SCREEN_HEIGHT * 0.35,
+    width: SCREEN_WIDTH * 0.44,
+    maxHeight: SCREEN_HEIGHT * 0.36,
+    minHeight: SCREEN_HEIGHT * 0.3,
     borderRadius: '10@msr',
   },
   eventImgContainer: {
     alignItems: 'center',
     overflow: 'hidden',
     marginHorizontal: SCREEN_WIDTH * 0.01,
-    flex: 2,
+    height:SCREEN_HEIGHT * 0.15,
   },
   eventImg: {
     width: SCREEN_WIDTH * 0.38,
@@ -116,22 +100,19 @@ const style = ScaledSheet.create({
     borderRadius: '4@msr',
   },
   eventTitleContainer: {
-    flex: 2,
+    height:SCREEN_HEIGHT * 0.06,
+    marginVertical: '5@msr',
     alignItems: 'flex-start',
     marginHorizontal: '10@msr',
   },
   eventTitleText: {
-    // marginTop: '10@msr',
     fontSize: '14@msr',
     color: '#333333',
-    flex: 1,
     fontWeight: 'bold',
   },
   eventContentContainer: {
     alignItems: 'flex-start',
-    justifyContent: 'flex-end',
-    flex: 2,
-    marginTop: '2@msr',
+    marginHorizontal: '10@msr',
   },
 })
 
