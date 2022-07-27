@@ -36,6 +36,7 @@ const QRread = ({route}) =>{
       alert(res.data.message)
     } catch (e) {
       console.log(e)
+      alert('에러 발생')
     }
   }
 

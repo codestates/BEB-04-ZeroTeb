@@ -51,7 +51,7 @@ const EventList: React.FC<eventListProps> = ({ eventList }) => {
                     />
                   ) : (
                     <InnerText
-                      innerText={`응모 인원 : ${event.price[0].count}`}
+                      innerText={`추첨 인원 : ${event.price[0].count}`}
                       size={10}
                     />
                   )}
