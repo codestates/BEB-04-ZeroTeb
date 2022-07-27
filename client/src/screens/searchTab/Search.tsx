@@ -5,7 +5,6 @@ import {
   View,
   StatusBar,
   Platform,
-  Pressable,
   ScrollView,
   RefreshControl,
 } from 'react-native'
@@ -61,10 +60,7 @@ export default function Search() {
           onChangeText={searchInputHandler}
           onSubmitEditing={searchEnterHandler}
         />
-        <Hashtag
-          hashtags={['아이유', '폴킴', '코드 스테이츠', '그라운드X']}
-          onPress={pressHandler}
-        />
+        <Hashtag onPress={pressHandler} />
       </ScrollView>
     </View>
   )

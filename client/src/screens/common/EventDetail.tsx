@@ -17,7 +17,7 @@ import EntryBottomContent from '../../components/event/EntryBottomContent'
 import SaleBottomContent from '../../components/event/SaleBottomContent'
 import RadioGroup, { RadioButtonProps } from 'react-native-radio-buttons-group'
 import { EventType } from '../../models/Event'
-import { getDate, getDateAndTime } from '../../utils/unixTime'
+import { getDateAndTime } from '../../utils/unixTime'
 import { profile_url } from '../../utils/utils'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../store/Index'
@@ -284,12 +284,12 @@ const style = ScaledSheet.create({
     paddingVertical: '10@msr',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#5D8BF4',
+    backgroundColor: '#3AACFF',
     borderRadius: '15@msr',
-    borderColor: '#5D8BF4',
+    borderColor: '#3AACFF',
     borderWidth: 1,
   },
-  eventText: { color: '#ffffff', fontSize: '12@msr' },
+  eventText: { color: '#ffffff', fontWeight: 'bold', fontSize: '15@msr' },
   RadioButtonText: { fontSize: '15@msr' },
   promoterContainer: {
     flex: 1,

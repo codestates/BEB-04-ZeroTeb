@@ -44,19 +44,19 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
           >
             <AvatarIcon
               size={moderateScale(50)}
-              color={'lightgrey'}
+              color={'#cccccc'}
               title={userInfo.history.created}
             />
           </Pressable>
         </View>
-        <View style={styles.infoIconContainer}>
+        <View style={styles.infoIconContainermiddle}>
           <Text style={styles.infoText}>응모</Text>
           <Pressable
             onPress={() => navigation.navigate('MyList', { type: 'entry' })}
           >
             <AvatarIcon
               size={moderateScale(50)}
-              color={'lightgrey'}
+              color={'#cccccc'}
               title={userInfo.history.entry}
             />
           </Pressable>
@@ -68,7 +68,7 @@ const MyPageHeader: React.FC<profileProps> = ({ userInfo }) => {
           >
             <AvatarIcon
               size={moderateScale(50)}
-              color={'lightgrey'}
+              color={'#cccccc'}
               title={userInfo.history.sale}
             />
           </Pressable>
@@ -110,7 +110,18 @@ const styles = ScaledSheet.create({
     borderWidth: 1,
     borderRightWidth: 0,
     paddingBottom: '15@msr',
-
+    width: SCREEN_WIDTH * 0.28,
+    height: SCREEN_HEIGHT * 0.16,
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10,
+  },
+  infoIconContainermiddle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRightWidth: 0,
+    paddingBottom: '15@msr',
     width: SCREEN_WIDTH * 0.28,
     height: SCREEN_HEIGHT * 0.16,
   },
@@ -120,7 +131,8 @@ const styles = ScaledSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     paddingBottom: '15@msr',
-
+    borderBottomRightRadius: 10,
+    borderTopRightRadius: 10,
     width: SCREEN_WIDTH * 0.28,
     height: SCREEN_HEIGHT * 0.16,
   },

@@ -7,8 +7,6 @@ import {
   StyleSheet,
   Dimensions,
   ScrollView,
-  Text,
-  View,
   RefreshControl,
 } from 'react-native'
 import { useSelector } from 'react-redux'
@@ -61,8 +59,6 @@ export default function MyList({ route }) {
   //entry: type data가 entry 목록 검색
   //sale: type data가 sale인 목록 검색
   //create: address데이터가 입력한 address인 목록을 검색
-  //liked: 좋아요 콜렉션에 있고, 입력한 address를 가진 목록을 검색
-  //http://server.beeimp.com:18080/event/history?address=0xf0a29e430d12065bfa9a5e0bc694f26accb151f4&page=1&count=5&type=created
   const getTypeListHandler = async () => {
     try {
       const config: AxiosRequestConfig = {

@@ -5,16 +5,15 @@ import {
   StyleSheet,
   Image,
   Dimensions,
-  ScrollView,
   Pressable,
 } from 'react-native'
 import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import axios, { AxiosRequestConfig } from 'axios'
 import { useNavigation } from '@react-navigation/native'
-import { moderateScale, ScaledSheet } from 'react-native-size-matters'
+import { ScaledSheet } from 'react-native-size-matters'
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')
+const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
 interface searchListProps {
   sendList: EventType[]
@@ -72,11 +71,10 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                 <View style={style.SearchListTextContainer}>
                   <View style={style.textWrapper}>
                     <Text style={style.SearchListTitle}>{event.title}</Text>
-                    {event.type === 'sale'? (
+                    {event.type === 'sale' ? (
                       <Text style={style.SearchListSeat}>
                         남은 좌석 : {event.remaining} / {event.totalSeat}
                       </Text>
-                  
                     ) : (
                       <Text style={style.SearchListSeat}>
                         응모 인원 : {event.price[0].count}
@@ -103,17 +101,19 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
                           <Text>당첨 확인</Text>
                         </View>
                       </Pressable>
-                    ) : (type === 'created' ?
-                    <Pressable
+                    ) : type === 'created' ? (
+                      <Pressable
                         onPress={() => {
-                          navigation.navigate('QRread', {event_id: event.event_id})
+                          navigation.navigate('QRread', {
+                            event_id: event.event_id,
+                          })
                         }}
                       >
                         <View style={style.checkBtn}>
                           <Text>QR 확인</Text>
                         </View>
                       </Pressable>
-                    :null)}
+                    ) : null}
                   </View>
                 </View>
               </View>

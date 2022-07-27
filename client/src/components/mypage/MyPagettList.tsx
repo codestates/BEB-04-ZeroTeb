@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native'
-import axios, { AxiosRequestConfig } from 'axios'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import {
   View,
   Text,
@@ -14,7 +13,6 @@ import { moderateScale } from 'react-native-size-matters'
 import { useSelector } from 'react-redux'
 import { UserType } from '../../models/User'
 import { RootState } from '../../store/Index'
-
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')
 
@@ -51,36 +49,6 @@ const MyPagettList: React.FC<ttListProps> = props => {
       },
     ]
   >(token_data)
-
-  // const getMyTT = async() =>{
-  //   console.log('TT 데이터 호출!')
-  //   let url = `http://server.beeimp.com:18080/token/list?address=${KilpAddress}`
-  //   try {
-  //     const config: AxiosRequestConfig = {
-  //       method: 'get',
-  //       url: url,
-  //       withCredentials: true,
-  //     }
-
-  //     const res = await axios(config)
-
-  //     console.log(res.data)
-  //     if (res.data.message) {
-  //       console.log(res.data.message);
-  //       alert('TT 로딩 실패')
-  //     }else{
-  //       console.log(res.data)
-  //       setTokens(res.data)
-  //     }
-  //   } catch (e) {
-  //     console.log(e)
-
-  //   }
-  // }
-
-  // useEffect(()=>{
-  //   getMyTT()
-  // }, [])
 
   const renderItem = useCallback(({ item, index }) => {
     console.log(item, index)

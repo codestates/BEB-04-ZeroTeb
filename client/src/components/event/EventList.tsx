@@ -5,7 +5,6 @@ import { EventType } from '../../models/Event'
 import { getDate } from '../../utils/unixTime'
 import { ScaledSheet, moderateScale } from 'react-native-size-matters'
 import { useNavigation } from '@react-navigation/native'
-import Title from '../common/Title'
 
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window')

@@ -8,14 +8,6 @@ import { RootState } from '../../store/Index'
 
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 40 : StatusBar.currentHeight
 
-// const tempDataList = [
-//   { url: '../../../assets/categoryImg/consert.png', title: 'Consert' },
-//   { url: '../../../assets/categoryImg/theater.png', title: 'Theater' },
-//   { url: '../../../assets/categoryImg/kids.png', title: 'Kids' },
-//   { url: '../../../assets/categoryImg/musical.png', title: 'Musical' },
-//   { url: '../../../assets/categoryImg/exhibition.png', title: 'Exhibition' },
-//   { url: '../../../assets/categoryImg/exhibition.png', title: 'Leisure Sport' },
-// ]
 const tempDataList = [
   {
     url: 'https://images.unsplash.com/photo-1520074189855-c26f27cc7ac8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1158&q=80',

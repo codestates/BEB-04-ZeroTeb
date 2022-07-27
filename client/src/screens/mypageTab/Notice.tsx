@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text, Dimensions, ScrollView, Image } from 'react-native'
+import { View, ScrollView } from 'react-native'
 import { ScaledSheet } from 'react-native-size-matters'
 import MyPageNotice from '../../components/mypage/MyPageNotice'
 

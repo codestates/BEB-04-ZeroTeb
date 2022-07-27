@@ -23,7 +23,7 @@ const QRLoad: React.FC<Props> = ({ route }) => {
       <View style={styles.titleContainer}>
         <InnerText innerText={'SCAN ME'} size={30}></InnerText>
       </View>
-      <View style={styles.textContainer}>
+      <View>
         <InnerText
           innerText={'담당자에게 QR코드를 보여주세요'}
           size={18}
@@ -40,7 +40,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     height: SCREEN_HEIGHT,
-    paddingBottom: '100@msr',
+    paddingBottom: '150@msr',
   },
   qrContainer: {
     padding: '15@msr',
@@ -49,39 +49,9 @@ const styles = ScaledSheet.create({
   },
   titleContainer: {
     marginVertical: '20@msr',
-    // backgroundColor: 'green',
-    // borderColor:'red',
     borderWidth: '2@msr',
     borderRadius: '10@msr',
   },
-  textContainer: {},
 })
-
-// const styles2 = StyleSheet.create({
-//     loadContainer:{
-//         flexDirection: 'column',
-//         justifyContent: 'center',
-//         alignItems: 'center',
-//         backgroundColor: 'white',
-//         height: SCREEN_HEIGHT,
-//         paddingBottom: 100
-
-//     },
-//     qrContainer:{
-//         padding: 15,
-//         borderColor: 'black',
-//         borderWidth: 3,
-//     },
-//     titleContainer:{
-//         marginVertical: 20,
-//         // backgroundColor: 'green',
-//         // borderColor:'red',
-//         borderWidth: 2,
-//         borderRadius: 10
-//     },
-//     textContainer:{
-
-//     },
-// })
 
 export default QRLoad

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { ScaledSheet } from 'react-native-size-matters'
-import { View, Dimensions, Platform } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window')

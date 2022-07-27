@@ -118,7 +118,6 @@ const styles = ScaledSheet.create({
     bottom: '24@msr',
   },
   checkText: {
-    // fontFamily: 'Itim',
     fontSize: '16@msr',
   },
   checkbox: {
@@ -148,7 +147,6 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   text: {
-    // fontFamily: 'JetBrains Mono',
     fontSize: '18@msr',
     color: 'white',
   },

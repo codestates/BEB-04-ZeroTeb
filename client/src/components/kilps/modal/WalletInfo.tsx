@@ -40,23 +40,6 @@ export const getAddress = (callback: any, tokenback: any) => {
       //request [request_key 인증하기]
       const { request_key } = response.data
       Linking.openURL(getKlipAccessUrl(request_key)) //kilp 인증 화면 이동
-      // timeid = setInterval(async () => {
-      //   // result [지갑 주소 가져오기]
-      //   await axios
-      //     .get(
-      //       `https://a2a-api.klipwallet.com/v2/a2a/result?request_key=${request_key}`,
-      //     )
-      //     .then(res => {
-      //       const data = res.data
-      //       if (data.status === 'completed') {
-      //         // result에서 받은 결과 값 중 지갑 주소 확인
-      //         console.log(`[Result] ${data.result.klaytn_address}`)
-      //         // 지갑 주소 저장 콜백
-      //         stopInterval()
-      //         callback(data.result.klaytn_address)
-      //       }
-      //     })
-      // }, 3000)
       return request_key
     })
     // 지갑 인증 후 서버에 request_key 전달
