@@ -229,7 +229,7 @@ export class TokenService {
   }
 
   // 사용자 address의 토큰을 읽어 오는 함수 - 매 초 실행
-  @Cron('*/5 * * * * *')
+  @Cron('*/15 * * * * *')
   async getHoldingData() {
     console.log('getHoldingData : address에 따른 토큰 정보 받기');
     // // 'selling'
