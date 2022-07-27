@@ -50,7 +50,7 @@ const SearchList: React.FC<searchListProps> = ({ sendList, type, address }) => {
 
   return (
     <View style={style.SearchListOuterContainer}>
-      <Text style={style.listTitle}>{type}검색목록</Text>
+      <Text style={style.listTitle}>{type ==='created'? '등록':(type === 'sale' ? '구매' : '응모')}한 이벤트 목록</Text>
       <View style={style.SearchListInnerContainer}>
         {sendList.map((event: EventType, index: number) => {
           return (
