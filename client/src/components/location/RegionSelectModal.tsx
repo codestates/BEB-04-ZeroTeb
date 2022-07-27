@@ -84,13 +84,13 @@ const styles = ScaledSheet.create({
     opacity: 0.3,
   },
   selectSpace: {
-    flexDirection: 'column',
-    width: moderateScale(320),
-    height: moderateScale(610),
-
+    width: SCREEN_WIDTH * 0.7,
+    height: SCREEN_HEIGHT * 0.7,
     backgroundColor: 'white',
-    borderRadius: 10,
-    padding: '6@msr',
+    borderRadius: '10@msr',
+    padding: '20@msr',
+    alignContent: 'center',
+    justifyContent: 'space-between',
   },
   regionTitle: {
     marginTop: '15@msr',
