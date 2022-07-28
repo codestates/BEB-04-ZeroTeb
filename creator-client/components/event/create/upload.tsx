@@ -1,6 +1,13 @@
 import { css } from '@emotion/react';
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { ChangeEvent, ChangeEventHandler, FunctionComponent, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  ChangeEventHandler,
+  FunctionComponent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { FileType } from '../../../types/common';
 import EventCreateItemWrapper from './item-wrapper';
@@ -12,11 +19,24 @@ interface EventCreateUploadProps {
 const EventCreateUpload: FunctionComponent<EventCreateUploadProps> = ({ title, action }) => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const uploadRef = useRef<HTMLInputElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [imageHeight, setImageHeight] = useState<number>(0);
   const dispatch = useDispatch();
+
+  const screenResize = () => {
+    setImageHeight(() => ((wrapRef.current?.clientWidth ?? 0) / 16) * 9);
+  };
+
+  useEffect(() => {
+    screenResize();
+    window.addEventListener('resize', screenResize);
+    return () => {
+      window.removeEventListener('resize', screenResize);
+    };
+  }, []);
 
   const uploadHandler: ChangeEventHandler = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files?.length === 0) return;
-    console.log(event.target.files);
     const url = URL.createObjectURL(event.target.files[0]);
     setImageUrl(() => url);
     dispatch(
@@ -29,8 +49,8 @@ const EventCreateUpload: FunctionComponent<EventCreateUploadProps> = ({ title, a
 
   const wrapperStyle = css`
     position: relative;
-    width: calc(10vh * 2);
-    height: 10vh;
+    width: 100%;
+    height: ${imageHeight}px;
     border: 1px solid black;
     ${imageUrl === '' ? undefined : `background-image: url(${imageUrl});`}
     background-size: contain;
@@ -66,7 +86,7 @@ const EventCreateUpload: FunctionComponent<EventCreateUploadProps> = ({ title, a
 
   return (
     <EventCreateItemWrapper title={title + ' 업로드'}>
-      <div css={wrapperStyle}>
+      <div css={wrapperStyle} ref={wrapRef}>
         <button
           css={buttonStyle}
           onClick={() => {

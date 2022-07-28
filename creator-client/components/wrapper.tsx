@@ -7,6 +7,7 @@ interface WrapperProps {
 
 const Wrapper: FunctionComponent<WrapperProps> = ({ children }) => {
   const wrapperStyle = css`
+    position: relative;
     padding-top: 100px;
   `;
   return <div css={wrapperStyle}>{children}</div>;

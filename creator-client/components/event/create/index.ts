@@ -1,4 +1,4 @@
-import EventCreateType from './type';
+import EventCreateType from './event-type';
 import EventDateTimePicker from './datetime-picker';
 import EventCreateEditor from './editor';
 import EventCreateTitle from './Title';
@@ -7,6 +7,7 @@ import EventCreateWrapper from './wrapper';
 import EventCreateCategory from './category';
 import EventCreateUpload from './upload';
 import EventCreatePrices from './prices';
+import EventCreateTokenType from './token-type';
 
 export {
   EventCreateEditor,
@@ -18,4 +19,5 @@ export {
   EventCreateCategory,
   EventCreateUpload,
   EventCreatePrices,
+  EventCreateTokenType,
 };

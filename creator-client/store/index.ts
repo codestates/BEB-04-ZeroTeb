@@ -2,6 +2,8 @@ import { configureStore, createSerializableStateInvariantMiddleware } from '@red
 import { createWrapper } from 'next-redux-wrapper';
 import { commonSlice } from './commonSlice';
 import { createEventSlice } from './event/createSlice';
+import { tokenSlice } from './event/tokenSlice';
+import { eventInfoSlice } from './event/viewSlice';
 import { klipSlice } from './klipSlice';
 import { userSlice } from './user';
 
@@ -15,6 +17,8 @@ const store = configureStore({
     user: userSlice.reducer,
     klip: klipSlice.reducer,
     common: commonSlice.reducer,
+    token: tokenSlice.reducer,
+    eventInfo: eventInfoSlice.reducer,
   },
   middleware: [serializableMiddleware],
   devTools: process.env.NODE_ENV !== 'production',

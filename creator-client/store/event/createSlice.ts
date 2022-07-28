@@ -24,10 +24,10 @@ const initialState: CreateState = {
   ],
   contents: '',
   option: [],
-  recruit_start_date: 0,
-  recruit_end_date: 0,
-  event_start_date: 0,
-  event_end_date: 0,
+  recruit_start_date: Number(Date.now().toString().substring(0, 10)),
+  recruit_end_date: Number((Date.now() + 1).toString().substring(0, 10)),
+  event_start_date: Number((Date.now() + 2).toString().substring(0, 10)),
+  event_end_date: Number((Date.now() + 3).toString().substring(0, 10)),
   created_date: 0,
   modified_date: 0,
 };
@@ -89,6 +89,9 @@ export const createEventSlice = createSlice({
     },
     set_modified_date: (state, action: PayloadAction<number>) => {
       state.modified_date = action.payload;
+    },
+    clear: (state, action: PayloadAction<void>) => {
+      state = initialState;
     },
   },
 });

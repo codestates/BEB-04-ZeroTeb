@@ -12,15 +12,17 @@ interface EventDateTimePickerPickerProps {
   title?: string;
   startDateActions: ActionCreatorWithPayload<number>;
   endDateActions: ActionCreatorWithPayload<number>;
+  refDate?: Date;
 }
 
 const EventDateTimePicker: FunctionComponent<EventDateTimePickerPickerProps> = ({
   title = '',
   startDateActions,
   endDateActions,
+  refDate = new Date(),
 }) => {
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<Date>(refDate);
+  const [endDate, setEndDate] = useState<Date>(refDate);
   const dispatch = useDispatch();
 
   const timestamp10digits = (date: Date) => {
@@ -41,7 +43,7 @@ const EventDateTimePicker: FunctionComponent<EventDateTimePickerPickerProps> = (
           onChange={(newDate) => {
             if (!newDate) return;
             setStartDate(newDate);
-            const value = newDate < startDate ? startDate : newDate;
+            const value = refDate < newDate ? newDate : refDate;
             setEndDate(value);
             const timestamp = timestamp10digits(value);
             dispatch(startDateActions(timestamp));
