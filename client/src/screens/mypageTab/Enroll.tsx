@@ -110,7 +110,6 @@ const Enroll = () => {
         if (Platform.OS === 'ios') {
           filename = result.uri.replace('file:///var', 'private/var')
         } else {
-          console.log('and')
           filename = result.uri.split('/').pop()
         }
         const formData = new FormData()
