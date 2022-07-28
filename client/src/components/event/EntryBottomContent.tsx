@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, Text } from 'react-native'
 import { EventType } from '../../models/Event'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import Unserbar from '../../components/common/Underbar'
 import EntryRefundPolicy from '../../components/event/EntryRefundPolicy'
 import EntryLotPolicy from '../../components/event/EntryLotPolicy'
@@ -10,21 +10,33 @@ import InnerText from '../common/InnerText'
 import { getDate, getDateAndTime } from '../../utils/unixTime'
 import Title from '../common/Title'
 import EventImg from '../common/EventImg'
+import { StyleSheet } from 'react-native'
+import HTMLView from 'react-native-htmlview'
 
 interface entryBottomContentProps {
   eventDetail: EventType
 }
 
+const styles = StyleSheet.create({
+  content: {
+    fontSize: moderateScale(15),
+    color: '#333333',
+  },
+})
+
 const EntryBottomContent: React.FC<entryBottomContentProps> = ({
   eventDetail,
 }) => {
+  const htmlContent = eventDetail.contents
   return (
     <>
       <Unserbar />
       <Text></Text>
       <Title title={'이벤트 내용'} size={18} />
       <View style={style.eventContentContainer}>
-        <InnerText innerText={eventDetail.contents} size={15} />
+        <View style={style.innerContentContainer}>
+          <HTMLView value={htmlContent} stylesheet={styles.content} />
+        </View>
       </View>
       <Unserbar />
       <Text></Text>
@@ -72,6 +84,11 @@ const style = ScaledSheet.create({
   eventContentContainer: {
     paddingVertical: '15@msr',
     paddingHorizontal: '10@msr',
+  },
+  innerContentContainer: {
+    alignItems: 'flex-start',
+    marginHorizontal: moderateScale(10),
+    marginVertical: moderateScale(5),
   },
 })
 

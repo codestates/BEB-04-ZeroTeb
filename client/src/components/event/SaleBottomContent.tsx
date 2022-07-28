@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, Text } from 'react-native'
-import { ScaledSheet } from 'react-native-size-matters'
+import { moderateScale, ScaledSheet } from 'react-native-size-matters'
 import { EventType } from '../../models/Event'
 import Unserbar from '../../components/common/Underbar'
 import Title from '../../components/common/Title'
@@ -9,21 +9,31 @@ import SaleRefundPolicy from '../../components/event/SaleRefundPolicy'
 import InnerText from '../common/InnerText'
 import { getDate } from '../../utils/unixTime'
 import EventImg from '../common/EventImg'
-
+import { StyleSheet } from 'react-native'
+import HTMLView from 'react-native-htmlview'
 interface saleBottomContentProps {
   eventDetail: EventType
 }
+const styles = StyleSheet.create({
+  content: {
+    fontSize: moderateScale(15),
+    color: '#333333',
+  },
+})
 
 const SaleBottomContent: React.FC<saleBottomContentProps> = ({
   eventDetail,
 }) => {
+  const htmlContent = eventDetail.contents
   return (
     <>
       <Unserbar />
       <Text></Text>
       <Title title={'이벤트 내용'} size={18} />
       <View style={style.eventContentContainer}>
-        <InnerText innerText={eventDetail.contents} size={15} />
+        <View style={style.innerContentContainer}>
+          <HTMLView value={htmlContent} stylesheet={styles.content} />
+        </View>
       </View>
       <Unserbar />
       <Text></Text>
@@ -92,6 +102,11 @@ const style = ScaledSheet.create({
     marginHorizontal: '10@msr',
     fontSize: '15@msr',
     color: '#333333',
+  },
+  innerContentContainer: {
+    alignItems: 'flex-start',
+    marginHorizontal: moderateScale(10),
+    marginVertical: moderateScale(5),
   },
 })
 
