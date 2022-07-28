@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store';
 import { EventInfoType } from '../../../types/event';
@@ -27,6 +27,9 @@ const EventViewList: FunctionComponent<EventViewListProps> = ({ title }) => {
     { title: '레저스포츠', category: 'leisure sport' },
   ];
   const eventInfo = useSelector((state: RootState) => state.eventInfo);
+
+  useEffect(() => {}, [eventInfo]);
+
   const listStyle = css`
     width: 100%;
     list-style: none;
