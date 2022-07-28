@@ -13,7 +13,7 @@ const EventCreateAddress: FunctionComponent<EventCreateAddressProps> = ({
   setIsVisibleJuso,
 }) => {
   return (
-    <EventCreateItemWrapper title={'이벤트 검색'}>
+    <EventCreateItemWrapper title={'이벤트 장소'}>
       {isVisibleJuso ? (
         <EventCreateAddressSearch
           isVisibleJuso={isVisibleJuso}

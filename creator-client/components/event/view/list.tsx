@@ -117,46 +117,50 @@ const EventViewList: FunctionComponent<EventViewListProps> = ({ title }) => {
   return (
     <EventCreateItemWrapper title={title}>
       <ul css={listStyle}>
-        {eventInfo.data.map((event, index) => {
-          return (
-            <li css={itemStyle} key={index}>
-              <EventViewImage url={event.thumnail} size={'280px'}></EventViewImage>
-              <div css={contentsWrapperStyle}>
-                <EventViewTitle title={event.title}></EventViewTitle>
-                <div css={contentsStyle}>
-                  <EventViewDescription title={'상태'}>{event.status}</EventViewDescription>
-                  <EventViewDescription title={'유형'}>
-                    {categories.find((item) => item.category === event.category)?.title}
-                  </EventViewDescription>
-                  <EventViewDescription title={'장소'}>
-                    {[event.location, event.sub_location].join(' ')}
-                  </EventViewDescription>
-                  <EventViewDescription title={'모집기간'}>
-                    <EventViewDateTime
-                      start_date={new Date(event.recruit_start_date * 1000)}
-                      end_date={new Date(event.recruit_end_date * 1000)}
-                    ></EventViewDateTime>
-                  </EventViewDescription>
-                  <EventViewDescription title={'행사기간'}>
-                    <EventViewDateTime
-                      start_date={new Date(event.recruit_start_date * 1000)}
-                      end_date={new Date(event.recruit_end_date * 1000)}
-                    ></EventViewDateTime>
-                  </EventViewDescription>
+        {eventInfo.data.length > 0 ? (
+          eventInfo.data.map((event, index) => {
+            return (
+              <li css={itemStyle} key={index}>
+                <EventViewImage url={event.thumnail} size={'280px'}></EventViewImage>
+                <div css={contentsWrapperStyle}>
+                  <EventViewTitle title={event.title}></EventViewTitle>
+                  <div css={contentsStyle}>
+                    <EventViewDescription title={'상태'}>{event.status}</EventViewDescription>
+                    <EventViewDescription title={'유형'}>
+                      {categories.find((item) => item.category === event.category)?.title}
+                    </EventViewDescription>
+                    <EventViewDescription title={'장소'}>
+                      {[event.location, event.sub_location].join(' ')}
+                    </EventViewDescription>
+                    <EventViewDescription title={'모집기간'}>
+                      <EventViewDateTime
+                        start_date={new Date(event.recruit_start_date * 1000)}
+                        end_date={new Date(event.recruit_end_date * 1000)}
+                      ></EventViewDateTime>
+                    </EventViewDescription>
+                    <EventViewDescription title={'행사기간'}>
+                      <EventViewDateTime
+                        start_date={new Date(event.recruit_start_date * 1000)}
+                        end_date={new Date(event.recruit_end_date * 1000)}
+                      ></EventViewDateTime>
+                    </EventViewDescription>
+                  </div>
                 </div>
-              </div>
-              <button
-                css={detailButtonStyle}
-                onClick={() => {
-                  setIsDetail(true);
-                  setDetailEvent(event);
-                }}
-              >
-                자세히 보기
-              </button>
-            </li>
-          );
-        })}
+                <button
+                  css={detailButtonStyle}
+                  onClick={() => {
+                    setIsDetail(true);
+                    setDetailEvent(event);
+                  }}
+                >
+                  자세히 보기
+                </button>
+              </li>
+            );
+          })
+        ) : (
+          <div>등록한 이벤트가 없습니다.</div>
+        )}
       </ul>
       {isDetail && !!detailEvent ? (
         <div css={detailWrapperStyle}>
