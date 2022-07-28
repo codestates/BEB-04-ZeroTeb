@@ -391,7 +391,7 @@ export class KlaytnService {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
         this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
       }
-      const receipt = await this.contract.methods.transferEventWinner(eventId).send({
+      const receipt = await this.contract.methods.transferEventWinner(eventId, 0).send({
         from: OWNER_ADDRESS,
         gas: GAS,
       });
