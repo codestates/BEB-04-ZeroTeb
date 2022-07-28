@@ -69,7 +69,7 @@ export class TokenService {
       }).exec();
 
       const now = new Date(); // 현재 날짜
-      const ex = Math.round(Number(now.setMinutes(0.2) / 1000)); //유효기한 10초
+      const ex = Math.round(Number(now.getTime() / 1000)) + 25; //유효기한 10초
       console.log('ex', ex);
       //만약 한 번도 nonce 발행 기록이 없다면 새로 발행
       if (noncedata !== null) {
@@ -148,7 +148,8 @@ export class TokenService {
   checkEx(date: number): boolean {
     try {
       const now = new Date(); // 현재 날짜
-      const now_min = Math.round(now.setMinutes(0) / 1000);
+      const now_min = Math.round(now.getTime() / 1000);
+      console.log('지금 시간', now_min);
       console.log('date:', date, 'now:', now_min, '유효기한(양수: 유효기한 남음):', date - now_min);
       if (Number(date) > now_min) {
         return true; // 유효기한 남음
