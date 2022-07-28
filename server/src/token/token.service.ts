@@ -51,7 +51,7 @@ export class TokenService {
     //유효한 계정(로그인)일 경우, 받은 주소에 해당 토큰 확인 (이 부분은 나중에 다른 데이터 확인해야함 Nonce X)
     // 계정(로그인) 확인 코드 필요
     try {
-      let saveResult;
+      // let saveResult;
       const holdingdata = await this.HoldingModel.findOne({
         address: `${address}`,
         token_id: `${token_id}`,
@@ -69,45 +69,31 @@ export class TokenService {
       }).exec();
 
       const now = new Date(); // 현재 날짜
-      const ex = Math.round(Number(now.setMinutes(5) / 1000)); //유효기한 5분
-      console.log('exddddd', ex);
+      const ex = Math.round(Number(now.setMinutes(0.2) / 1000)); //유효기한 10초
+      console.log('ex', ex);
       //만약 한 번도 nonce 발행 기록이 없다면 새로 발행
-      if (noncedata === null) {
-        console.log('nonce 새로 발행');
+      if (noncedata !== null) {
+        console.log('기존 QR 삭제');
         //nonce값 생성, DB에 논스값 저장
-        const newNonce = new this.NonceModel({
-          address,
-          token_id,
-          date: ex,
-          event_id: holdingdata.event_id,
+        const deleteRes = await this.NonceModel.deleteOne({
+          address: `${address}`,
+          token_id: `${token_id}`,
+          event_id: `${holdingdata.event_id}`,
         });
-        saveResult = await newNonce.save();
-      }
-      //유효기한이 남았으면 유효기한 연장? 같은거 아직 뭐할지 안정함
-      // else if (this.checkEx(noncedata.date)) {
-      //   console.log('유효기한 남음');
-      //   return { message: 'QR is expired' };
-      // }
-      // 유효기한 갱싱
-      else {
-        console.log('유효기한 지남');
-        console.log('유효기한 갱신');
-        await this.NonceModel.updateOne(
-          {
-            token_id: noncedata.token_id,
-            address: noncedata.address,
-            event_id: holdingdata.event_id,
-          },
-          { $set: { date: ex } },
-        );
-        saveResult = noncedata;
+        console.log('delete:', deleteRes);
       }
       console.log('QR 발행');
-
+      const newNonce = new this.NonceModel({
+        address,
+        token_id,
+        date: ex,
+        event_id: holdingdata.event_id,
+      });
+      const saveResult = await newNonce.save();
       //QR 생성 요청 API
       //참고 사이트 https://www.qr-code-generator.com/qr-code-api/?target=api-ad
       const nonce = saveResult._id; //nonce값은 무작이로 정해지는 _id값을 사용
-      const text = `${nonce} ${holdingdata.event_id} format:(nonce, event_id)`;
+      const text = `${nonce} format:(nonce)`;
       const api = process.env.QR_API_KEY;
       const param = {
         frame_name: 'no-frame',
