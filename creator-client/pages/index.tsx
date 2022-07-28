@@ -151,7 +151,7 @@ const Home: NextPage = () => {
             <div
               style={{ textAlign: 'center', fontSize: '1em', color: 'white', whiteSpace: 'nowrap' }}
             >
-              <ReactQrCode value="http://server.beeimp.com:18080/file?fn=358a1386-1163-4792-ad8c-ef4923969850.jpg"></ReactQrCode>
+              <ReactQrCode value="http://server.beeimp.com:18080/file?fn=tt.apk"></ReactQrCode>
               <p style={{ paddingTop: '1em' }}>휴대폰에서 QR코드를 인식해주세요!</p>
               <p style={{ fontSize: '0.5em' }}>
                 (현재 스토어 배포 중이며, QR코드는 안드로이드 apk파일 다운로드를 지원합니다.)
