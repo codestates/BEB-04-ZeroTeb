@@ -14,6 +14,8 @@ import { ContracCreateEventkDto } from 'src/klaytn/klaytn.entity';
 import { ipfsGetData, ipfsMetadataUpload } from 'lib/pinata';
 import { EventStatus, EventStatusDocument } from './schemas/event-status.schema';
 import { EventStatusDto } from './dto/event-status.dto';
+import { HoldingType } from 'src/token/schemas/holding.schema';
+import { Participant, ParticipantDocument } from 'src/token/schemas/participant.schema';
 
 @Injectable()
 export class EventService {
@@ -23,6 +25,8 @@ export class EventService {
     @InjectModel('LikedEvent') private readonly LikedEventModel: Model<LikedEvent>,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
     @InjectModel(EventStatus.name) private readonly EventStatusModel: Model<EventStatusDocument>,
+    @InjectModel('Holding') private readonly HoldingModel: Model<HoldingType>,
+    @InjectModel(Participant.name) private readonly ParticipantModel: Model<ParticipantDocument>,
     private readonly klaytnService: KlaytnService,
   ) {}
 
@@ -37,13 +41,13 @@ export class EventService {
 
       // 최신 event_id 가져와서 다음 evnet_id 생성
       // 기존 데이터 없으면 오류 발생해서 next_evnet_id는 0으로 사용
-      let next_event_id = 0;
-      try {
-        const lastEvent = await this.EventModel.find().sort({ event_id: -1 }).limit(1);
-        lastEvent[0].event_id >= 0 ? (next_event_id = lastEvent[0].event_id + 1) : null;
-      } catch (e) {
-        console.log('아무 데이터 없음');
-      }
+      // let next_event_id = 0;
+      // try {
+      //   const lastEvent = await this.EventModel.find().sort({ event_id: -1 }).limit(1);
+      //   lastEvent[0].event_id >= 0 ? (next_event_id = lastEvent[0].event_id + 1) : null;
+      // } catch (e) {
+      //   console.log('아무 데이터 없음');
+      // }
       const {
         title,
         promoter,
@@ -67,11 +71,11 @@ export class EventService {
       //남은 좌석
       let totalSeat = 0;
       for (const i of price) {
-        totalSeat += i.count;
+        totalSeat += Number(i.count);
       }
       // location의 데이터를 분리해서 도, 시 까지만 사용
       // const sliceLocation = sub_location.split(' ');
-      const sL = `${location}`;
+      const sL = `${location} ${sub_location}`;
       // 한글로 입력된 이벤트 장소를 좌표로 바꿈
       const header = { Authorization: process.env.KAKAO_API };
       const point = await axios
@@ -91,7 +95,7 @@ export class EventService {
         address,
         location,
         sub_location,
-        category,
+        category: category.toLowerCase(),
         type,
         thumnail,
         token_image_url,
@@ -104,9 +108,9 @@ export class EventService {
         event_end_date,
         created_date,
         modified_date,
-        x: point.documents[0].x, //location 기반 좌표 lat
-        y: point.documents[0].y, //location 기반 좌표 lon
-        status: '시작 전',
+        x: point.documents[0].y, //location 기반 좌표 lat
+        y: point.documents[0].x, //location 기반 좌표 lon
+        status: 'created',
         remaining: totalSeat,
         totalSeat,
       };
@@ -138,7 +142,7 @@ export class EventService {
       const eventStatus = new this.EventStatusModel(eventStatusDto);
       await eventStatus.save();
 
-      return saveResult;
+      return { message: 'success' };
     } catch (e) {
       console.log(e);
       return { message: 'Failed to create event' };
@@ -272,10 +276,10 @@ export class EventService {
     }
   }
 
-  async findAroundEvent(lon: number, lat: number) {
+  async findAroundEvent(lat: number, lon: number) {
     console.log('findAroundEvent');
     try {
-      const threshold = 50; // 내 주변 탐색 범위 (단위 km)
+      // const threshold = 50; // 내 주변 탐색 범위 (단위 km)
       // API 사용을 위한 key를 헤더에 셋팅
       const header = { Authorization: process.env.KAKAO_API };
       // 사용자의 좌표 받아서 사용자가 있는 장소(행정구역) 구하기
@@ -296,10 +300,10 @@ export class EventService {
       });
       console.log(`${region}지역 이벤트:`, regionEventList);
       // 호출된 이벤트와 사용자의 좌표의 거리가 threshold 이하인 데이터만 추출
-      const aroundEvent = regionEventList.filter(
-        (ele) => this.getDistance(lon, lat, ele.x, ele.y) < threshold,
-      );
-      return aroundEvent;
+      // const aroundEvent = regionEventList.filter(
+      //   (ele) => this.getDistance(lon, lat, ele.x, ele.y) < threshold,
+      // );
+      return regionEventList;
     } catch (e) {
       console.log(e);
       return { message: 'Failed to find around event' };
@@ -327,7 +331,7 @@ export class EventService {
     console.log('거리', dist / 1000, 'km');
     return dist / 1000;
   }
-
+  // 배너 뿌리는 API
   async getBanner() {
     console.log('getBanner');
     try {
@@ -338,32 +342,101 @@ export class EventService {
       return { message: 'Fail to import ad' };
     }
   }
+  // 내 구매 목록 반환 API
+  async getMySaleList(address: string) {
+    try {
+      console.log('add:', address);
+      const mySaleTokenList = await this.HoldingModel.find({ address: address });
+      // console.log(mySaleTokenList);
+      let filedList = [];
+      mySaleTokenList.forEach((ele) => {
+        if (!filedList.includes(ele)) {
+          filedList = [...filedList, ele];
+        }
+      });
+      console.log(filedList);
+      let result = [];
+      for (const i of filedList) {
+        // console.log(i);
+        const value = await this.EventModel.find({ event_id: i.event_id });
+        result = [...result, ...value];
+      }
 
+      return result;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your sale evnetList' };
+    }
+  }
+  // 내 응모 목록 반환 API
+  async getMyEntryList(address: string) {
+    try {
+      console.log('address:', address);
+      const myEntryTokenList = await this.ParticipantModel.find({ address: address });
+
+      let result = [];
+      for (const i of myEntryTokenList) {
+        console.log(i);
+        const value = await this.EventModel.find({ event_id: i.event_id });
+        result = [...result, ...value];
+      }
+
+      return result;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your entry evnetList' };
+    }
+  }
+  // token detail
+  async getTokenDetail(token_id: number) {
+    try {
+      const tokenData = await this.HoldingModel.find({ token_id: token_id });
+      const eventData = await this.EventModel.find({ event_id: tokenData[0].event_id });
+
+      return eventData;
+    } catch (e) {
+      console.log(e);
+      return { message: 'Fail get your entry evnetList' };
+    }
+  }
   // 이벤트 리스트 받아서 holdings에 업데이트
   @Cron('0 */1 * * * *') // 15분 마다 진행
   async mintTokens(): Promise<void> {
+    const nowDatePlusOneHour = Number((Date.now() + 1000 * 60 * 60).toString().substring(0, 10));
     try {
       // 이벤트 토큰 민팅
-      const createdEvent = await this.EventStatusModel.find({ status: 'created' }).exec();
-      if (!createdEvent) throw new Error('CreateEvent가 없습니다.');
+      const mintingEvent = await this.EventModel.find({
+        status: 'minting',
+      }).exec();
+      console.log('minting :', mintingEvent);
+      if (mintingEvent.length > 0) return;
+      const createdEvent = await this.EventModel.find({
+        status: 'created',
+        recruit_start_date: { $lt: nowDatePlusOneHour },
+      }).exec();
+      if (!createdEvent) return;
       for (let i = 0; i < createdEvent.length; i++) {
         const eventId = createdEvent[i].get('event_id');
-        // console.log('eventId :', eventId);
+        console.log('eventId :', eventId);
         const event = await this.klaytnService.getEvent(eventId);
-        // console.log('eventUri :', event.eventUri);
+        console.log('eventUri :', event.eventUri);
         const eventData = await ipfsGetData(event.eventUri);
-        // console.log('eventData :', eventData);
+        console.log('eventData :', eventData);
         if (!eventData) throw new Event('이벤트를 가져오지 못했습니다.');
         await createdEvent[i].updateOne({ $set: { status: 'minting' } });
         await this.klaytnService.mintToken(eventId, 0, eventData.token_image_url);
-        await createdEvent[i].updateOne({ $set: { status: 'minted' } });
+        await createdEvent[i].$set({ status: 'minted' }).save();
+        await this.EventModel.updateOne(
+          { event_id: eventId },
+          { $set: { status: 'minted' } },
+        ).exec();
       }
     } catch (error) {
       console.error(error);
     }
   }
 
-  @Cron('0 */1 * * * *')
+  @Cron('30 */1 * * * *')
   async getTokens(): Promise<void> {
     const nowTimestamp = Number(Date.now().toString().substring(0, 10));
     console.log('상태 변경 :', new Date(nowTimestamp * 1000));
@@ -473,6 +546,11 @@ export class EventService {
     for (let i = 0; i < preparingEvents2.length; i++) {
       const eventId = preparingEvents2[i].get('event_id');
       await this.klaytnService.transferEventWinner(eventId);
+      // 이벤트 당첨자 조회
+      const winners = this.klaytnService.getTokenHolders(eventId);
+      // 이벤트 당첨자 홀더로 디비 저장
+      const holders = new this.HoldingModel(winners);
+      await holders.save();
       await this.EventStatusModel.updateOne(
         { event_id: eventId },
         {
@@ -558,11 +636,19 @@ export class EventService {
     // 이벤트 구매자 디비 저장
 
     // 이벤트 응모자 디비 저장
+
+    console.log('상태 변경 종료');
   }
 
   // @Cron('* * * * * *')
   // async test(): Promise<void> {
-  //   const eventStatus = await this.klaytnService.getEventLength();
-  //   console.log(eventStatus);
+  //   // await this.klaytnService.test();
+  //   console.log('start');
+  //   const data = await this.Event.find().exec();
+  //   for (let i = 0; i < data.length; i++) {
+  //     console.log(i);
+  //     await data[i].$set({ address: data[i].get('address').toLowerCase() }).save();
+  //   }
+  //   console.log('end');
   // }
 }

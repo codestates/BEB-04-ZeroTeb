@@ -1,5 +1,5 @@
 interface TokenType {
-  token_id: string;
+  token_id: number;
   token_image_url: string;
 }
 

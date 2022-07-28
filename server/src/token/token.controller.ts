@@ -10,7 +10,7 @@ export class TokenController {
   constructor(private readonly tokenService: TokenService) {}
 
   @Get('list')
-  findTokenList(@Query() address: string): object {
+  findTokenList(@Query('address') address: string): object {
     return this.tokenService.findTokenList(address);
   }
   @Get('qrcode')
@@ -19,8 +19,8 @@ export class TokenController {
   }
 
   @Post('qrcode/validation')
-  checkValidation(@Body() nonce: string) {
-    return this.tokenService.checkValidation(nonce);
+  checkValidation(@Body('nonce') nonce: string, @Body('event_id') event_id: number) {
+    return this.tokenService.checkValidation(nonce, event_id);
   }
 
   @UseGuards(AuthGuard)
@@ -35,6 +35,12 @@ export class TokenController {
   async entryToken(@Body() body: EntryTokenDto, @Req() req: Request) {
     const message = await this.tokenService.entryToken(body, req.user);
     return { message };
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/balance')
+  async getBalance(@Query('address') address: string) {
+    return await this.tokenService.getBalance(address);
   }
 
   // @Post()

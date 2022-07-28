@@ -12,7 +12,18 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     Counters.Counter private _eventIds;
     Counters.Counter private _tokenIds;
 
-    // 이벤트 구조체
+    event CreateEvent(uint256 _eventId, uint256 _deposit);
+    event BuyToken(
+        uint256 _eventId,
+        uint256 _classId,
+        uint256 _number,
+        address _buyer,
+        uint256 _tokenId
+    );
+    event ApplyToken(uint256 _eventId, address[] _participants);
+    event EndEvent(uint256 _eventId, uint8 _eventEndStatus);
+
+    // 이벤트 클래스 구조체
     struct EventClass {
         string name;
         uint256 price;
@@ -23,6 +34,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 ownerTotal;
     }
 
+    // 이벤트 구조체
     struct Event {
         string name;
         uint8 eventType; // 0 - sale, 1 - entry
@@ -33,7 +45,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 startTime;
         uint256 closeTime;
         uint256 endTime;
-        uint8 status; // 0 - init, 1 - minted, 2 - sale or winners, 2 - end
         mapping(uint8 => EventClass) class;
     }
 
@@ -47,12 +58,12 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
     /*
      * Mapping
      */
-    mapping(uint256 => Event) private _events;
-    mapping(uint256 => TokenExtention) private _tokenExtentions;
-    mapping(uint256 => address[]) private _eventParticipants; // 이벤트 응모 참가자
-    mapping(uint256 => bool) private _isEventWinners;
-    mapping(uint256 => uint256) private _deposits;
-    mapping(uint256 => uint256) private _amounts;
+    mapping(uint256 => Event) private _events; // event_id => Event
+    mapping(uint256 => TokenExtention) private _tokenExtentions; // token_id => TokenExtention
+    mapping(uint256 => address[]) private _eventParticipants; // event_id => address[] - 이벤트 응모 참가자
+    mapping(uint256 => bool) private _isEventWinners; // event_id => bool - 이벤트 당첨 처리
+    mapping(uint256 => uint256) private _deposits; // event_id => deposit - 이벤트 보증금 + 수수료
+    mapping(uint256 => uint256) private _amounts; // event_id => amount - 이벤트 토큰 구매에 따른 총액
 
     /*
      * Modifier
@@ -92,6 +103,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
 
     function totalEvent() public view returns (uint256) {
         return _eventIds.current();
+    }
+
+    function totalToken() public view returns (uint256) {
+        return _tokenIds.current();
     }
 
     function eventType(uint256 _eventId) public view returns (uint8) {
@@ -135,12 +150,18 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _startTime,
         uint256 _endTime
     ) public payable override returns (uint256 _eventId) {
-        _eventIds.increment();
-
         uint256 _total = 0;
         uint256 _deposit = 0;
-        for (uint256 i = 0; i < _classPrices.length; i++) {
-            _total = _total + (_classPrices[i] * _classCounts[i]);
+        if (_eventType == 0) {
+            for (uint256 i = 0; i < _classPrices.length; i++) {
+                _total = _total + (_classPrices[i] * _classCounts[i]);
+            }
+        } else if (_eventType == 1) {
+            for (uint256 i = 0; i < _classPrices.length; i++) {
+                _total = _total + (5 * _classCounts[i]);
+            }
+        } else {
+            revert("Invalid value.");
         }
         _total = _total * 1 ether;
         _deposit = (_total / 100) * 5;
@@ -161,7 +182,6 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _events[_newEventId].startTime = _startTime;
         _events[_newEventId].endTime = _endTime;
         _events[_newEventId].classCount = _classNames.length;
-        _events[_newEventId].status = 0; // init status
 
         for (uint8 i = 0; i < _classNames.length; i++) {
             _events[_newEventId].class[i].name = _classNames[i];
@@ -179,6 +199,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _amounts[_newEventId] = 0;
         // 반환
         _eventId = _newEventId;
+
+        emit CreateEvent(_eventId, _deposit);
+        _eventIds.increment();
     }
 
     // 이벤트 조회
@@ -223,20 +246,26 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         uint256 _number,
         string memory _tokenUri
     ) public override onlyOwner returns (uint256) {
-        _tokenIds.increment();
-
         uint256 _newTokenId = _tokenIds.current();
         _safeMint(msg.sender, _newTokenId);
         _setTokenURI(_newTokenId, _tokenUri);
 
         _events[_eventId].class[_classId].tokens[_number] = _newTokenId;
 
-        _tokenExtentions[_newTokenId] = TokenExtention({
-            eventId: _eventId,
-            tokenType: _tokenType,
-            isTrade: true
-        });
-
+        if (_events[_eventId].eventType == 0) {
+            _tokenExtentions[_newTokenId] = TokenExtention({
+                eventId: _eventId,
+                tokenType: _tokenType,
+                isTrade: true
+            });
+        } else {
+            _tokenExtentions[_newTokenId] = TokenExtention({
+                eventId: _eventId,
+                tokenType: _tokenType,
+                isTrade: false
+            });
+        }
+        _tokenIds.increment();
         return _eventId;
     }
 
@@ -266,6 +295,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         );
 
         uint256 _tokenId;
+        uint256 number_ = _number;
 
         // 자리를 선택하는 경우
         if (_isSelect) {
@@ -279,6 +309,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             ) {
                 _tokenId = _events[_eventId].class[_classId].tokens[i];
                 if (_tokenExtentions[_tokenId].isTrade) {
+                    number_ = i;
                     break;
                 }
             }
@@ -293,6 +324,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         _tokenExtentions[_tokenId].isTrade = false;
         _events[_eventId].class[_classId].ownerTotal += 1;
         _amounts[_eventId] += msg.value;
+
+        emit BuyToken(_eventId, _classId, number_, msg.sender, _tokenId);
     }
 
     // 토큰 구매자 조회
@@ -334,6 +367,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         }
         _eventParticipants[_eventId].push(msg.sender);
         _amounts[_eventId] += msg.value;
+        emit ApplyToken(_eventId, _eventParticipants[_eventId]);
     }
 
     // 이벤트 응모자 조회
@@ -346,10 +380,10 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         return _eventParticipants[_eventId];
     }
 
-    function _eventWinners(uint256 _eventId, uint8 _eventClassId) private {
+    function _eventWinners(uint256 _eventId) private {
         uint256 _randNum = 0;
         address _temp;
-        for (uint256 j = 0; j < 10; j++) {
+        for (uint256 j = 0; j < _eventParticipants[_eventId].length; j++) {
             _randNum =
                 uint256(
                     keccak256(
@@ -391,7 +425,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             "Already selected the winners."
         );
         address _owner = owner();
-        _eventWinners(_eventId, _eventClassId);
+        _eventWinners(_eventId);
 
         for (uint256 i = 0; i < _eventParticipants[_eventId].length; i++) {
             _transfer(
@@ -418,7 +452,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
         isEndEvent(_eventId)
     {
         uint256 _deposit = _deposits[_eventId];
-        uint256 _compensation = 0; // 실패 시 사용자 보상
+        uint256 _compensation; // 실패 시 사용자 보상
         address _owner = owner();
 
         // 이벤트가 성공적으로 이루어진 경우
@@ -426,6 +460,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             payable(_events[_eventId].creator).transfer(
                 _amounts[_eventId] + _deposit
             );
+            _deposits[_eventId] = 0;
 
             // 이벤트가 실패한 경우
         } else if (_eventEndStatus == 0) {
@@ -434,9 +469,9 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
             // Sale
             if (_eventType == 0) {
                 for (uint8 i = 0; i < _events[_eventId].classCount; i++) {
+                    _compensation = 0;
                     if (_events[_eventId].class[i].price == 0) continue;
-                    uint256 _compensation = _events[_eventId].class[i].price *
-                        1 ether;
+                    _compensation = _events[_eventId].class[i].price * 1 ether;
                     _compensation = _compensation + ((_compensation / 100) * 3);
                     for (
                         uint256 j = 0;
@@ -452,6 +487,7 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
                                     _events[_eventId].class[i].price +
                                         _compensation
                                 );
+                            _deposits[_eventId] -= _compensation;
                         }
                     }
                 }
@@ -469,6 +505,8 @@ contract ZeroTEB is IZeroTEB, Ownable, KIP17URIStorage {
                 }
             }
         }
+        payable(_owner).transfer(_deposits[_eventId]);
+        emit EndEvent(_eventId, _eventEndStatus);
     }
 
     /**

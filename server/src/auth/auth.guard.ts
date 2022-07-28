@@ -17,6 +17,7 @@ export class AuthGuard extends NestAuthGuard('jwt') {
       throw new HttpException('cannot found the access_token.', HttpStatus.UNAUTHORIZED);
     }
 
+    console.log('token :', access_token);
     request.user = this.validateToken(access_token);
     return true;
   }
@@ -25,6 +26,7 @@ export class AuthGuard extends NestAuthGuard('jwt') {
 
     try {
       const verify = this.jwtService.verify(token, { secret: secretKey });
+      console.log('verify :', verify);
       const { address, username } = verify;
 
       return { address, username };

@@ -5,6 +5,7 @@ import { EventModule } from './event/event.module';
 import { TokenModule } from './token/token.module';
 import { AuthModule } from './auth/auth.module';
 import { KlaytnModule } from './klaytn/klaytn.module';
+import { FileModule } from './common/file/file.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { KlaytnModule } from './klaytn/klaytn.module';
     TokenModule,
     AuthModule,
     KlaytnModule.forRoot(),
+    FileModule,
   ],
   controllers: [],
   providers: [],

@@ -1,30 +1,32 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import axios, { AxiosRequestConfig } from 'axios';
 import Caver, { AbiItem, Contract, KeyringContainer } from 'caver-js';
 import { ipfsMetadataUpload } from 'lib/pinata';
-import { setMyInterval } from 'lib/timer';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/auth/schemas/user.schema';
+import { HoldingType } from 'src/token/schemas/holding.schema';
 
 import CONTRACT_ABI from '../../lib/abi_ZeroTEB.json';
-import {
-  ContractEventDto,
-  ContracCreateEventkDto,
-  ContractEventClassType,
-  ContractBuyerType,
-} from './klaytn.entity';
+import { ContractEventDto, ContracCreateEventkDto, ContractEventClassType } from './klaytn.entity';
 const CONTRACT_ADDRESS =
-  process.env.CONTRACT_ADDRESS || '0x33c76e6003c97270098D4fe54a634EBb057E1Fd5';
+  process.env.CONTRACT_ADDRESS || '0x2b2b8B4ceA146757c2855D846F826A5Fb250dcb5';
 const GAS = '10000000';
+
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 const OWNER_ADDRESS = process.env.OWNER_ADDRESS;
+
+const KAS_ACCESS_KEY_ID = process.env.KAS_ACCESS_KEY_ID ?? '';
+const KAS_SECRET_ACCESS_KEY = process.env.KAS_SECRET_ACCESS_KEY ?? '';
 
 @Injectable()
 export class KlaytnService {
   private contract: Contract | null;
+  private get_contract: Contract | null;
 
   constructor(
     @Inject('Klaytn') private readonly caver: Caver,
+    @Inject('GetKlaytn') private readonly get_caver: Caver,
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
   ) {
     if ([CONTRACT_ABI, CONTRACT_ADDRESS].every(Boolean)) {
@@ -33,8 +35,14 @@ export class KlaytnService {
         CONTRACT_ADDRESS,
       );
       this.contract = contractInstance;
+
+      const get_contractInstance = this.get_caver.contract.create(
+        CONTRACT_ABI as AbiItem[],
+        CONTRACT_ADDRESS,
+      );
+      this.get_contract = get_contractInstance;
     } else {
-      this.contract = null;
+      this.get_contract = null;
     }
   }
 
@@ -89,60 +97,99 @@ export class KlaytnService {
     return this.caver.utils.klayUnit;
   }
 
+  async balanceOf(address: string): Promise<number> {
+    try {
+      if (!this.isAddress(address)) throw new Error('주소가 올바르지 않습니다.');
+      const getBalancePeb = await this.get_caver.klay.getBalance(address);
+      const getBalanceKlay = this.get_caver.utils.fromPeb(getBalancePeb, 'KLAY');
+      return Number(Number(getBalanceKlay).toFixed(4));
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async eventOf(tokenId: number): Promise<number> {
+    // return await this.contract.methods.eventOf(tokenId).call();
+    return await this.get_contract.methods.eventOf(tokenId).call();
+  }
+
   async createEvent(event: ContracCreateEventkDto): Promise<void> {
-    const inputData = [
-      event.creator,
-      event.eventName,
-      event.eventType,
-      event.eventUri,
-      event.classNames,
-      event.classPrices,
-      event.classCounts,
-      event.openTime,
-      event.startTime,
-      event.closeTime,
-      event.endTime,
-    ];
-    let price = 0;
-    for (let i = 0; i < event.classPrices.length; i++) {
-      price += event.classPrices[i] * event.classCounts[i];
+    try {
+      const inputData = [
+        event.creator,
+        event.eventName,
+        event.eventType,
+        event.eventUri,
+        event.classNames,
+        event.classPrices,
+        event.classCounts,
+        event.openTime,
+        event.closeTime,
+        event.startTime,
+        event.endTime,
+      ];
+      let price = 0;
+      if (event.eventType === 0) {
+        for (let i = 0; i < event.classPrices.length; i++) {
+          price += event.classPrices[i] * event.classCounts[i];
+        }
+        price *= 0.05;
+      } else if (event.eventType === 1) {
+        for (let i = 0; i < event.classPrices.length; i++) {
+          price += 5 * event.classCounts[i];
+        }
+        price *= 0.05;
+      }
+      price *= 10 ** 18;
+      // const user = await this.UserModel.findOne({ address: event.creator });
+      const user = await this.UserModel.findOne({ test_address: event.creator });
+      if (!this.caver.wallet.isExisted(user.test_address)) {
+        this.singleKeyring(user.test_address, user.test_private_key);
+      }
+      console.log('address :', user.test_address);
+      console.log(
+        'balance :',
+        this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
+        'KLAY',
+      );
+      console.log(
+        'Send :',
+        this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
+        'KLAY',
+      );
+
+      const receipt = await this.contract.methods.createEvent(...inputData).send({
+        from: user.test_address,
+        gas: GAS,
+        value: this.caver.utils.convertToPeb(String(price), 'peb'),
+      });
+      console.log('receipt :', receipt);
+    } catch (error) {
+      console.error('error :', error);
     }
-    price *= 0.05;
-    price *= 10 ** 18;
-    // const user = await this.UserModel.findOne({ address: event.creator });
-    const user = await this.UserModel.findOne({ test_address: event.creator });
-    if (!this.caver.wallet.isExisted(user.test_address)) {
-      this.singleKeyring(user.test_address, user.test_private_key);
-    }
-    console.log('address :', user.test_address);
-    console.log(
-      'balance :',
-      this.caver.utils.fromPeb(await this.caver.klay.getBalance(user.test_address), 'KLAY'),
-      'KLAY',
-    );
-    console.log(
-      'Send :',
-      this.caver.utils.fromPeb(this.caver.utils.toPeb(price, 'peb'), 'KLAY'),
-      'KLAY',
-    );
-    const receipt = await this.contract.methods.createEvent(...inputData).send({
-      from: user.test_address,
-      gas: GAS,
-      value: this.caver.utils.convertToPeb(String(price), 'peb'),
-    });
-    console.log(receipt);
   }
 
+  // Event 전체 개수
   async getEventLength(): Promise<number> {
-    return await this.contract.methods.totalEvent().call();
+    // return await this.contract.methods.totalEvent().call();
+    return await this.get_contract.methods.totalEvent().call();
   }
 
+  // Token 전체 개수
+  async getTokenLength(): Promise<number> {
+    // return await this.contract.methods.totalToken().call();
+    return await this.get_contract.methods.totalToken().call();
+  }
+
+  // 이벤트 조회
   async getEvent(eventId: number): Promise<ContractEventDto> {
     const contractEventDto: ContractEventDto = new ContractEventDto();
-    const event = await this.contract.methods.getEvent(eventId).call();
+    // const event = await this.contract.methods.getEvent(eventId).call();
+    const event = await this.get_contract.methods.getEvent(eventId).call();
     const prices = [];
     for (let i = 0; i < Number(event._classCount); i++) {
-      const receipt = await this.contract.methods.getEventClass(eventId, i).call();
+      // const receipt = await this.contract.methods.getEventClass(eventId, i).call();
+      const receipt = await this.get_contract.methods.getEventClass(eventId, i).call();
       prices.push({
         class: receipt[0],
         price: Number(receipt[1]),
@@ -151,7 +198,7 @@ export class KlaytnService {
     }
     contractEventDto.name = event._name;
     contractEventDto.eventUri = event._eventUri;
-    contractEventDto.creator = event._creator;
+    contractEventDto.creator = event._creator.toLowerCase();
     contractEventDto.classCount = Number(event._classCount);
     contractEventDto.prices = prices;
     contractEventDto.openTime = Number(event._openTime);
@@ -162,8 +209,10 @@ export class KlaytnService {
     return contractEventDto;
   }
 
+  // 이벤트 클래스 조회
   async getEventClass(eventId: number, eventClassId): Promise<ContractEventClassType> {
-    const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+    // const receipt = await this.contract.methods.getEventClass(eventId, eventClassId).call();
+    const receipt = await this.get_contract.methods.getEventClass(eventId, eventClassId).call();
 
     return {
       class: receipt[0],
@@ -172,10 +221,13 @@ export class KlaytnService {
     };
   }
 
+  // 이벤트 클래스 개수 조회
   async getEventClassCount(eventId: number): Promise<number> {
-    return await this.contract.methods.getEventClassCount(eventId).call();
+    // return await this.contract.methods.getEventClassCount(eventId).call();
+    return await this.get_contract.methods.getEventClassCount(eventId).call();
   }
 
+  // 토큰 민팅
   async mintToken(eventId: number, tokenType: number, token_image_uri): Promise<void> {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
@@ -187,7 +239,8 @@ export class KlaytnService {
         const price = event.prices[classId];
         for (let number = 0; number < price.count; number++) {
           // 민팅되었는지 확인
-          const isMint = await this.contract.methods.isMint(eventId, classId, number).call();
+          // const isMint = await this.contract.methods.isMint(eventId, classId, number).call();
+          const isMint = await this.get_contract.methods.isMint(eventId, classId, number).call();
           if (isMint) continue;
 
           const metaData = {
@@ -216,6 +269,7 @@ export class KlaytnService {
     }
   }
 
+  // 토큰 구매
   async buyToken(
     buyerAddress: string,
     eventId: number,
@@ -226,6 +280,17 @@ export class KlaytnService {
       const isSelect = number !== undefined;
       number = isSelect ? number : 0;
 
+      console.log('=== klaytn.service.ts ===');
+      console.log(
+        'buyerAddress :',
+        buyerAddress,
+        'eventId :',
+        eventId,
+        'classId :',
+        classId,
+        'number :',
+        number,
+      );
       // const user = await this.UserModel.findOne({ address: buyerAddress });
       const user = await this.UserModel.findOne({ test_address: buyerAddress });
       if (!user) throw new Error('user is undefined.');
@@ -255,7 +320,7 @@ export class KlaytnService {
           gas: GAS,
           value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
         });
-
+      console.log('buyToken receipt:', receipt);
       return false;
     } catch (err) {
       console.error(err);
@@ -263,19 +328,25 @@ export class KlaytnService {
     }
   }
 
-  async getTokenBuyers(eventId): Promise<ContractBuyerType[]> {
-    const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+  // 토큰 구매자 조회
+  async getTokenHolders(eventId: number): Promise<HoldingType[]> {
+    // const eventClassCount = await this.contract.methods.getEventClassCount(eventId).call();
+    const eventClassCount = await this.get_contract.methods.getEventClassCount(eventId).call();
     // console.log(eventClassCount);
     const results = [];
     for (let eventClassId = 0; eventClassId < eventClassCount; eventClassId++) {
-      const { _onwerArray, _tokenIdArray } = await this.contract.methods
+      // const { _onwerArray, _tokenIdArray } = await this.contract.methods
+      //   .getTokenBuyers(eventId, eventClassId)
+      //   .call();
+      const { _onwerArray, _tokenIdArray } = await this.get_contract.methods
         .getTokenBuyers(eventId, eventClassId)
         .call();
       for (let i = 0; i < _tokenIdArray.length; i++) {
         const buyers = {
-          id: i,
-          address: _onwerArray[i],
-          tokenId: Number(_tokenIdArray[i]),
+          event_id: eventId,
+          token_id: Number(_tokenIdArray[i]),
+          address: _onwerArray[i].toLowerCase(),
+          number: i,
         };
         results.push(buyers);
       }
@@ -283,6 +354,7 @@ export class KlaytnService {
     return results;
   }
 
+  // 토큰 응모
   async applyToken(applicantAddress: string, eventId: number): Promise<boolean> {
     try {
       // const user = await this.UserModel.findOne({ address: applicantAddress });
@@ -299,23 +371,27 @@ export class KlaytnService {
         value: this.caver.utils.toPeb(eventClass.price, 'KLAY'),
       });
 
-      return true;
+      return false;
     } catch (err) {
       console.error(err);
-      return false;
+      return true;
     }
   }
 
-  async getEventParticipants(eventId: number) {
-    return await this.contract.methods.getEventParticipants(eventId).call();
+  // 응모자 조회
+  async getEventParticipants(eventId: number): Promise<string[]> {
+    // const participants = await this.contract.methods.getEventParticipants(eventId).call();
+    const participants = await this.get_contract.methods.getEventParticipants(eventId).call();
+    return participants.map((participant) => participant.toLowerCase());
   }
 
+  // 이벤트 응모 당첨 트리거
   async transferEventWinner(eventId: number) {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
         this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
       }
-      const receipt = await this.contract.methods.transferEventWinner(eventId).send({
+      const receipt = await this.contract.methods.transferEventWinner(eventId, 0).send({
         from: OWNER_ADDRESS,
         gas: GAS,
       });
@@ -326,7 +402,8 @@ export class KlaytnService {
     }
   }
 
-  async endEvent(eventId, eventEndStatus) {
+  // 이벤트 종료
+  async endEvent(eventId: number, eventEndStatus: number) {
     try {
       if (!this.caver.wallet.isExisted(OWNER_ADDRESS)) {
         this.singleKeyring(OWNER_ADDRESS, OWNER_PRIVATE_KEY);
@@ -339,5 +416,39 @@ export class KlaytnService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async getTokens(cursor: string) {
+    const axiosRequestConfig: AxiosRequestConfig = {
+      method: 'GET',
+      url: `https://th-api.klaytnapi.com/v2/contract/nft/${CONTRACT_ADDRESS}/token`,
+      auth: {
+        username: KAS_ACCESS_KEY_ID,
+        password: KAS_SECRET_ACCESS_KEY,
+      },
+      headers: {
+        'x-chain-id': '1001',
+      },
+      params: {
+        size: 1000,
+        cursor: cursor,
+      },
+    };
+    const res = await axios(axiosRequestConfig);
+    const data = res.data;
+    if (data.message || !data.items) throw new Error(data.message);
+
+    if (data.cursor !== '') {
+      return {
+        ...data,
+        item: [...data.item, this.getTokens(data.cursor)],
+      };
+    } else {
+      return data;
+    }
+  }
+
+  async test() {
+    // console.log(await this.getEvent(1));
   }
 }

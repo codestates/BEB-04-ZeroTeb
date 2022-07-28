@@ -58,13 +58,37 @@ export class EventController {
     return this.eventService.findByKeyword(keyword);
   }
 
+  // 인기 검색어
+  @Get('hashtag')
+  hashtag() {
+    // 구현 예정
+    return {
+      hashtag: ['아이유', 'TT', 'ZeroTEB', 'CodeStates', 'BEB'],
+    };
+  }
+
   @Get('location')
-  findLocation(@Query('lon') lon: number, @Query('lat') lat: number) {
-    return this.eventService.findAroundEvent(lon, lat);
+  findLocation(@Query('lat') lat: number, @Query('lon') lon: number) {
+    return this.eventService.findAroundEvent(lat, lon);
   }
 
   @Get('banner')
   findBanner() {
     return this.eventService.getBanner();
+  }
+
+  @Get('mysale')
+  findMySale(@Query('address') address: string) {
+    return this.eventService.getMySaleList(address);
+  }
+
+  @Get('myentry')
+  findMyEntry(@Query('address') address: string) {
+    return this.eventService.getMyEntryList(address);
+  }
+
+  @Get('token')
+  findTokenDetail(@Query('token_id') token_id: number) {
+    return this.eventService.getTokenDetail(token_id);
   }
 }

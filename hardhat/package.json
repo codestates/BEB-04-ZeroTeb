@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "deploy": "npx hardhat run --network baobab ./scripts/ztebDeploy.ts",
+    "deploy": "npx hardhat run --network baobab ./scripts/ztebDeploy.ts && npx hardhat export-abi",
     "deploy:test": "npx hardhat run --network baobab ./scripts/test.ts",
     "start": "npx hardhat",
     "compile": "npx hardhat compile",

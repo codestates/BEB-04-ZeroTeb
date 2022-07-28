@@ -11,6 +11,8 @@ import { UserInfoDto } from './dto/userInfo.dto';
 import { LikedEvent } from 'src/event/schemas/likedEvent.schema';
 import { Event } from 'src/event/schemas/event.schema';
 import { Cron } from '@nestjs/schedule';
+import { HoldingType } from 'src/token/schemas/holding.schema';
+import { Participant, ParticipantDocument } from 'src/token/schemas/participant.schema';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +20,8 @@ export class AuthService {
   usernameModel: Model<UsernameDocument>;
   EventModel: Model<Event>;
   LikedEventModel: Model<LikedEvent>;
+  HoldingModel: Model<HoldingType>;
+  ParticipantModel: Model<ParticipantDocument>;
   constructor(
     private jwtService: JwtService,
     // @InjectConnection(User.name) private userModel: Model<User>,
@@ -28,6 +32,8 @@ export class AuthService {
     this.usernameModel = mongooseConnection.model(Username.name);
     this.EventModel = mongooseConnection.model('Event');
     this.LikedEventModel = mongooseConnection.model('LikedEvent');
+    this.HoldingModel = mongooseConnection.model('Holding');
+    this.ParticipantModel = mongooseConnection.model(Participant.name);
   }
 
   async signIn(signInReqDto: SignInReqDto): Promise<SignInResDto> {
@@ -68,7 +74,7 @@ export class AuthService {
           newUser.username = usernameData.get('username');
 
           const testWallet = await newWallet(newUser.address);
-          newUser.test_address = testWallet.address;
+          newUser.test_address = testWallet.address.toLowerCase();
           newUser.test_private_key = testWallet.privateKey;
 
           await this.userModel.create(newUser);
@@ -111,20 +117,37 @@ export class AuthService {
       if (userData === null) throw new Error();
       userInfoDto.username = userData.get('username');
       userInfoDto.profile_url = `#${address.slice(2, 8)}`;
-      userInfoDto.history.created = await this.EventModel.count({ address: address });
-      userInfoDto.history.entry = await this.EventModel.count({
-        type: 'entry',
-        address: address,
-      });
-      userInfoDto.history.sale = await this.EventModel.count({
-        type: 'sale',
-        address: address,
-      });
+      userInfoDto.history.created = await this.EventModel.count({ address: address }).exec();
+      userInfoDto.history.entry = await this.ParticipantModel.count({ address: address }).exec();
+      const holdings = await this.HoldingModel.find({ address: address });
+      userInfoDto.history.sale = 0;
+      for (let i = 0; i < holdings.length; i++) {
+        const eventId = holdings[i].get('event_id');
+        const event = await this.EventModel.findOne({ type: 'sale', event_id: eventId }).exec();
+        if (!!event) userInfoDto.history.sale += 1;
+      }
       // const likedList = await this.LikedEventModel.find({ address: address });
       // const likedId = likedList.map((ele) => ele.event_id);
       // userInfoDto.history.sale = await this.EventModel.count({ event_id: likedId });
+      userInfoDto.tokens = [];
+      // console.log(address);
+      const tokens = await this.HoldingModel.find({ address: address }).exec();
+      // console.log(tokens);
+      if (tokens.length > 0) {
+        for (let i = 0; i < tokens.length; i++) {
+          const event = await this.EventModel.findOne({
+            event_id: tokens[i].event_id,
+          }).exec();
+          userInfoDto.tokens.push({
+            token_id: tokens[i].token_id,
+            token_image_url: event.token_image_url,
+          });
+        }
+      }
+      console.log(userInfoDto);
       return userInfoDto;
     } catch (err) {
+      console.error(err);
       return {
         message: '일치하는 사용자가 없습니다.',
       };

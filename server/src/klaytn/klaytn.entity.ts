@@ -29,9 +29,3 @@ export interface ContractEventClassType {
   price: number;
   count: number;
 }
-
-export interface ContractBuyerType {
-  id: number;
-  address: string;
-  tokenId: number;
-}
