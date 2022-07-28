@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "TT",
+    "slug": "ZeroTEB",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logoImg/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logoImg/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ZeroTEB.TT",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logoImg/adaptive-icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.ZeroTEB.TT",
+      "versionCode": 1,
+      "config": {
+        "googleMaps": { "apiKey": "AIzaSyAI4gv_qqc9x-RRVTG8mVjn6fXY3Gq01PY" }
+      }
+    },
+    "web": {
+      "favicon": "./assets/icon_withoutbackground.png"
+    }
+  }
+}
