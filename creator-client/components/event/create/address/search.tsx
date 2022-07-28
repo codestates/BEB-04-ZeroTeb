@@ -126,6 +126,7 @@ const EventCreateAddressSearch: FunctionComponent<EventCreateAddressSearchProps>
     height: calc(100% - 2em);
     border: 1px solid rgba(100, 100, 100, 0.7);
     overflow-y: ${jusoData.juso.length > 0 ? 'scroll' : 'none'};
+    max-height: 30vh;
 
     margin: 1em;
   `;

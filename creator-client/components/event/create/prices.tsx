@@ -14,6 +14,7 @@ const EventCreatePrices: FunctionComponent<EventCreatePricesProps> = () => {
   const dispatch = useDispatch();
   const createEventState = useSelector((state: RootState) => state.createEvent);
   const price = createEventState.price;
+  const title = createEventState.type === 'sale' ? '판매 가격' : '당첨자';
   const propertiesHandler = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
@@ -115,77 +116,123 @@ const EventCreatePrices: FunctionComponent<EventCreatePricesProps> = () => {
   `;
 
   const addButtonStyle = css`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
+    font-size: 1em;
     border: none;
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(255, 255, 255, 0.5);
     padding: 0 1em;
     :hover {
       transition-duration: 0.3s;
-      background-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(255, 255, 255, 1);
     }
   `;
   return (
-    <EventCreateItemWrapper title={`클래스 입력`}>
+    <EventCreateItemWrapper title={title}>
       <div css={wrapperStyle}>
-        <ul css={classListStyle}>
-          {eventClasses.map((eventClass, index) => {
-            return (
-              <li key={index}>
-                <TextField
-                  css={inputStyle}
-                  label={'class'}
-                  name={'class_name'}
-                  placeholder={'ex) A, B, C, ...'}
-                  onChange={(e) => {
-                    setEventClasses((state) => [
-                      ...state.slice(0, index),
-                      e.target.value,
-                      ...state.slice(index + 1),
-                    ]);
-                  }}
-                  value={eventClass}
-                ></TextField>
-                <TextField
-                  css={inputStyle}
-                  label={'가격(KLAY)'}
-                  name={'price'}
-                  type={'number'}
-                  // placeholder={'Value..'}
-                  onChange={(e) => {
-                    propertiesHandler(e, index);
-                  }}
-                  value={String(price[index].price)}
-                ></TextField>
-                <TextField
-                  css={inputStyle}
-                  label={'인원수'}
-                  name={'count'}
-                  type={'number'}
-                  // placeholder={'Value..'}
-                  onChange={(e) => {
-                    propertiesHandler(e, index);
-                  }}
-                  value={String(price[index].count)}
-                ></TextField>
-                {index > 0 ? (
-                  <button
-                    css={removeButtonStyle}
-                    onClick={(e) => {
-                      removePropertiesHandler(e, index);
-                    }}
-                  >
-                    <DeleteIcon css={removeIconStyle}></DeleteIcon>
-                  </button>
-                ) : undefined}
-              </li>
-            );
-          })}
-        </ul>
-        <div css={addButtonWrapperStyle}>
-          <button css={addButtonStyle} onClick={addPropertiesHandler}>
-            <AddIcon></AddIcon>
-          </button>
-        </div>
+        {title === '판매 가격' ? (
+          <>
+            <ul css={classListStyle}>
+              {eventClasses.map((eventClass, index) => {
+                return (
+                  <li key={index}>
+                    <TextField
+                      css={inputStyle}
+                      label={'등급'}
+                      name={'class_name'}
+                      placeholder={'ex) A, B, C, ...'}
+                      onChange={(e) => {
+                        setEventClasses((state) => [
+                          ...state.slice(0, index),
+                          e.target.value,
+                          ...state.slice(index + 1),
+                        ]);
+                      }}
+                      value={eventClass}
+                    ></TextField>
+                    <TextField
+                      css={inputStyle}
+                      label={'가격(KLAY)'}
+                      name={'price'}
+                      type={'number'}
+                      // placeholder={'Value..'}
+                      onChange={(e) => {
+                        propertiesHandler(e, index);
+                      }}
+                      value={String(price[index].price)}
+                    ></TextField>
+                    <TextField
+                      css={inputStyle}
+                      label={'인원수'}
+                      name={'count'}
+                      type={'number'}
+                      // placeholder={'Value..'}
+                      onChange={(e) => {
+                        propertiesHandler(e, index);
+                      }}
+                      value={String(price[index].count)}
+                    ></TextField>
+                    {index > 0 ? (
+                      <button
+                        css={removeButtonStyle}
+                        onClick={(e) => {
+                          removePropertiesHandler(e, index);
+                        }}
+                      >
+                        <DeleteIcon css={removeIconStyle}></DeleteIcon>
+                      </button>
+                    ) : undefined}
+                  </li>
+                );
+              })}
+            </ul>
+            <div css={addButtonWrapperStyle}>
+              <button css={addButtonStyle} onClick={addPropertiesHandler}>
+                <span>추가</span>
+              </button>
+            </div>
+          </>
+        ) : (
+          <ul css={classListStyle}>
+            <li>
+              <TextField
+                css={inputStyle}
+                label={'등급'}
+                name={'class_name'}
+                placeholder={'ex) A, B, C, ...'}
+                onChange={(e) => {
+                  setEventClasses((state) => [e.target.value]);
+                }}
+                value={'Event'}
+                disabled
+              ></TextField>
+              <TextField
+                css={inputStyle}
+                label={'가격(KLAY)'}
+                name={'price'}
+                type={'number'}
+                // placeholder={'Value..'}
+                onChange={(e) => {
+                  propertiesHandler(e, 0);
+                }}
+                value={String(price[0].price)}
+              ></TextField>
+              <TextField
+                css={inputStyle}
+                label={'인원수'}
+                name={'count'}
+                type={'number'}
+                // placeholder={'Value..'}
+                onChange={(e) => {
+                  propertiesHandler(e, 0);
+                }}
+                value={String(price[0].count)}
+              ></TextField>
+            </li>
+          </ul>
+        )}
       </div>
     </EventCreateItemWrapper>
   );
