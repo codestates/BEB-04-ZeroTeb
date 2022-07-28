@@ -8,7 +8,7 @@ import Header from '../../layouts/header';
 import { RootState } from '../../store';
 import { eventInfoActions } from '../../store/event/viewSlice';
 
-const EventViewPage: NextPage<EventViewPageType> = () => {
+const EventViewPage: NextPage = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state: RootState) => state.user);
   const axiosRequestConfig: AxiosRequestConfig = {
