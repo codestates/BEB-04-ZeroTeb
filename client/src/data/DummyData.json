@@ -1,0 +1,221 @@
+{
+  "event": [
+    {
+      "_id": "sdfbjksdfwioj1238343",
+      "event_id": 12385786,
+      "title": "토르와의 전쟁",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "Theater",
+      "type": "sale",
+      "thumnail": "https://images.unsplash.com/photo-1496337589254-7e19d01cec44?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "token_image_url": "https://ipfs.io/ipfs/QmdPDwaERnorhDKnc7G4PKZETbjnQLxLKMc8VvmG9DjWCK",
+      "price": [
+        {
+          "class": "A",
+          "price": 500,
+          "count": 100
+        },
+        {
+          "class": "B",
+          "price": 300,
+          "count": 500
+        }
+      ],
+      "contents": "",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    },
+    {
+      "_id": "sdfbjksdfwioj1238348",
+      "event_id": 12385784,
+      "title": "한국 최고 가수 김영현님의 무대",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "concert",
+      "type": "entry",
+      "thumnail": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "token_image_url": "https://ipfs.io/ipfs/QmZwcZWkbGWP19E6qvudBKZ6MJ1LGFfXkWvAUCGM2Cu6Ew",
+      "price": [
+        {
+          "class": "A",
+          "price": 5,
+          "count": 100
+        }
+      ],
+      "contents": "",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    },
+    {
+      "_id": "sdfbjksdfwioj1238345",
+      "event_id": 12385781,
+      "title": "한국 최고 미남 최정환님의 무대!",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "concert",
+      "type": "sale",
+      "thumnail": "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
+      "token_image_url": "https://ipfs.io/ipfs/QmVWt5RXTa6ntecWCvT6Z4Nc1MppUjUhbXnu8N3jjcXfun",
+      "price": [
+        {
+          "class": "A",
+          "price": 500,
+          "count": 100
+        },
+        {
+          "class": "B",
+          "price": 300,
+          "count": 500
+        }
+      ],
+      "contents": "오히려, 여타 언어에서 여러 줄 번거롭게 이어지는 부분들이, 한줄에 한 부분으로 짧게 축약돼서 더 좋게 느껴지기까지 한다. 게다가 대응되는 괄호 쌍을 다양한 무지개색으로 표시해주는 기능도 있으니, 심지어 아름다워 보이기까지 한다! (나까지 이런 말을 하게 됐다는 걸 자신도 믿을 수 없다) 게다가, Emacs에 있는 paredit 모드 같은 경우, 괄호의 안과 밖으로의 이동이나 범위를 좁히거나 넓히는 기능이 있어서, 일일이 괄호를 옮기는 데에 파격적인 편리함이 있다. 쉽게 얘기하면, 보통의 에디터에서 줄 단위로 소스 코드를 위아래로 이동하는 기능 같은 것인데, 그보다 훨씬 유연하게 움직인다. 아래 EmacsRocks.com의 에피소드 14 동영상을 참고하자.(나까지 이런 말을 하게 됐다는 걸 자신도 믿을 수 없다) 게다가, Emacs에 있는 paredit 모드 같은 경우, 괄호의 안과 밖으로의 이동이나 범위를 좁히거나 넓히는 기능이 있어서, 일일이 괄호를 옮기는 데에 파격적인 편리함이 있다. 쉽게 얘기하면, 보통의 에디터에서 줄 단위로 소스 코드를 위아래로 이동하는 기능 같은 것인데,(나까지 이런 말을 하게 됐다는 걸 자신도 믿을 수 없다) 게다가, Emacs에 있는 paredit 모드 같은 경우, 괄호의 안과 밖으로의 이동이나 범위를 좁히거나 넓히는 기능이 있어서, 일일이 괄호를 옮기는 데에 파격적인 편리함이 있다. 쉽게 얘기하면, 보통의 에디터에서 줄 단위로 소스 코드를 위아래로 이동하는 기능 같은 것인데,(나까지 이런 말을 하게 됐다는 걸 자신도 믿을 수 없다) 게다가, Emacs에 있는 paredit 모드 같은 경우, 괄호의 안과 밖으로의 이동이나 범위를 좁히거나 넓히는 기능이 있어서, 일일이 괄호를 옮기는 데에 파격적인 편리함이 있다. 쉽게 얘기하면, 보통의 에디터에서 줄 단위로 소스 코드를 위아래로 이동하는 기능 같은 것인데,",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    },
+    {
+      "_id": "sdfbjksdfwioj1238344",
+      "event_id": 12385785,
+      "title": "한국 최고 싱어송라이터 채희수님의 무대!",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "concert",
+      "type": "sale",
+      "thumnail": "https://images.unsplash.com/photo-1496843916299-590492c751f4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80",
+      "token_image_url": "https://ipfs.io/ipfs/QmRDhTpXp5Pe2MQ4aNR9FPDGbRk492DcUTmkZYJX9siqWr",
+      "price": [
+        {
+          "class": "A",
+          "price": 500,
+          "count": 100
+        },
+        {
+          "class": "B",
+          "price": 300,
+          "count": 500
+        }
+      ],
+      "contents": "",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    },
+    {
+      "_id": "sdfbjksdfwioj1238342",
+      "event_id": 12385787,
+      "title": "잃어버린 호랑이를 찾아서",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "Theater",
+      "type": "sale",
+      "thumnail": "https://ipfs.io/ipfs/QmVWt5RXTa6ntecWCvT6Z4Nc1MppUjUhbXnu8N3jjcXfun",
+      "token_image_url": "https://ipfs.io/ipfs/QmVWt5RXTa6ntecWCvT6Z4Nc1MppUjUhbXnu8N3jjcXfun",
+      "price": [
+        {
+          "class": "A",
+          "price": 500,
+          "count": 100
+        },
+        {
+          "class": "B",
+          "price": 300,
+          "count": 500
+        }
+      ],
+      "contents": "",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    },
+    {
+      "_id": "sdfbjksdfwioj1238341",
+      "event_id": 12385788,
+      "title": "지금이 순간",
+      "address": "0xCe2484aAf7D7cbFB5e7C63D599F82Fc6f02Ec07f",
+      "location": "경남",
+      "sub_location": "양산시 양산역",
+      "category": "Musical",
+      "type": "sale",
+      "thumnail": "https://images.unsplash.com/photo-1623638309606-e587fda3fb49?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
+      "token_image_url": "https://ipfs.io/ipfs/QmXmtnA37CH48gqKMg5o7jS2KfLmWq8A1R8cCnxWVVN43d",
+      "price": [
+        {
+          "class": "A",
+          "price": 800,
+          "count": 100
+        },
+        {
+          "class": "B",
+          "price": 500,
+          "count": 500
+        }
+      ],
+      "contents": "",
+      "option": [{}],
+      "recruit_start_date": 1657706400,
+      "recruit_end_date": 1657706400,
+      "event_start_date": 1657706400,
+      "event_end_date": 1657706400,
+      "created_date": 1657706400,
+      "modified_date": 1657706400,
+      "__v": 1,
+      "promoter": "지민",
+      "remaining": 87,
+      "x": 37.4807307,
+      "y": 126.8567382
+    }
+  ]
+}
