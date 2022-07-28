@@ -54,7 +54,7 @@ interface EventClassType {
 }
 type EventType = 'entry' | 'sale';
 type TokenType = 'nft' | 'sbt';
-type EventCategory = 'concert' | 'theater' | 'kid' | 'musical' | 'exhibition' | 'leisure sport';
+type EventCategory = 'concert' | 'theater' | 'kids' | 'musical' | 'exhibition' | 'leisure sport';
 type EventStatusType =
   | 'created' // 이벤트 생성 완료
   | 'minting' // 이벤트 토큰 생성 중
