@@ -39,7 +39,7 @@ const EntryBottomContent: React.FC<entryBottomContentProps> = ({
         <InnerText
           innerText={`- 티켓 응모 가능 날짜 \n: ${getDateAndTime(
             eventDetail.recruit_start_date,
-          )} ~ ${getDateAndTime(eventDetail.recruit_start_date)}`}
+          )} ~ ${getDateAndTime(eventDetail.recruit_end_date)}`}
           size={15}
         />
 
