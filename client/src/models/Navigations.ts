@@ -16,12 +16,14 @@ export type HomeStackParamList = {
 
 export type CategoryStackParamList = {
   Category: undefined
+  SignIn: { gotoMyPage: boolean }
   CategoryListup: { catagoryName: string }
   EventDetail: { event: EventType }
 }
 
 export type SearchStackParamList = {
   Search: undefined
+  SignIn: { gotoMyPage: boolean }
   SearchListup: { searchWord: string }
   EventDetail: { event: EventType }
 }

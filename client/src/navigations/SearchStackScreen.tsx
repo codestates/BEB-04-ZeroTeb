@@ -4,6 +4,7 @@ import { SearchStackParamList } from '../models/Navigations'
 import Search from '../screens/searchTab/Search'
 import SearchSearchListup from '../screens/searchTab/SearchListup'
 import EventDetail from '../screens/common/EventDetail'
+import SignIn from '../screens/auth/SignIn'
 
 export default function SearchStackScreen() {
   const SearchStack = createNativeStackNavigator<SearchStackParamList>()
@@ -23,6 +24,11 @@ export default function SearchStackScreen() {
       <SearchStack.Screen
         name="EventDetail"
         component={EventDetail}
+        options={{ headerTitle: '' }}
+      />
+      <SearchStack.Screen
+        name="SignIn"
+        component={SignIn}
         options={{ headerTitle: '' }}
       />
     </SearchStack.Navigator>
