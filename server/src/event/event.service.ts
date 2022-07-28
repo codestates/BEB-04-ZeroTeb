@@ -75,7 +75,7 @@ export class EventService {
       }
       // location의 데이터를 분리해서 도, 시 까지만 사용
       // const sliceLocation = sub_location.split(' ');
-      const sL = `${location}`;
+      const sL = `${location} ${sub_location}`;
       // 한글로 입력된 이벤트 장소를 좌표로 바꿈
       const header = { Authorization: process.env.KAKAO_API };
       const point = await axios
