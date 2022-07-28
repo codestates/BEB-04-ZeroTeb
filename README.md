@@ -2,7 +2,7 @@
 
 ## 프로젝트 개요
 
-![ezgif.com-gif-maker.gif](assets/ezgif.com-gif-maker.gif)
+![ezgif.com-gif-maker.gif](./assets/ezgif.com-gif-maker.gif)
 
 ### TT 란 ?
 
@@ -14,7 +14,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
 ## [팀원 소개](https://www.notion.so/aec4ec3169d64e9385e04677cf6f699d)
 
-![](assets/20220728_222529_image.png)
+![](./assets/20220728_222529_image.png)
 
 ## 기술 스택
 
@@ -109,17 +109,17 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
   - 가격 - 트랜잭션에서 발생하는 가스비가 1~20원 수준으로 매우 저렴합니다.
   - 속도 - 이론적 측면이 아닌 실제 4000 TPS의 처리량을 가집니다.
 
-  ![Untitled](assets/Untitled.png)
+  ![Untitled](./assets/Untitled.png)
 
 ### WorkFlow
 
-![다이어그램.png](assets/%25EB%258B%25A4%25EC%259D%25B4%25EC%2596%25B4%25EA%25B7%25B8%25EB%259E%25A8.png)
+![다이어그램.png](./assets/%25EB%258B%25A4%25EC%259D%25B4%25EC%2596%25B4%25EA%25B7%25B8%25EB%259E%25A8.png)
 
 ## **기능별 시연 영상**
 
 ### 랜딩 페이지 (WEB)
 
-  ![TT_1.gif](assets/TT_1.gif)
+  ![TT_1.gif](./assets/TT_1.gif)
 
 ### Klip 로그인
 
@@ -129,7 +129,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     Klip에서 request key를 받아 서버로 전송하고, 서버에서 Klip과 통신해서 사용자를 인증합니다. 인증된 사용자에게 JWT 토큰을 발행하여, TT의 기능을 사용할 수 있도록 합니다.
 
-    ![ezgif.com-gif-maker (3).gif](assets/ezgif.com-gif-maker_(3).gif)
+    ![ezgif.com-gif-maker (3).gif](./assets/ezgif.com-gif-maker_(3).gif)
 
 ### 이벤트 등록(모바일)
 
@@ -141,13 +141,13 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     이벤트가 등록되면, 컨트랙트는 토큰을 서버에 발행합니다. 발행된 토큰은 구매를 통해 얻을 수 있습니다.
 
-    ![enroll.gif](assets/enroll.gif)
+    ![enroll.gif](./assets/enroll.gif)
 
 - 이벤트 등록(웹)
 
-    ![TT_2.gif](assets/TT_2.gif)
+    ![TT_2.gif](./assets/TT_2.gif)
 
-    ![TT_3.gif](assets/TT_3.gif)
+    ![TT_3.gif](./assets/TT_3.gif)
 
 ### 이벤트 티켓 구매/응모
 
@@ -159,7 +159,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     응모한 사용자의 주소를 컨트랙트에 보관합니다. 이벤트 응모 가능 기간이 지나면 서버가 자동으로 이벤트 추첨을 컨트랙트에 요청합니다. 이벤트 추첨은 응모자 중 랜덤으로 당첨자를 선정합니다.
 
-    ![ezgif.com-gif-maker (4).gif](assets/ezgif.com-gif-maker_(4).gif)
+    ![ezgif.com-gif-maker (4).gif](./assets/ezgif.com-gif-maker_(4).gif)
 
 ### QRcode 생성
 
@@ -167,7 +167,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     QR 코드는 앱에서 티켓을 클릭할 때 발행되고, 서버는 해당 QR에 유효 기한을 부여합니다. QRcode는 nonce 데이터를 가지고 있습니다.
 
-    ![ezgif.com-gif-maker (5).gif](assets/ezgif.com-gif-maker_(5).gif)
+    ![ezgif.com-gif-maker (5).gif](./assets/ezgif.com-gif-maker_(5).gif)
 
 ### QRcode 유효성 확인
 
@@ -177,7 +177,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     서버는 해당 이벤트의 QRcode인지, 유효 기한이 남았는지 검사합니다.
 
-    ![ezgif.com-gif-maker (6).gif](assets/ezgif.com-gif-maker_(6).gif)
+    ![ezgif.com-gif-maker (6).gif](./assets/ezgif.com-gif-maker_(6).gif)
 
 ### 검색
 
@@ -191,7 +191,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     이후 같은 키워드가 들어오면 count값을 올려주고, count가 가장 많은 키워드를 인기 검색어로 정합니다.
 
-    ![ezgif.com-gif-maker (7).gif](assets/ezgif.com-gif-maker_(7).gif)
+    ![ezgif.com-gif-maker (7).gif](./assets/ezgif.com-gif-maker_(7).gif)
 
 ### 내 주변
 
@@ -199,7 +199,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
     현재 위치의 좌표를 서버로 보냅니다. 서버는 Map API를 통해 사용자의 지역을 찾고, 이벤트의 좌표와 거리를 구해 사용자에게 출력해 줍니다.
 
-    ![ezgif.com-gif-maker (8).gif](assets/ezgif.com-gif-maker_(8).gif)
+    ![ezgif.com-gif-maker (8).gif](./assets/ezgif.com-gif-maker_(8).gif)
 
 ### 관련 문서
 
