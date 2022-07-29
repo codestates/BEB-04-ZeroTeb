@@ -28,7 +28,7 @@ TT 이용자는 이벤트를 기획할 수도 있고, 다른 이벤트를 참여
 
 - Mobile
   - Languege - TypeScript
-  - Core - React, Native-Expo
+  - Core - React-Native, Expo
   - 상태관리 - Redux, redux-toolkit
 - Web
   - Languege - TypeScript
